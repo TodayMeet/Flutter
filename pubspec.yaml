@@ -65,6 +65,11 @@ flutter:
   assets:
     - assets/images/Bottombar/
     - assets/images/Category/
+    - assets/images/List_Categort/
+    - assets/images/List_Icon/
+    - assets/images/List_Image/
+    - assets/images/LoginImage/
+    - assets/images/User_Picture/
 
   fonts:
     - family: PretendardBold

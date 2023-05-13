@@ -22,8 +22,8 @@ class _BottomBarState extends State<BottomBar> {
                   builder: (context) => RegisterMeeting()));
           },
         ),
-        IconButton(icon: Image.asset("assets/images/Bottombar_third.png"),onPressed: () {},),
-        IconButton(icon: Image.asset("assets/images/Bottombar_fourth.png"),onPressed: () {},),
+        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_third.png"),onPressed: () {},),
+        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_fourth.png"),onPressed: () {},),
       ],
     );
   }

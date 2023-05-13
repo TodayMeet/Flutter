@@ -3,6 +3,7 @@ import 'setlocation.dart';
 import 'setFilter.dart';
 import 'mainPageMap.dart';
 import 'mainListBoard.dart';
+import 'start.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,11 +43,11 @@ class MainPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  child: Text('위치 설정'),
+                  child: Text('로그인'),
                   onPressed: (){
                     Navigator.push(context,
                         MaterialPageRoute(
-                            builder: (context) => LocationPage()));
+                            builder: (context) => Start()));
                   },
                 ),
                 ElevatedButton(

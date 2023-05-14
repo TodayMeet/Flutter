@@ -232,6 +232,7 @@ class _FilterState extends State<Filter> {
                             print('정렬 순 : 참여 높은 순');
                           }
                         });
+                        Navigator.pop(context);
                       },
                       child: const Text("적용", style: TextStyle(
                           color:Color(0xFFFFFFFF), fontFamily: "PretendardBold"))),

@@ -1,14 +1,15 @@
 // 로그인 화면
-// 
+//
 // 남재혁
 // 최종수정일 2023.05.14
 //추후 작업예정사항
 // sns 로그인 추가 디자인 수정
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:front/screen/login/pwFind.dart';
 import 'Phone_ij.dart';
 import 'package:front/screen/mainMap/mainPageMap.dart';
-
+import 'idFind.dart';
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -20,10 +21,10 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   String _text = '';
   String _text1 = '';
-  void _findId() {}
-  void _findPassword() {
+
+
     // 비밀번호 찾기 버튼을 눌렀을 때 실행할 코드 작성
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,7 @@ class _loginState extends State<login> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: 20,),
               Image.asset(
                 "assets/images/LoginImage/logoimage.png",
                 width: 180,
@@ -39,9 +41,10 @@ class _loginState extends State<login> {
                 fit: BoxFit.cover,
               ),
               Image.asset("assets/images/LoginImage/titleimage.png"),
+              SizedBox(height: 10.0),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 10.0),
+                    vertical: 8.0, horizontal: 10.0),
                 child: TextField(
                   autofocus: true,
                   onChanged: (value) {
@@ -50,14 +53,14 @@ class _loginState extends State<login> {
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: '아이디',
+                    labelText: '임시아이디 ghwmfap1234@naver.com',
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 10.0),
+                    vertical: 8.0, horizontal: 10.0),
                 child: TextField(
                   obscureText: true,
                   autofocus: true,
@@ -67,13 +70,21 @@ class _loginState extends State<login> {
                     });
                   },
                   decoration: InputDecoration(
-                      labelText: '비밀번호', border: OutlineInputBorder()),
+                      labelText: '임시비밀번호 asdf12345',
+                      border: OutlineInputBorder()),
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: _findId,
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => idFind()),
+                      );
+                    },
                     child: Text(
                       '아이디 찾기',
                       style: TextStyle(
@@ -83,7 +94,13 @@ class _loginState extends State<login> {
                   ),
                   Text("|"),
                   TextButton(
-                    onPressed: _findPassword,
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => pwFind()),
+                      );
+                    },
                     child: Text(
                       '비밀번호 찾기',
                       style: TextStyle(
@@ -92,7 +109,6 @@ class _loginState extends State<login> {
                     ),
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -109,16 +125,20 @@ class _loginState extends State<login> {
                       ),
                     ),
                     onPressed: () {
-
-                      if(_text1 ==''){
+                      if (_text == '') {
                         _login_fail_idnone(context);
-                      }else if(_text1 == ''){
+                      } else if (_text1 == '') {
                         _login_fail_pwnone(context);
-                      }else if(_text1!='asdf12345'){
+                      } else if (_text1 != 'asdf12345' ||
+                          _text != 'ghwmfap1234@naver.com') {
                         _login_fail_incorrect(context);
-                      }else{
+                      } else {
                         Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageMap()),);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainPageMap()),
+                        );
                       }
                     },
                     child: Text(
@@ -132,17 +152,28 @@ class _loginState extends State<login> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: GestureDetector(
-                    onTap: () => _login_fail_incorrect(context),
-                    child: Image.asset(
-                      'assets/images/LoginImage/kakao_login_large_wide.png',
-                      width: 327,
-                      height: 56,
-                    )),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainPageMap()),
+                    );
+                  },
+                  child: Image.asset(
+                    'assets/images/LoginImage/kakao_login_large_wide.png',
+                    width: 327,
+                    height: 56,
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: GestureDetector(
-                    onTap: () => _login_fail_alrephone(context),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainPageMap()),
+                      );
+                    },
                     child: Image.asset(
                       'assets/images/LoginImage/naverlogin.png',
                       width: 327,
@@ -152,7 +183,12 @@ class _loginState extends State<login> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: GestureDetector(
-                    onTap: () => _login_fail_incorrect(context),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainPageMap()),
+                      );
+                    },
                     child: Image.asset(
                       'assets/images/LoginImage/googlelogin.png',
                       width: 327,
@@ -176,7 +212,6 @@ class _loginState extends State<login> {
                   ),
                 ),
               ),
-
             ],
           ),
         ),
@@ -184,6 +219,7 @@ class _loginState extends State<login> {
     );
   }
 }
+
 void _login_fail_idnone(BuildContext context) {
   showCupertinoModalPopup<void>(
     context: context,
@@ -194,6 +230,8 @@ void _login_fail_idnone(BuildContext context) {
           isDefaultAction: true,
           onPressed: () {
             Navigator.pop(context);
+
+
           },
           child: const Text('확인'),
         ),
@@ -220,91 +258,11 @@ void _login_fail_pwnone(BuildContext context) {
   );
 }
 
-
-
-
-
-
-
-
-
 void _login_fail_incorrect(BuildContext context) {
   showCupertinoModalPopup<void>(
     context: context,
     builder: (BuildContext context) => CupertinoAlertDialog(
       content: const Text('입력하신 아이디 또는 비밀번호가 일치하지 않습니다.\n 확인 후 다시 입력해주세요.'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('확인'),
-        ),
-      ],
-    ),
-  );
-}
-
-void _login_fail_alrephone(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('이미 가입된 휴대전화번호 입니다.'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('확인'),
-        ),
-      ],
-    ),
-  );
-}
-
-void _login_fail_timeover(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('입력 시간이 초과되었습니다.'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('확인'),
-        ),
-      ],
-    ),
-  );
-}
-
-void _login_success_phoneij(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('휴대전화번호 인증이 완료되었습니다.'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('확인'),
-        ),
-      ],
-    ),
-  );
-}
-
-void _login_fail_incorrectij(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('인증번호가 올바르지 않습니다.\n다시 확인해 주세요.'),
       actions: <CupertinoDialogAction>[
         CupertinoDialogAction(
           isDefaultAction: true,
@@ -342,12 +300,11 @@ void _backto_login(BuildContext context) {
     ),
   );
 }
-
-void _login_fail_notmember(BuildContext context) {
+void _login_fail_alrephone(BuildContext context) {
   showCupertinoModalPopup<void>(
     context: context,
     builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('가입되지 않은 휴대전화번호 입니다.\n회원가입을 해주세요.'),
+      content: const Text('이미 가입된 휴대전화번호 입니다.'),
       actions: <CupertinoDialogAction>[
         CupertinoDialogAction(
           isDefaultAction: true,

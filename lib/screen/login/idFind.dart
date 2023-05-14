@@ -7,19 +7,20 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'idFindResult.dart';
 import 'login.dart';
 import 'accountsetting.dart';
 import 'dart:async';
 
 import 'signup.dart';
 
-class Phone_ij extends StatefulWidget {
+class idFind extends StatefulWidget {
 
   @override
-  State<Phone_ij> createState() => _Phone_ijState();
+  State<idFind> createState() => _idFindState();
 }
 
-class _Phone_ijState extends State<Phone_ij> {
+class _idFindState extends State<idFind> {
   final TextEditingController _textEditingController = TextEditingController();
   String _text2 = '';
   String _text3 = '';
@@ -70,7 +71,7 @@ class _Phone_ijState extends State<Phone_ij> {
           ),
           centerTitle: true,
           title: Text(
-            '휴대전화 번호 인증',
+            '아이디 찾기',
             style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
@@ -201,7 +202,7 @@ class _Phone_ijState extends State<Phone_ij> {
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.horizontal(
-                        right: Radius.circular(10), // 오른쪽 위와 아래 모서리 둥글기 설정
+                        right: Radius.circular(10),
                       ),
                     ),
                     fixedSize: Size(107, 46),
@@ -222,26 +223,27 @@ class _Phone_ijState extends State<Phone_ij> {
           Spacer(),
           Container(
             width: 327,
+            height: 56,
             child: CupertinoButton(
               onPressed: () {
                 // 입력시간 초과 -> _login_fail_timeover
                 // 성공했으면 -> _login_success_phoneij
                 //인증번호 틀리면 -> _login_fail_incorrectij
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => accountsetting()));},
+                    MaterialPageRoute(builder: (context) => idFindResult()));},
               minSize: 0,
               padding: EdgeInsets.symmetric(
-                vertical: 24.0,
+                // vertical: 24.0,
               ),
               color: CupertinoDynamicColor.resolve(
                 CupertinoColors.systemBlue,
                 context,
               ).withAlpha(0xFF4874EA),
-              // 버튼의 수직 방향 패딩 값 조정
+
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
 
               child: Text(
-                '다음',
+                '아이디 찾기',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

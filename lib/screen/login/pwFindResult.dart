@@ -12,12 +12,12 @@ import 'package:front/screen/login/Phone_ij.dart';
 
 import 'login.dart';
 
-class accountsetting extends StatefulWidget {
+class pwFindResult extends StatefulWidget {
   @override
-  _accountsettingState createState() => _accountsettingState();
+  _pwFindResultState createState() => _pwFindResultState();
 }
 
-class _accountsettingState extends State<accountsetting> {
+class _pwFindResultState extends State<pwFindResult> {
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -43,13 +43,13 @@ class _accountsettingState extends State<accountsetting> {
             size: 25,
           ),
           onPressed: () {
-            _backto_Phoneij(context);
+            _backto_login(context);
 
           },
         ),
         centerTitle: true,
         title: Text(
-          '계정설정',
+          '비밀번호 변경',
           style: TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
@@ -61,60 +61,28 @@ class _accountsettingState extends State<accountsetting> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 8.0),
-            Padding(
-              padding: EdgeInsets.only(left: 3.0),
-              child: Text(
-                '아이디(이메일)',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17),
-              ),
-            ),
-            SizedBox(height: 8.0),
-            Center(
-              child: Container(
-                width: 360,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: TextField(
-                  controller: _idController,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 16.0,
-                      horizontal: 12.0,
-                    ),
-                    hintText: '아이디를 입력하세요',
-                    hintStyle: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 13,
-                    ),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 8.0),
-            Text(
-              '* 이메일 주소는 "@"와 "."을 최소 하나 이상 포함되어야합니다.',
-              style: TextStyle(color: Colors.red),
-            ),
-            Text(
-              '* 이미 가입된 이메일 주소입니다.',
-              style: TextStyle(color: Colors.red),
-            ),
             SizedBox(height: 24.0),
-            Padding(
-              padding: EdgeInsets.only(left: 3.0),
-              child: Text(
-                '비밀번호',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 0,
             ),
+            child: Row(children: [
+              Text(
+                "새 비밀번호 ",
+                style: TextStyle(
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "*",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14.0,
+                ),
+              )
+            ]),
+          ),
             SizedBox(height: 8.0),
             Center(
               child: Container(
@@ -148,13 +116,25 @@ class _accountsettingState extends State<accountsetting> {
             ),
             SizedBox(height: 24.0),
             Padding(
-              padding: EdgeInsets.only(left: 3.0),
-              child: Text(
-                '비밀번호 확인',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17),
+              padding: const EdgeInsets.only(
+                left: 0,
               ),
+              child: Row(children: [
+                Text(
+                  "새 비밀번호 확인 ",
+                  style: TextStyle(
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "*",
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 14.0,
+                  ),
+                )
+              ]),
             ),
             SizedBox(height: 8.0),
             Center(
@@ -199,33 +179,38 @@ class _accountsettingState extends State<accountsetting> {
             Spacer(),
             Center(
               child:Container(
-              width: 327,
-              child: CupertinoButton(
-                onPressed: () {
-                  // 입력시간 초과 -> _login_fail_timeover
-                  // 성공했으면 -> _login_success_phoneij
-                  //인증번호 틀리면 -> _login_fail_incorrectij
+                width: 327,
+                child: CupertinoButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => login()),
+                    );
+                    // 입력시간 초과 -> _login_fail_timeover
+                    // 성공했으면 -> _login_success_phoneij
+                    //인증번호 틀리면 -> _login_fail_incorrectij
                   },
-                minSize: 0,
-                padding: EdgeInsets.symmetric(
-                  vertical: 24.0,
-                ),
-                color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemBlue,
-                  context,
-                ).withAlpha(0xFF4874EA),
-                // 버튼의 수직 방향 패딩 값 조정
-                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  minSize: 0,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 24.0,
+                  ),
+                  color: CupertinoDynamicColor.resolve(
+                    CupertinoColors.systemBlue,
+                    context,
+                  ).withAlpha(0xFF4874EA),
 
-                child: Text(
-                  '다음',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+
+                  child: Text(
+                    '비밀번호 변경',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
                 ),
-              ),
-            ),),
+              ),),
           ],
         ),
       ),
@@ -233,7 +218,7 @@ class _accountsettingState extends State<accountsetting> {
   }
 }
 
-void _backto_Phoneij(BuildContext context) {
+void _backto_login(BuildContext context) {
   showCupertinoModalPopup<void>(
     context: context,
     builder: (BuildContext context) => CupertinoAlertDialog(
@@ -247,7 +232,7 @@ void _backto_Phoneij(BuildContext context) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => Phone_ij()),
+                  builder: (context) => login()),
             );
           },
           child: const Text('확인'),

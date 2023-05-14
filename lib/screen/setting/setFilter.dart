@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'bottomBar.dart';
+import 'package:front/model/bottomBar.dart';
 
 class Filter extends StatefulWidget {
   const Filter({Key? key}) : super(key: key);

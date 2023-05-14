@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'registerMeeting.dart';
+import 'package:front/screen/setting/registerMeeting.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({Key? key}) : super(key: key);

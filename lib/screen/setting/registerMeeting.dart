@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
-import 'bottomBar.dart';
+import 'package:front/model/bottomBar.dart';
 
 bool meetTime = false;
 bool meetWho = false;

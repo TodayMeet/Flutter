@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'meetList.dart';
-import 'TextPrint.dart';
+import 'package:front/data/meetList.dart';
+import 'package:front/model/TextPrint.dart';
 
 Future Invitaiton(BuildContext context, meetList test) {
   return showModalBottomSheet(

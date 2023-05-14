@@ -10,9 +10,9 @@
 
 import 'package:flutter/material.dart';
 import 'ListDetail.dart';
-import 'meetList.dart';
-import 'CategoryContainer.dart';
-import 'TextPrint.dart';
+import 'package:front/data/meetList.dart';
+import 'package:front/model/mainList/CategoryContainer.dart';
+import 'package:front/model/TextPrint.dart';
 
 class mainListView extends StatelessWidget { //건수 리스트 게시판 뷰
   final String category; //모임 카테고리

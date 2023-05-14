@@ -12,11 +12,11 @@
 // 하단 고정 바
 
 import 'package:flutter/material.dart';
-import 'TextPrint.dart';
+import 'package:front/model/TextPrint.dart';
 import 'mainListView.dart';
-import 'Advertisement.dart';
-import 'meetList.dart';
-import 'bottomBar.dart';
+import 'package:front/model/mainList/Advertisement.dart';
+import 'package:front/data/meetList.dart';
+import 'package:front/model/bottomBar.dart';
 
 //List 클래스 더미 객체
 meetList test0 = meetList('호스트0', 25, 10, 0, '게임', '대구광역시 북구 90', '산격동', 2023, 6, 30, 17, 00, true, 8, 20000, '내가 이 과목 왜했지', 'ㄹㅇ 인생 최대 실수\n과거의 나야 그만둬\n지금 학점이 문제가 아닙니다', true, 0, 0, 1);

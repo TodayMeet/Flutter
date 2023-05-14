@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'setlocation.dart';
-import 'setFilter.dart';
-import 'mainPageMap.dart';
-import 'mainListBoard.dart';
-import 'start.dart';
+import 'screen/setting/setlocation.dart';
+import 'screen/setting/setFilter.dart';
+import 'screen/mainMap/mainPageMap.dart';
+import 'package:front/screen/mainList/mainListBoard.dart';
+import 'package:front/screen/login/start.dart';
 
 void main() {
   runApp(const MyApp());

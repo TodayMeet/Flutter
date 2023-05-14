@@ -1,3 +1,14 @@
+// 건수 등록 페이지
+
+// 최종 수정일 : 2023.5.12
+// 작업자 : 김혁
+
+// 추가 작업 예정 사항
+// 서버에서 위치 정보 받아오기
+// 받아온 위치 정보로 지도 출력
+// state 관리하기
+// 추후 버튼 더 출력하기
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

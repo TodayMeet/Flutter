@@ -8,6 +8,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:front/screen/setting/setlocation.dart';
 import 'package:front/model/setting/location.dart';
 import 'package:front/model/bottomBar.dart';
+import '../mainList/mainListBoard.dart';
 
 const String kakaoMapKey = '61ebde2674fd1c5802aa0e27d589baba';
 const String KakaoRestAPIKey = "639525c51e8f0aa63a256f74ddfe80ce";
@@ -205,7 +206,9 @@ class _MainPageMapState extends State<MainPageMap> {
               heroTag: "게시판화면 이동",
               backgroundColor: const Color(0xFFFFFFFF),
               onPressed: (){
-
+                Navigator.push(context,
+                  MaterialPageRoute(
+                    builder: (context) => MainListBoard()));
               },
               child: const Icon(Icons.list, color: Color(0xFF4874EA)),
             ),

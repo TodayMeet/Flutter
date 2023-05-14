@@ -102,9 +102,12 @@ class _loginState extends State<login> {
                       ),
                     ),
                     onPressed: () {
-
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageMap()),);
+                      if(_text =='asdf12345'){
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageMap()),);
+                      }else{
+                        _login_fail_incorrect(context);
+                      }
                     },
                     child: Text(
                       '로그인',

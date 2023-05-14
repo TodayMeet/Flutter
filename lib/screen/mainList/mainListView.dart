@@ -121,6 +121,7 @@ class mainListView extends StatelessWidget { //건수 리스트 게시판 뷰
                 Row(
                   children: [
                     Image.asset('assets/images/List_Image/List_image_sample1.png',
+                        fit: BoxFit.fitHeight,
                         width: 100, height: 100),  //건수 등록 이미지
                     const SizedBox(width: 2,),
                     Image.asset('assets/images/List_Image/List_image_sample2.png',

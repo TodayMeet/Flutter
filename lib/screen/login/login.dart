@@ -1,3 +1,9 @@
+// 로그인 화면
+// 
+// 남재혁
+// 최종수정일 2023.05.14
+//추후 작업예정사항
+// sns 로그인 추가 디자인 수정
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Phone_ij.dart';
@@ -13,6 +19,7 @@ class login extends StatefulWidget {
 
 class _loginState extends State<login> {
   String _text = '';
+  String _text1 = '';
   void _findId() {}
   void _findPassword() {
     // 비밀번호 찾기 버튼을 눌렀을 때 실행할 코드 작성
@@ -56,7 +63,7 @@ class _loginState extends State<login> {
                   autofocus: true,
                   onChanged: (value) {
                     setState(() {
-                      _text = value;
+                      _text1 = value;
                     });
                   },
                   decoration: InputDecoration(
@@ -103,8 +110,16 @@ class _loginState extends State<login> {
                     ),
                     onPressed: () {
 
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageMap()),);
+                      if(_text1 ==''){
+                        _login_fail_idnone(context);
+                      }else if(_text1 == ''){
+                        _login_fail_pwnone(context);
+                      }else if(_text1!='asdf12345'){
+                        _login_fail_incorrect(context);
+                      }else{
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageMap()),);
+                      }
                     },
                     child: Text(
                       '로그인',
@@ -171,6 +186,49 @@ class _loginState extends State<login> {
     );
   }
 }
+void _login_fail_idnone(BuildContext context) {
+  showCupertinoModalPopup<void>(
+    context: context,
+    builder: (BuildContext context) => CupertinoAlertDialog(
+      content: const Text('아이디를 입력해주세요'),
+      actions: <CupertinoDialogAction>[
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('확인'),
+        ),
+      ],
+    ),
+  );
+}
+
+void _login_fail_pwnone(BuildContext context) {
+  showCupertinoModalPopup<void>(
+    context: context,
+    builder: (BuildContext context) => CupertinoAlertDialog(
+      content: const Text('비밀번호를 입력해주세요'),
+      actions: <CupertinoDialogAction>[
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('확인'),
+        ),
+      ],
+    ),
+  );
+}
+
+
+
+
+
+
+
+
 
 void _login_fail_incorrect(BuildContext context) {
   showCupertinoModalPopup<void>(

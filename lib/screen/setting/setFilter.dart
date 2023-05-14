@@ -1,3 +1,11 @@
+// 게시판에서 필터 설정 페이지
+
+// 최종 수정일 : 2023.5.14
+// 작업자 : 김혁
+
+// 추가 작업 예정 사항
+// 적용 버튼 입력 시 서버에 데이터 전송하기
+
 import 'package:flutter/material.dart';
 
 import 'package:front/model/bottomBar.dart';

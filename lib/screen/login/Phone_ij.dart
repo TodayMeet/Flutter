@@ -1,7 +1,17 @@
+// 휴대폰인증
+//
+// 남재혁
+// 최종수정일 2023.05.14
+//추후 작업예정사항
+// 화면 전체 수정
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'accountsetting.dart';
+
+
 import 'signup.dart';
 
 class Phone_ij extends StatefulWidget {

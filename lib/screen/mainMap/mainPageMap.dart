@@ -1,3 +1,12 @@
+// 메인 지도 페이지
+
+// 최종 수정일 : 2023.5.14
+// 작업자 : 김혁
+
+// 추가 작업 예정 사항
+// 서버에서 받아온 모임 정보를 통해 핀 띄우기
+// 위치 설정을 통해 받아온 정보로 지도 이동하기
+
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;

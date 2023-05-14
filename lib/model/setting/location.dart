@@ -1,3 +1,8 @@
+// 현재 위치 가져오기
+
+// 최종 수정일 : 2023.4.29
+// 작업자 : 김혁
+
 import 'package:geolocator/geolocator.dart';
 
 class Location {

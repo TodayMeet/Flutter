@@ -1,3 +1,9 @@
+// 로그인 화면
+// 
+// 남재혁
+// 최종수정일 2023.05.14
+//추후 작업예정사항
+// sns 로그인 추가 디자인 수정
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Phone_ij.dart';

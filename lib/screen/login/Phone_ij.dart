@@ -24,12 +24,12 @@ class _Phone_ijState extends State<Phone_ij> {
               size: 25,
             ),
             onPressed: () {
-//             Navigator.push(
-//               context,
-//               MaterialPageRoute(
-//                 builder: (context) => login(),
-//               ),
-//             );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => login(),
+              ),
+            );
             },
           ),
           middle: Text('휴대전화 번호 인증'),

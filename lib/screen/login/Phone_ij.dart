@@ -201,7 +201,7 @@ class _Phone_ijState extends State<Phone_ij> {
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.horizontal(
-                        right: Radius.circular(10), // 오른쪽 위와 아래 모서리 둥글기 설정
+                        right: Radius.circular(10),
                       ),
                     ),
                     fixedSize: Size(107, 46),
@@ -209,7 +209,7 @@ class _Phone_ijState extends State<Phone_ij> {
                   ),
                   child: Text(
                     '확인',
-                    // '$minutes:${seconds.toString().padLeft(2, '0')}'
+
                     style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
@@ -237,7 +237,7 @@ class _Phone_ijState extends State<Phone_ij> {
                 CupertinoColors.systemBlue,
                 context,
               ).withAlpha(0xFF4874EA),
-              // 버튼의 수직 방향 패딩 값 조정
+
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
 
               child: Text(

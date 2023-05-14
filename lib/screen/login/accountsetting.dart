@@ -214,7 +214,7 @@ class _accountsettingState extends State<accountsetting> {
                   CupertinoColors.systemBlue,
                   context,
                 ).withAlpha(0xFF4874EA),
-                // 버튼의 수직 방향 패딩 값 조정
+
                 borderRadius: BorderRadius.all(Radius.circular(12.0)),
 
                 child: Text(

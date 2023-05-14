@@ -117,7 +117,7 @@ class _loginState extends State<login> {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.black),
                       minimumSize: MaterialStateProperty.all<Size>(
-                          Size(327, 56)), // 변경할 크기를 지정합니다.
+                          Size(327, 56)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),

@@ -1,6 +1,6 @@
 // 건수 상세 정보 출력 페이지
 
-// 최종 수정: 2023.5.2
+// 최종 수정: 2023.5.14
 // 작업자: 정해수
 
 //추가 작업 예정 사항:
@@ -10,11 +10,13 @@
 // 하단 바 고정
 
 import 'package:flutter/material.dart';
-import 'List.dart';
+import 'meetList.dart';
 import 'CategoryContainer.dart';
+import 'TextPrint.dart';
+import 'Invitation.dart';
 
 //List 클래스 더미 객체
-List test1 = List('호스트1', 25, '게임', '대구광역시 용산구 121-2', '용산동', 2023, 6, 30, 17, 00, true, 8, 20000, '내가 이 과목 왜했지', 'ㄹㅇ 인생 최대 실수\n과거의 나야 그만둬\n지금 학점이 문제가 아닙니다', true, 0, 0, 1);
+meetList test2 = meetList('호스트1', 25, 1, 1, '게임', '대구광역시 용산구 121-2', '용산동', 2023, 6, 30, 17, 00, true, 8, 20000, '내가 이 과목 왜했지', 'ㄹㅇ 인생 최대 실수\n과거의 나야 그만둬\n지금 학점이 문제가 아닙니다', true, 0, 0, 1);
 
 class ListDetail extends StatefulWidget {
   const ListDetail({Key? key}) : super(key: key);
@@ -45,18 +47,16 @@ class _ListDetailState extends State<ListDetail> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CategoryContainer(category: test1.category,),
+                CategoryContainer(test2.category,),
                 const SizedBox(width: 6,),
-                Complete(test1.complete),
-                Container(
-                  child: Row(
-                    children: [
-                      const StringText('모집 마감 시간: ', 12, 'PretendardRegular', 0xff000000),
-                      IntText(test1.hour, 12, 'PretendardRegular', 0xff000000),
-                      const StringText(':', 12, 'PretendardRegular', 0xff000000),
-                      IntText(test1.minute, 12, 'PretendardRegular', 0xff000000),
-                    ],
-                  ),
+                Complete(test2.complete),
+                Row(
+                  children: [
+                    StringText('모집 마감 시간: ', 12, 'PretendardRegular', Colors.black),
+                    IntText(test2.hour, 12, 'PretendardRegular', Colors.black),
+                    StringText(':', 12, 'PretendardRegular', Colors.black),
+                    TimeText(test2.minute, 12, 'PretendardRegular', Colors.black),
+                  ],
                 )
               ],
             ), //카테고리, 마감시간
@@ -64,16 +64,17 @@ class _ListDetailState extends State<ListDetail> {
             const SizedBox(height: 12,),
             Row(
               children: [
-                StringText(test1.title, 24, 'PretendardBold', 0xff2F3036)
+                StringText(test2.title, 24, 'PretendardBold', const Color(0xff2F3036))
               ],
             ), //모임 제목
 
             const SizedBox(height: 10,),
             Row(
               children: [
-                //호스트 사진
+                Image.asset('assets/images/User_Picture/User_pic_null.png',
+                    width: 26, height: 26),  //사용자 사진
                 const SizedBox(width: 10,),
-                StringText(test1.hostName, 12, 'PretendardRegular', 0xff000000),
+                StringText(test2.hostName, 12, 'PretendardRegular', Colors.black),
               ],
             ), //호스트 사진, 이름
 
@@ -96,7 +97,7 @@ class _ListDetailState extends State<ListDetail> {
                           Image.asset('assets/images/List_Icon/List_icon_participate.png',
                               width: 20, height: 20),
                           const SizedBox(width: 7.75,),
-                          const StringText('참가하기', 14, 'PretendardBold', 0xff5E5F68),
+                          StringText('참가하기', 14, 'PretendardBold', const Color(0xff5E5F68)),
                         ],
                       ),
                     ),
@@ -104,9 +105,7 @@ class _ListDetailState extends State<ListDetail> {
                   ButtonTheme(
                     child: OutlinedButton(
                       onPressed: () {
-                        ScaffoldMessenger.of(context)
-                          ..removeCurrentSnackBar()
-                          ..showSnackBar(SnackBar(content: Text('미구현 기능입니다 (초대하기)')));
+                        Invitaiton(context, test2);
                       },
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.fromLTRB(47, 15, 47, 15),
@@ -116,7 +115,7 @@ class _ListDetailState extends State<ListDetail> {
                           Image.asset('assets/images/List_Icon/List_icon_invite.png',
                               width: 20, height: 20),
                           const SizedBox(width: 7.75,),
-                          const StringText('초대하기', 14, 'PretendardBold', 0xff5E5F68),
+                          StringText('초대하기', 14, 'PretendardBold', const Color(0xff5E5F68)),
                         ],
                       ),
                     ),
@@ -143,7 +142,7 @@ class _ListDetailState extends State<ListDetail> {
                         Image.asset('assets/images/List_Icon/List_icon_comments2.png',
                             width: 20, height: 20),
                         const SizedBox(width: 7.75,),
-                        const StringText('채팅방 입장', 14, 'PretendardBold', 0xffFFFFFF),
+                        StringText('채팅방 입장', 14, 'PretendardBold', Colors.white),
                       ],
                     ),
                   ),
@@ -166,9 +165,9 @@ class _ListDetailState extends State<ListDetail> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const StringText('내용', 12, 'PretendardBold', 0xff000000),
+                StringText('내용', 12, 'PretendardBold', Colors.black),
                 const SizedBox(width: 50,),
-                StringText(test1.content, 14, 'PretendardRegular', 0xff5E5F68),
+                StringText(test2.content, 14, 'PretendardRegular', const Color(0xff5E5F68)),
               ],
             ), //모임 내용
 
@@ -186,17 +185,17 @@ class _ListDetailState extends State<ListDetail> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const StringText('시간', 12, 'PretendardBold', 0xff000000),
+                StringText('시간', 12, 'PretendardBold', Colors.black),
                 const SizedBox(width: 50,),
-                IntText(test1.year, 14, 'PretendardRegular', 0xff5E5F68),
-                const StringText('년 ', 14, 'PretendardRegular', 0xff5E5F68),
-                IntText(test1.month, 14, 'PretendardRegular', 0xff5E5F68),
-                const StringText('월 ', 14, 'PretendardRegular', 0xff5E5F68),
-                IntText(test1.date, 14, 'PretendardRegular', 0xff5E5F68),
-                const StringText('일 ', 14, 'PretendardRegular', 0xff5E5F68),
-                IntText(test1.hour, 14, 'PretendardRegular', 0xff5E5F68),
-                const StringText(':', 14, 'PretendardRegular', 0xff5E5F68),
-                IntText(test1.minute, 14, 'PretendardRegular', 0xff5E5F68),
+                IntText(test2.year, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                StringText('년 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                IntText(test2.month, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                StringText('월 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                IntText(test2.date, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                StringText('일 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                IntText(test2.hour, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                StringText(':', 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                TimeText(test2.minute, 14, 'PretendardRegular', const Color(0xff5E5F68)),
               ],
             ), //모임 날짜 및 시각
 
@@ -214,9 +213,9 @@ class _ListDetailState extends State<ListDetail> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const StringText('장소', 12, 'PretendardBold', 0xff000000),
+                StringText('장소', 12, 'PretendardBold', Colors.black),
                 const SizedBox(width: 50,),
-                StringText(test1.location, 14, 'PretendardRegular', 0xff5E5F68),
+                StringText(test2.location, 14, 'PretendardRegular', const Color(0xff5E5F68)),
               ],
             ), //모임 장소
 
@@ -243,9 +242,9 @@ class _ListDetailState extends State<ListDetail> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const StringText('참여 연령', 12, 'PretendardBold', 0xff000000),
+                StringText('참여 연령', 12, 'PretendardBold', Colors.black),
                 const SizedBox(width: 35,),
-                Age(test1.age),
+                Age(test2.age),
               ],
             ), //참여 연령 제한
 
@@ -263,10 +262,10 @@ class _ListDetailState extends State<ListDetail> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const StringText('참가비', 12, 'PretendardBold', 0xff000000),
+                StringText('참가비', 12, 'PretendardBold', Colors.black),
                 const SizedBox(width: 50,),
-                IntText(test1.fee, 14, 'PretendardRegular', 0xff5E5F68),
-                const StringText('원', 14, 'PretendardRegular', 0xff5E5F68),
+                IntText(test2.fee, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                StringText('원', 14, 'PretendardRegular', const Color(0xff5E5F68)),
               ],
             ), //참가비
 
@@ -284,13 +283,12 @@ class _ListDetailState extends State<ListDetail> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const StringText('참가 인원', 12, 'PretendardBold', 0xff000000),
+                StringText('참가 인원', 12, 'PretendardBold', Colors.black),
                 const SizedBox(width: 35,),
-                IntText(test1.curUserNum, 14, 'PretendardRegular', 0xff5E5F68),
-                const StringText('명 참여중 / 최대 ', 14, 'PretendardRegular', 0xff5E5F68),
-                IntText(test1.userNum, 14, 'PretendardRegular', 0xff5E5F68),
-                const StringText(' 명까지', 14, 'PretendardRegular', 0xff5E5F68),
-
+                IntText(test2.curUserNum, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                StringText('명 참여중 / 최대 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                IntText(test2.userLimit, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                StringText(' 명까지', 14, 'PretendardRegular', const Color(0xff5E5F68)),
               ],
             ), //참가 인원
 
@@ -301,7 +299,7 @@ class _ListDetailState extends State<ListDetail> {
                 Row(
                   children: [
                     //호스트 사진
-                    StringText(test1.hostName, 12, 'PretendardRegular', 0xff000000),
+                    StringText(test2.hostName, 12, 'PretendardRegular', Colors.black),
                   ],
                 ),
                 Row(
@@ -309,7 +307,7 @@ class _ListDetailState extends State<ListDetail> {
                     Image.asset('assets/images/List_Icon/List_icon_host.png',
                         width: 24, height: 24),
                     const SizedBox(width: 4,),
-                    StringText('호스트', 12, 'PretendardRegular', 0xffB78C00),
+                    StringText('호스트', 12, 'PretendardRegular', const Color(0xffB78C00)),
                   ],
                 )
               ],
@@ -330,7 +328,7 @@ class _ListDetailState extends State<ListDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(width: 24,),
-                StringText('댓글', 12, 'PretendardBold', 0xffAEAFB3),
+                StringText('댓글', 12, 'PretendardBold', const Color(0xffAEAFB3)),
               ],
             ), //댓글
 
@@ -354,14 +352,14 @@ class _ListDetailState extends State<ListDetail> {
                       ),
                       child: Row(
                         children: [
-                          StringText('전체 댓글 보기', 14, 'PretendardBold', 0xffA8A8B2),
+                          StringText('전체 댓글 보기', 14, 'PretendardBold', const Color(0xffA8A8B2)),
                         ],
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
+            ), //전체 댓글 보기 버튼
 
             const SizedBox(height: 28,),
           ]
@@ -387,8 +385,8 @@ class Complete extends StatelessWidget {
             color: const Color(0xffD0D1D8),
             borderRadius: BorderRadius.circular(30),
           ),
-          child: const Center(
-            child: StringText('완료', 9, 'PretendardBold', 0xffFFFFFF),
+          child: Center(
+            child: StringText('완료', 9, 'PretendardBold', Colors.white),
           ),
         );
       }
@@ -399,81 +397,21 @@ class Complete extends StatelessWidget {
   }
 } //모집 완료 여부
 
-class Age extends StatelessWidget {
-  final bool age;
-
-  const Age(this.age, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if(age)
-    {
-      return Container(
+Widget Age(bool age) {
+  if(age)
+  {
+    return Container(
         child: Row(
           children: [
-            IntText(test1.hostAge - 5, 14, 'PretendardRegular', 0xff5E5F68),
-            const StringText(' ~ ', 14, 'PretendardRegular', 0xff5E5F68),
-            IntText(test1.hostAge + 5, 14, 'PretendardRegular', 0xff5E5F68),
+            IntText(test2.hostAge - 5, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+            StringText(' ~ ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
+            IntText(test2.hostAge + 5, 14, 'PretendardRegular', const Color(0xff5E5F68)),
           ],
         )
-      );
-    }
-    else
-    {
-      return const StringText('연령 제한 없음', 14, 'PretendardRegular', 0xff5E5F68);
-    }
-  }
-} //연령 제한 여부
-
-class StringText extends StatelessWidget {
-  final String string;
-  final double size;
-  final String font;
-  final int color;
-
-  const StringText(this.string, this.size, this.font, this.color, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(string,
-      style: TextStyle(
-        color: Color(color),
-        fontSize: size,
-        fontFamily: font,
-      ),
     );
   }
-} //문자열 출력
-
-class IntText extends StatelessWidget {
-  final int num;
-  final double size;
-  final String font;
-  final int color;
-
-  const IntText(this.num, this.size, this.font, this.color, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if(num == 0)
-      {
-        return Text('00',
-          style: TextStyle(
-            color: Color(color),
-            fontSize: size,
-            fontFamily: font,
-          ),
-        );
-      }
-    else {
-      return Text('$num',
-        style: TextStyle(
-          color: Color(color),
-          fontSize: size,
-          fontFamily: font,
-        ),
-      );
-    }
-
+  else
+  {
+    return StringText('연령 제한 없음', 14, 'PretendardRegular', const Color(0xff5E5F68));
   }
-} //정수 출력
+}//연령 제한 여부

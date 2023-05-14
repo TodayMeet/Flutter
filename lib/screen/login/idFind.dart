@@ -210,7 +210,7 @@ class _idFindState extends State<idFind> {
                   ),
                   child: Text(
                     '확인',
-                    // '$minutes:${seconds.toString().padLeft(2, '0')}'
+
                     style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,

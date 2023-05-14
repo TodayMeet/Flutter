@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Phone_ij.dart';
+import 'package:front/screen/mainMap/mainPageMap.dart';
+
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -100,8 +102,9 @@ class _loginState extends State<login> {
                       ),
                     ),
                     onPressed: () {
-                      //if(맞으면) => 메인페이지로 이동
-                      //비밀번호가 다르면 => _login_fail_incorrect(context),
+
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageMap()),);
                     },
                     child: Text(
                       '로그인',

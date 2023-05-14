@@ -13,10 +13,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:front/model/TextPrint.dart';
+import '../setting/setFilter.dart';
+import '../setting/setlocation.dart';
 import 'mainListView.dart';
 import 'package:front/model/mainList/Advertisement.dart';
 import 'package:front/data/meetList.dart';
 import 'package:front/model/bottomBar.dart';
+import 'package:front/screen/mainMap/mainPageMap.dart';
+
+String dong = "용산동";
 
 //List 클래스 더미 객체
 meetList test0 = meetList('호스트0', 25, 10, 0, '게임', '대구광역시 북구 90', '산격동', 2023, 6, 30, 17, 00, true, 8, 20000, '내가 이 과목 왜했지', 'ㄹㅇ 인생 최대 실수\n과거의 나야 그만둬\n지금 학점이 문제가 아닙니다', true, 0, 0, 1);
@@ -37,12 +42,30 @@ class _MainListBoardState extends State<MainListBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('오늘의 건수',
-            style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
+        leadingWidth: 150,
+        leading: TextButton.icon(
+            onPressed: (){
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => LocationPage()));
+            },
+            icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+            label: Text(dong,
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'PretendardBold'),
+            )),
+        automaticallyImplyLeading: false,
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black87),
+        title: const Text("오늘의 건수",
+          style: TextStyle(
+              fontFamily: 'PretendardBold',
+              color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+      ),
+      bottomNavigationBar: const BottomAppBar(
+          child: BottomBar()
       ),
       body: Padding(
         padding: const EdgeInsets.all(24), //컨테이너 외부 공백 조절
@@ -61,6 +84,55 @@ class _MainListBoardState extends State<MainListBoard> {
             mainListView.list(test3),
           ],
         ),
+      ),
+      floatingActionButton: Wrap(
+        direction: Axis.vertical,
+        children: <Widget> [
+          Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x1A000000),
+                  blurRadius: 20,
+                  offset: Offset(0, 8),
+                ),
+              ],
+            ),
+            margin: const EdgeInsets.all(10.0),
+            child: FloatingActionButton(
+              heroTag: "필터화면 이동",
+              backgroundColor: const Color(0xFF4874EA),
+              onPressed: (){
+                Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context) => Filter()));
+              },
+              child: const Icon(Icons.menu, color: Color(0xFFFFFFFF)),
+            ),
+          ), //필터 화면 이동 아이콘
+          Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x1A000000),
+                  blurRadius: 20,
+                  offset: Offset(0, 8),
+                ),
+              ],
+            ),
+            margin: const EdgeInsets.all(10.0),
+            child: FloatingActionButton(
+              heroTag: "지도화면 이동",
+              backgroundColor: const Color(0xFFFFFFFF),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+              child: const Icon(Icons.map, color: Color(0xFF4874EA)),
+            ),
+          ), //지도 화면 이동 아이콘
+        ],
       ),
     );
   }

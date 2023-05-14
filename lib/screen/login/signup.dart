@@ -1,3 +1,11 @@
+//진입화면
+//
+// 남재혁
+// 최종수정일 2023.05.14
+//추후 작업예정사항
+// 이미지 수정 및 로고 수정
+
+
 import 'package:flutter/material.dart';
 import 'accountsetting.dart';
 

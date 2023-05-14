@@ -53,7 +53,7 @@ class _loginState extends State<login> {
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: '임시아이디 ghwmfap1234@naver.com',
+                    labelText: '임시아이디 abcd@gmail.com',
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -130,7 +130,7 @@ class _loginState extends State<login> {
                       } else if (_text1 == '') {
                         _login_fail_pwnone(context);
                       } else if (_text1 != 'asdf12345' ||
-                          _text != 'ghwmfap1234@naver.com') {
+                          _text != 'abcd@gmail.com') {
                         _login_fail_incorrect(context);
                       } else {
                         Navigator.pop(context);

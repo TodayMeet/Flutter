@@ -1,3 +1,12 @@
+// 위치 설정 페이지
+
+// 최종 수정일 : 2023.5.14
+// 작업자 : 김혁
+
+// 추가 작업 예정 사항
+// 적용 버튼 입력 시 서버에서 데이터 받아오기
+// 리스트 박스 선택 시 메인 페이지에게 위,경도 값 주기
+
 import 'package:flutter/material.dart';
 
 class LocationPage extends StatefulWidget {
@@ -84,6 +93,7 @@ class _LocationState extends State<LocationPage> {
                       TextButton(
                         onPressed: () {
                           print(addressList[index]);
+                          Navigator.pop(context);
                         },
                           child: Container(
                             alignment: Alignment.centerLeft,

@@ -1,3 +1,11 @@
+// 메인 페이지 하단 바
+
+// 최종 수정일 : 2023.5.8
+// 작업자 : 김혁
+
+// 추가 작업 예정 사항
+// 페이지 생성 되면 각 페이지로 하단바 연결
+
 import 'package:flutter/material.dart';
 import 'package:front/screen/setting/registerMeeting.dart';
 

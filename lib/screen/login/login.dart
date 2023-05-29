@@ -10,6 +10,7 @@ import 'package:front/screen/login/pwFind.dart';
 import 'Phone_ij.dart';
 import 'package:front/screen/mainMap/mainPageMap.dart';
 import 'idFind.dart';
+import 'pwFind.dart';
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -22,108 +23,131 @@ class _loginState extends State<login> {
   String _text = '';
   String _text1 = '';
 
-
-    // 비밀번호 찾기 버튼을 눌렀을 때 실행할 코드 작성
-
+  // 비밀번호 찾기 버튼을 눌렀을 때 실행할 코드 작성
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 20,),
-              Image.asset(
-                "assets/images/LoginImage/logoimage.png",
-                width: 180,
-                height: 180,
-                fit: BoxFit.cover,
+              SizedBox(
+                height: 125.50,
               ),
-              Image.asset("assets/images/LoginImage/titleimage.png"),
-              SizedBox(height: 10.0),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 8.0, horizontal: 10.0),
-                child: TextField(
-                  autofocus: true,
-                  onChanged: (value) {
-                    setState(() {
-                      _text = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: '임시아이디 abcd@gmail.com',
-                    border: OutlineInputBorder(),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Image.asset(
+                  "assets/images/LoginImage/logoimage.png",
+                  width: 100,
+                  height: 56,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Image.asset(
+                  "assets/images/LoginImage/titleimage.png",
+                  width: 121,
+                  height: 26.54,
+                ),
+              ),
+              SizedBox(height: 115),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: SizedBox(
+                  height: 48.0,
+                  child: TextField(
+                    autofocus: true,
+                    onChanged: (value) {
+                      setState(() {
+                        _text = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: '임시아이디 abcd@gmail.com',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      filled: true,
+                      fillColor: Color(0xFFF5F6FA),
+                    ),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 8.0, horizontal: 10.0),
-                child: TextField(
-                  obscureText: true,
-                  autofocus: true,
-                  onChanged: (value) {
-                    setState(() {
-                      _text1 = value;
-                    });
-                  },
-                  decoration: InputDecoration(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0),
+                child: SizedBox(
+                  height: 48.0,
+                  child: TextField(
+                    obscureText: true,
+                    autofocus: true,
+                    onChanged: (value) {
+                      setState(() {
+                        _text1 = value;
+                      });
+                    },
+                    decoration: InputDecoration(
                       labelText: '임시비밀번호 asdf12345',
-                      border: OutlineInputBorder()),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      filled: true,
+                      fillColor: Color(0xFFF5F6FA),
+                    ),
+                  ),
                 ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => idFind()),
+                        MaterialPageRoute(builder: (context) => idFind()),
                       );
                     },
                     child: Text(
                       '아이디 찾기',
                       style: TextStyle(
-                        color: Colors.black,
+                        fontSize: 12.0,
+                        color: Color(0xFF71727A),
                       ),
                     ),
                   ),
-                  Text("|"),
+                  Text(
+                    "|",
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      color: Color(0xFF71727A),
+                    ),
+                  ),
                   TextButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => pwFind()),
+                        MaterialPageRoute(builder: (context) => pwFind()),
                       );
                     },
                     child: Text(
                       '비밀번호 찾기',
                       style: TextStyle(
-                        color: Colors.black,
+                        fontSize: 12.0,
+                        color: Color(0xFF71727A),
                       ),
                     ),
                   ),
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
-                      minimumSize: MaterialStateProperty.all<Size>(
-                          Size(327, 56)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
+                padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 6.0),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 56.0,
+                  child: ElevatedButton(
                     onPressed: () {
                       if (_text == '') {
                         _login_fail_idnone(context);
@@ -143,14 +167,30 @@ class _loginState extends State<login> {
                     },
                     child: Text(
                       '로그인',
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.white,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      onPrimary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                    )),
+                    ),
+                  ),
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 18.0, horizontal: 24.0),
+                child: Divider(
+                  height: 1.0, // 선의 높이
+                  color: Colors.grey.withOpacity(0.5), // 희미한 선의 색상
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -158,15 +198,19 @@ class _loginState extends State<login> {
                       MaterialPageRoute(builder: (context) => MainPageMap()),
                     );
                   },
-                  child: Image.asset(
-                    'assets/images/LoginImage/kakao_login_large_wide.png',
-                    width: 327,
-                    height: 56,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 1.0),
+                    child: Image.asset(
+                      'assets/images/LoginImage/kakao_login_large_wide.png',
+                      width: MediaQuery.of(context).size.width,
+                      height: 56,
+                    ),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
                 child: GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -181,7 +225,8 @@ class _loginState extends State<login> {
                     )),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
                 child: GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -195,20 +240,23 @@ class _loginState extends State<login> {
                       height: 56,
                     )),
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Phone_ij(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 24.0),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Phone_ij(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    '회원가입',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF71727A),
                     ),
-                  );
-                },
-                child: Text(
-                  '회원가입',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
                   ),
                 ),
               ),
@@ -230,8 +278,6 @@ void _login_fail_idnone(BuildContext context) {
           isDefaultAction: true,
           onPressed: () {
             Navigator.pop(context);
-
-
           },
           child: const Text('확인'),
         ),
@@ -300,6 +346,7 @@ void _backto_login(BuildContext context) {
     ),
   );
 }
+
 void _login_fail_alrephone(BuildContext context) {
   showCupertinoModalPopup<void>(
     context: context,

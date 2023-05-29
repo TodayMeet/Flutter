@@ -9,6 +9,8 @@
 import 'package:flutter/material.dart';
 import 'package:front/screen/setting/registerMeeting.dart';
 
+import '../screen/profile/profileMain.dart';
+
 class BottomBar extends StatefulWidget {
   const BottomBar({Key? key}) : super(key: key);
 
@@ -22,16 +24,32 @@ class _BottomBarState extends State<BottomBar> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_first.png"),onPressed: () {},),
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_second.png"),onPressed: () {},),
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_center.png"),onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(
-                  builder: (context) => RegisterMeeting()));
+        IconButton(
+          icon: Image.asset("assets/images/Bottombar/Bottombar_first.png"),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Image.asset("assets/images/Bottombar/Bottombar_second.png"),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Image.asset("assets/images/Bottombar/Bottombar_center.png"),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => RegisterMeeting()));
           },
         ),
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_third.png"),onPressed: () {},),
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_fourth.png"),onPressed: () {},),
+        IconButton(
+          icon: Image.asset("assets/images/Bottombar/Bottombar_third.png"),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Image.asset("assets/images/Bottombar/Bottombar_fourth.png"),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => profileMain()));
+          },
+        ),
       ],
     );
   }

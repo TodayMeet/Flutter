@@ -40,8 +40,18 @@ class _Start extends State<Start> {
           height: 100,
           fit: BoxFit.cover,
         ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 127.0),
+          child: Image.asset(
+            'assets/images/LoginImage/titleimage.png',
+            fit: BoxFit.contain,
+          ),
+        ),
         Spacer(),
-        Text("bandeuthan")
+        Text("ⓒbandeuthan"),
+        SizedBox(
+          height: 52,
+        ),
       ])),
     );
   }

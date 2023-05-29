@@ -43,7 +43,7 @@ class _MainListBoardState extends ConsumerState<MainListBoard> {
             onPressed: (){
               Navigator.push(context,
                   MaterialPageRoute(
-                      builder: (context) => const LocationPage()));
+                      builder: (context) => LocationPage()));
             },
             icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
             label: Text(dong,

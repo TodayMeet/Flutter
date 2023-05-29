@@ -1,12 +1,13 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:flutter/material.dart';
-import 'screen/setting/setlocation.dart';
 import 'screen/setting/setFilter.dart';
 import 'screen/mainMap/mainPageMap.dart';
 import 'package:front/screen/mainList/mainListBoard.dart';
 import 'package:front/screen/login/start.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -59,14 +60,14 @@ class MainPage extends StatelessWidget {
                   },
                 ),
                 ElevatedButton(
-                  child: Text('메인페이지-지도'),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(
-                            builder: (context) => MainPageMap()));
-                  }
+                    child: Text('메인페이지-지도'),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) => MainPageMap()));
+                    }
                 ),
-                ElevatedButton(    
+                ElevatedButton(
                   child: Text('리스트'),
                   onPressed: (){
                     Navigator.push(context,
@@ -79,6 +80,6 @@ class MainPage extends StatelessWidget {
         ),
       ),
     );
+
   }
 }
-

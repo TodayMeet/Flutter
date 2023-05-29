@@ -1,6 +1,6 @@
 // 메인 지도 페이지
 
-// 최종 수정일 : 2023.5.14
+// 최종 수정일 : 2023.5.19
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
@@ -13,63 +13,54 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:front/screen/setting/setlocation.dart';
-import 'package:front/model/setting/location.dart';
-import 'package:front/model/bottomBar.dart';
+import '../setting/setlocation.dart';
 import '../mainList/mainListBoard.dart';
+import '../../model/setting/location.dart';
+import '../../model/bottomBar.dart';
+import '../../model/setting/mapClass.dart';
+import '../../data/apiKey.dart';
 
-const String kakaoMapKey = '61ebde2674fd1c5802aa0e27d589baba';
-const String KakaoRestAPIKey = "639525c51e8f0aa63a256f74ddfe80ce";
 
-class MainPageMap extends StatefulWidget {
-  const MainPageMap({Key? key}) : super(key: key);
+final dongProvider = StateProvider<String>((ref)=>"용산동");
+final markerProvider = StateProvider<List<Markers>?>((ref) => null);
+final mapControllerProvider = StateProvider<WebViewController?>((ref)=>null);
 
-  @override
-  State<MainPageMap> createState() => _MainPageMapState();
-}
+class MainPageMap extends ConsumerWidget {
+  MainPageMap({super.key});
 
-class _MainPageMapState extends State<MainPageMap> {
-  double _lat = 33.450701;
-  double _lng = 126.570667;
-  String dong = "용산동";
-  late final WebViewController _mapController;
-  List<String> markerList = [];
-  List markersLatitude = [];
-  List markersLongitude = [];
-  int markerCounts = 0;
-  List<Map<String,double>> _markersLocation = [];
-
-  Future<List> getLocationData() async {
+  Future<List> getLocationData(WidgetRef ref) async {
+    // 현재 위치 데이터 받아오기
     Location location = Location();
     await location.getCurrentLocation();
 
     var userLat = location.latitude;
     var userLong = location.longitude;
+
+    // 동 위치 받아오기
     var kakaoGeoUrl = Uri.parse('https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=$userLong&y=$userLat');
     var kakaoGeo = await http.get(kakaoGeoUrl, headers: {"Authorization": "KakaoAK $KakaoRestAPIKey"});
     String addr = kakaoGeo.body;
     var addrData = jsonDecode(addr);
 
+    final String dongName = addrData['documents'][0]['region_3depth_name'];
+    ref.read(dongProvider.notifier).state = dongName;
+
+    // 핀 위치 정보 받아오기
+    List<Markers> markersInfo = [];
     for(var i = 0; i < 10; i++){
-      markerList.add("6.22 18:00 영화");
-      markersLatitude.add(userLat + 0.0004 * i);
-      markersLongitude.add(userLong + 0.0004 * i);
-      _markersLocation.add({'latitude' : markersLatitude[i], 'longitude' : markersLongitude[i]});
+      markersInfo.add(Markers(
+          time:'6.22 18:00', categoryName: '주류', meetNo: 1, personClose: 5,
+          location: LocationLatLng(latitude: 33.450701, longitude: 126.570667)));
     }
+    ref.read(markerProvider.notifier).state = markersInfo;
 
-    markerCounts = markerList.length;
-
-    String dongName = addrData['documents'][0]['region_3depth_name'];
-    setState(() {
-      dong = dongName;
-    });
-
-    return [location.latitude, location.longitude];
+    return [userLat, userLong];
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -81,7 +72,7 @@ class _MainPageMapState extends State<MainPageMap> {
                 builder: (context) => LocationPage()));
               },
             icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-            label: Text(dong,
+            label: Text(ref.watch(dongProvider),
             style: const TextStyle(
               color: Colors.black,
               fontFamily: 'PretendardBold'),
@@ -90,6 +81,7 @@ class _MainPageMapState extends State<MainPageMap> {
         centerTitle: true,
         title: const Text("오늘의 건수",
             style: TextStyle(
+              fontSize: 16,
               fontFamily: 'PretendardBold',
                 color: Colors.black),
         ),
@@ -97,7 +89,7 @@ class _MainPageMapState extends State<MainPageMap> {
       ),
       body: Center(
         child: FutureBuilder(       // 메인페이지 - 지도
-          future: getLocationData(),
+          future: getLocationData(ref),
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if (snapshot.hasData == false) {
               return const CircularProgressIndicator();
@@ -106,22 +98,20 @@ class _MainPageMapState extends State<MainPageMap> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text('Error: ${snapshot.error}',
-                  style: TextStyle(fontSize: 15),
+                  style: const TextStyle(fontSize: 15),
                 ),
               );
             }
             else {
               List loc = snapshot.data;
-              _lat = loc[0];
-              _lng = loc[1];
               return KakaoMapView(
                 width: size.width,
                 height: size.height * 0.9,
                 kakaoMapKey: kakaoMapKey,
-                lat: _lat,
-                lng: _lng,
+                lat: loc[0],
+                lng: loc[1],
                 mapController: (mapController){
-                  _mapController = mapController;
+                  ref.watch(mapControllerProvider.notifier).state = mapController;
                 },
                 cameraIdle: (message) async {
                   KakaoLatLng latLng = KakaoLatLng.fromJson(jsonDecode(message.message));
@@ -133,29 +123,31 @@ class _MainPageMapState extends State<MainPageMap> {
                   var addrData = jsonDecode(addr);
 
                   String dongName = addrData['documents'][0]['region_3depth_name'];
-                  setState(() {
-                    dong = dongName;
-                  });
+                  ref.read(dongProvider.notifier).state = dongName;
                 },
-                customOverlayStyle: '''<style>
-                  .customoverlay {position:relative;bottom:85px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;float:left;}
-                  .customoverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
-                  .customoverlay .title {display:block;text-align:center;background:#fff;margin-right:35px;padding:10px 15px;font-size:14px;font-weight:bold;}
-                  </style>''',
                 customOverlay: '''
-                var content = '<div class="customoverlay">' +
-                    '    <span class="title">${markerList[0]}</span>' +
-                    '</div>';
-
-                var position = new kakao.maps.LatLng($_lat, $_lng);
-
-                var customOverlay = new kakao.maps.CustomOverlay({
-                    map: map,
+                function addMarker(content, position){
+                  var marker = new kakao.maps.CustomOverlay({
                     position: position,
                     content: content,
                     yAnchor: 1
-                });
+                  });
+                  marker.setMap(map);
+                }
+                
+                for(var i = 0; i < 3; i++){
+                  var position = new kakao.maps.LatLng(${loc[0]}+0.001*i, ${loc[1]}+0.001*i);
+                  var content = '<div class="customoverlay">' +
+                    '    <span class="title">6.22 18:00 주류</span>' +
+                    '</div>';
+                  addMarker(content, position);
+                }
                 ''',
+                customOverlayStyle: '''<style>
+                  .customoverlay {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
+                  .customoverlay .title {text-align:center;color:#FFF;padding:10px 15px;font-size:12px;font-weight:400;}
+                  .customoverlay::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
+                  </style>''',
                 onTapMarker: (message){
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text(message.message)));
@@ -187,14 +179,13 @@ class _MainPageMapState extends State<MainPageMap> {
               heroTag: "현재 위치 불러오기",
               backgroundColor: const Color(0xFF4874EA),
               onPressed: () async {
-                List location = await getLocationData();
-                setState(() {
-                  _mapController.runJavascript(
-                      '''
-                      map.panTo(new kakao.maps.LatLng(${location[0]},${location[1]}));
-                      '''
-                  );
-                });
+                List location = await getLocationData(ref);
+                final webViewController = ref.watch(mapControllerProvider);
+                webViewController?.runJavascript(
+                    '''
+                    map.panTo(new kakao.maps.LatLng(${location[0]},${location[1]}));
+                    '''
+                );
               },
               child: const Icon(Icons.place, color: Colors.white),
             ),
@@ -217,7 +208,7 @@ class _MainPageMapState extends State<MainPageMap> {
               onPressed: (){
                 Navigator.push(context,
                   MaterialPageRoute(
-                    builder: (context) => MainListBoard()));
+                    builder: (context) => const MainListBoard()));
               },
               child: const Icon(Icons.list, color: Color(0xFF4874EA)),
             ),

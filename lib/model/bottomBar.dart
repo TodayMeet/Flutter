@@ -1,6 +1,6 @@
 // 메인 페이지 하단 바
 
-// 최종 수정일 : 2023.5.8
+// 최종 수정일 : 2023.5.28
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:front/screen/setting/registerMeeting.dart';
+import '../screen/search/searchMain.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({Key? key}) : super(key: key);
@@ -22,16 +23,21 @@ class _BottomBarState extends State<BottomBar> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_first.png"),onPressed: () {},),
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_second.png"),onPressed: () {},),
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_center.png"),onPressed: () {
+        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_first.png", scale: 4,),onPressed: () {},),
+        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_second.png", scale: 4),onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(
+                  builder: (context) => SearchMain()));
+          },
+        ),
+        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_center.png", scale: 4),onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(
                   builder: (context) => RegisterMeeting()));
           },
         ),
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_third.png"),onPressed: () {},),
-        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_fourth.png"),onPressed: () {},),
+        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_third.png", scale: 4),onPressed: () {},),
+        IconButton(icon: Image.asset("assets/images/Bottombar/Bottombar_fourth.png", scale: 4),onPressed: () {},),
       ],
     );
   }

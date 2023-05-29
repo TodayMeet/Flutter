@@ -42,7 +42,10 @@ mixin _$meetList {
 //모임 현재 정보
   bool get complete => throw _privateConstructorUsedError; //모집 완료 여부
   int get commentNum => throw _privateConstructorUsedError; //댓글 수
-  int get curUserNum => throw _privateConstructorUsedError;
+  int get curUserNum => throw _privateConstructorUsedError; //현재 모집된 인원 수
+//지도 위치
+  double get laditude => throw _privateConstructorUsedError; //위도
+  double get longitude => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $meetListCopyWith<meetList> get copyWith =>
@@ -75,7 +78,9 @@ abstract class $meetListCopyWith<$Res> {
       bool approval,
       bool complete,
       int commentNum,
-      int curUserNum});
+      int curUserNum,
+      double laditude,
+      double longitude});
 }
 
 /// @nodoc
@@ -112,6 +117,8 @@ class _$meetListCopyWithImpl<$Res, $Val extends meetList>
     Object? complete = null,
     Object? commentNum = null,
     Object? curUserNum = null,
+    Object? laditude = null,
+    Object? longitude = null,
   }) {
     return _then(_value.copyWith(
       userNo: null == userNo
@@ -198,6 +205,14 @@ class _$meetListCopyWithImpl<$Res, $Val extends meetList>
           ? _value.curUserNum
           : curUserNum // ignore: cast_nullable_to_non_nullable
               as int,
+      laditude: null == laditude
+          ? _value.laditude
+          : laditude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -230,7 +245,9 @@ abstract class _$$_meetListCopyWith<$Res> implements $meetListCopyWith<$Res> {
       bool approval,
       bool complete,
       int commentNum,
-      int curUserNum});
+      int curUserNum,
+      double laditude,
+      double longitude});
 }
 
 /// @nodoc
@@ -265,6 +282,8 @@ class __$$_meetListCopyWithImpl<$Res>
     Object? complete = null,
     Object? commentNum = null,
     Object? curUserNum = null,
+    Object? laditude = null,
+    Object? longitude = null,
   }) {
     return _then(_$_meetList(
       userNo: null == userNo
@@ -351,6 +370,14 @@ class __$$_meetListCopyWithImpl<$Res>
           ? _value.curUserNum
           : curUserNum // ignore: cast_nullable_to_non_nullable
               as int,
+      laditude: null == laditude
+          ? _value.laditude
+          : laditude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -379,7 +406,9 @@ class _$_meetList implements _meetList {
       required this.approval,
       required this.complete,
       required this.commentNum,
-      required this.curUserNum});
+      required this.curUserNum,
+      required this.laditude,
+      required this.longitude});
 
 //키 값
   @override
@@ -447,10 +476,17 @@ class _$_meetList implements _meetList {
 //댓글 수
   @override
   final int curUserNum;
+//현재 모집된 인원 수
+//지도 위치
+  @override
+  final double laditude;
+//위도
+  @override
+  final double longitude;
 
   @override
   String toString() {
-    return 'meetList(userNo: $userNo, meetNo: $meetNo, hostName: $hostName, hostAge: $hostAge, category: $category, location: $location, address: $address, year: $year, month: $month, date: $date, hour: $hour, minute: $minute, age: $age, userLimit: $userLimit, fee: $fee, title: $title, content: $content, approval: $approval, complete: $complete, commentNum: $commentNum, curUserNum: $curUserNum)';
+    return 'meetList(userNo: $userNo, meetNo: $meetNo, hostName: $hostName, hostAge: $hostAge, category: $category, location: $location, address: $address, year: $year, month: $month, date: $date, hour: $hour, minute: $minute, age: $age, userLimit: $userLimit, fee: $fee, title: $title, content: $content, approval: $approval, complete: $complete, commentNum: $commentNum, curUserNum: $curUserNum, laditude: $laditude, longitude: $longitude)';
   }
 
   @override
@@ -486,7 +522,11 @@ class _$_meetList implements _meetList {
             (identical(other.commentNum, commentNum) ||
                 other.commentNum == commentNum) &&
             (identical(other.curUserNum, curUserNum) ||
-                other.curUserNum == curUserNum));
+                other.curUserNum == curUserNum) &&
+            (identical(other.laditude, laditude) ||
+                other.laditude == laditude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude));
   }
 
   @override
@@ -512,7 +552,9 @@ class _$_meetList implements _meetList {
         approval,
         complete,
         commentNum,
-        curUserNum
+        curUserNum,
+        laditude,
+        longitude
       ]);
 
   @JsonKey(ignore: true)
@@ -544,7 +586,9 @@ abstract class _meetList implements meetList {
       required final bool approval,
       required final bool complete,
       required final int commentNum,
-      required final int curUserNum}) = _$_meetList;
+      required final int curUserNum,
+      required final double laditude,
+      required final double longitude}) = _$_meetList;
 
   @override //키 값
   int get userNo;
@@ -592,6 +636,11 @@ abstract class _meetList implements meetList {
   int get commentNum;
   @override //댓글 수
   int get curUserNum;
+  @override //현재 모집된 인원 수
+//지도 위치
+  double get laditude;
+  @override //위도
+  double get longitude;
   @override
   @JsonKey(ignore: true)
   _$$_meetListCopyWith<_$_meetList> get copyWith =>

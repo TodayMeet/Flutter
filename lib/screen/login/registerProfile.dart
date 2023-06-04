@@ -320,7 +320,7 @@ class _registerProfileState extends State<registerProfile> {
                       ).withAlpha(0xFF4874EA),
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                       child: Text(
-                        '회원가입',
+                        '저장',
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

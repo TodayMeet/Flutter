@@ -1,24 +1,15 @@
-// 계정 설정
-//
-// 남재혁
-// 최종수정일 2023.05.14
-//추후 작업예정사항
-// 화면 전체 수정
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:front/screen/login/Phone_ij.dart';
-import 'package:front/screen/login/registerProfile.dart';
+import 'package:front/screen/profile/profileMain.dart';
 
-import 'login.dart';
+class pwChange extends StatefulWidget {
+  const pwChange({Key? key}) : super(key: key);
 
-class accountsetting extends StatefulWidget {
   @override
-  _accountsettingState createState() => _accountsettingState();
+  State<pwChange> createState() => _pwChangeState();
 }
 
-class _accountsettingState extends State<accountsetting> {
+class _pwChangeState extends State<pwChange> {
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -34,32 +25,26 @@ class _accountsettingState extends State<accountsetting> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
+        elevation: 0.0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-            size: 25,
-          ),
-          onPressed: () {
-            _backto_Phoneij(context);
-
-          },
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
+        title: Text(
+          '비밀번호 변경',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        title: Text(
-          '계정설정',
-          style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black),
-        ),
+        actions: null,
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -67,10 +52,8 @@ class _accountsettingState extends State<accountsetting> {
             Padding(
               padding: EdgeInsets.only(left: 3.0),
               child: Text(
-                '아이디(이메일)',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17),
+                '현재 비밀번호',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
             ),
             SizedBox(height: 8.0),
@@ -84,11 +67,12 @@ class _accountsettingState extends State<accountsetting> {
                 child: TextField(
                   controller: _idController,
                   decoration: InputDecoration(
+
                     contentPadding: EdgeInsets.symmetric(
                       vertical: 16.0,
                       horizontal: 12.0,
                     ),
-                    hintText: '아이디를 입력하세요',
+                    hintText: '2자 이상 12자 이하 영문, 숫자 특수기호만 입력 가능',
                     hintStyle: TextStyle(
                       color: Colors.grey[400],
                       fontSize: 13,
@@ -100,21 +84,15 @@ class _accountsettingState extends State<accountsetting> {
             ),
             SizedBox(height: 8.0),
             Text(
-              '* 이메일 주소는 "@"와 "."을 최소 하나 이상 포함되어야합니다.',
-              style: TextStyle(color: Colors.red),
-            ),
-            Text(
-              '* 이미 가입된 이메일 주소입니다.',
+              '* 2자 이상 12자 이하 영문, 숫자 특수기호만 입력 가능',
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 24.0),
             Padding(
               padding: EdgeInsets.only(left: 3.0),
               child: Text(
-                '비밀번호',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17),
+                '새 비밀번호',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
             ),
             SizedBox(height: 8.0),
@@ -133,7 +111,7 @@ class _accountsettingState extends State<accountsetting> {
                       vertical: 16.0,
                       horizontal: 12.0,
                     ),
-                    hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                    hintText: '2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능',
                     hintStyle: TextStyle(
                       color: Colors.grey[400],
                       fontSize: 13,
@@ -143,7 +121,6 @@ class _accountsettingState extends State<accountsetting> {
                 ),
               ),
             ),
-
             Text(
               '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
               style: TextStyle(color: Colors.red),
@@ -152,10 +129,8 @@ class _accountsettingState extends State<accountsetting> {
             Padding(
               padding: EdgeInsets.only(left: 3.0),
               child: Text(
-                '비밀번호 확인',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17),
+                '새 비밀번호 확인',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
             ),
             SizedBox(height: 8.0),
@@ -174,7 +149,7 @@ class _accountsettingState extends State<accountsetting> {
                       vertical: 16.0,
                       horizontal: 12.0,
                     ),
-                    hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                    hintText: '2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능',
                     hintStyle: TextStyle(
                       color: Colors.grey[400],
                       fontSize: 13,
@@ -198,78 +173,41 @@ class _accountsettingState extends State<accountsetting> {
             ),
             SizedBox(height: 32.0),
             Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(),
-              child: Center(
-                child:Container(
-                  width: MediaQuery.of(context).size.width,
+            Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
                 height: 56,
                 child: CupertinoButton(
                   onPressed: () {
                     // 입력시간 초과 -> _login_fail_timeover
                     // 성공했으면 -> _login_success_phoneij
                     //인증번호 틀리면 -> _login_fail_incorrectij
+                    Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => registerProfile()),
+                      MaterialPageRoute(builder: (context) => profileMain()),
                     );
-                    },
-
+                  },
+                  minSize: 0,
                   padding: EdgeInsets.symmetric(),
                   color: CupertinoDynamicColor.resolve(
                     CupertinoColors.systemBlue,
                     context,
                   ).withAlpha(0xFF4874EA),
-
                   borderRadius: BorderRadius.all(Radius.circular(12.0)),
-
                   child: Text(
-                    '다음',
+                    '저장',
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
                 ),
-              ),),
+              ),
             ),
-            SizedBox(height: 24,)
-
           ],
         ),
       ),
     );
   }
-}
-
-void _backto_Phoneij(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('뒤로가기를 하실 경우 입력된 내용이 삭제됩니다.\n 이전화면으로 이동 하시겠습니까?'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Phone_ij()),
-            );
-          },
-          child: const Text('확인'),
-        ),
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('취소'),
-        ),
-      ],
-    ),
-  );
 }

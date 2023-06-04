@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:front/screen/login/favorite.dart';
 import 'package:front/screen/login/registerProfile.dart';
 import 'package:front/screen/profile/blockManage.dart';
 import 'package:front/screen/profile/hostEvent.dart';
@@ -337,7 +338,12 @@ class _profileMainState extends State<profileMain> {
                     ),
                     Spacer(), // 텍스트와 버튼 사이의 간격 조절
                     IconButton(
-                        onPressed: () {}, icon: Icon(Icons.arrow_forward_ios)),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => favorite()));
+                        }, icon: Icon(Icons.arrow_forward_ios)),
                   ],
                 ),
               ),

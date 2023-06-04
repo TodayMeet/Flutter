@@ -1,6 +1,6 @@
 // 건수 상세 정보 출력 페이지
 
-// 최종 수정: 2023.5.14
+// 최종 수정: 2023.5.15
 // 작업자: 정해수
 
 //추가 작업 예정 사항:
@@ -10,33 +10,41 @@
 // 하단 바 고정
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front/data/meetList.dart';
 import 'package:front/model/mainList/CategoryContainer.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/model/mainList/Invitation.dart';
 
-//List 클래스 더미 객체
-meetList test = meetList('호스트1', 25, 1, 1, '주류', '대구광역시 북구 90', '산격동', 2023, 5, 16, 19, 00, true, 8, 20000, '오늘 같이 놀 사람!', '오늘 같이 한잔 하실 분 구해요~!', true, 0, 0, 1);
+final buttonColorProvider = StateProvider((ref) => 0xffFFFFFF);
+final buttonTextProvider = StateProvider((ref) => '참가하기');
 
-class ListDetail extends StatefulWidget {
+class ListDetail extends ConsumerStatefulWidget {
   const ListDetail({Key? key}) : super(key: key);
 
   @override
-  State<ListDetail> createState() => _ListDetailState();
+  _ListDetailState createState() => _ListDetailState();
 }
 
-class _ListDetailState extends State<ListDetail> {
+class _ListDetailState extends ConsumerState<ListDetail> {
 
   @override
   Widget build(BuildContext context) {
+    int curUserNum = ref.watch(curUserNumProvider);
+    int buttonColor = ref.watch(buttonColorProvider);
+    String buttonText = ref.watch(buttonTextProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('오늘의 건수',
-            style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 1,
+        leadingWidth: 150,
+        automaticallyImplyLeading: false,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black87),
+        title: const Text("오늘의 건수",
+          style: TextStyle(
+              fontFamily: 'PretendardBold',
+              color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
       ),
       body: ListView( // 메인 리스트 스크롤 뷰
         children: <Widget>[
@@ -51,15 +59,19 @@ class _ListDetailState extends State<ListDetail> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CategoryContainer(test.category,),
-                    const SizedBox(width: 6,),
-                    Complete(test.complete),
+                    Row(
+                      children: [
+                        categoryContainer(test0.category,),
+                        const SizedBox(width: 6,),
+                        //Complete(complete),
+                      ],
+                    ),
                     Row(
                       children: [
                         StringText('모집 마감 시간: ', 12, 'PretendardRegular', Colors.black),
-                        IntText(test.hour, 12, 'PretendardRegular', Colors.black),
+                        IntText(test0.hour, 12, 'PretendardRegular', Colors.black),
                         StringText(':', 12, 'PretendardRegular', Colors.black),
-                        TimeText(test.minute, 12, 'PretendardRegular', Colors.black),
+                        TimeText(test0.minute, 12, 'PretendardRegular', Colors.black),
                       ],
                     )
                   ],
@@ -68,7 +80,7 @@ class _ListDetailState extends State<ListDetail> {
                 const SizedBox(height: 12,),
                 Row(
                   children: [
-                    StringText(test.title, 24, 'PretendardBold', const Color(0xff2F3036))
+                    StringText(test0.title, 24, 'PretendardBold', const Color(0xff2F3036))
                   ],
                 ), //모임 제목
 
@@ -78,49 +90,79 @@ class _ListDetailState extends State<ListDetail> {
                     Image.asset('assets/images/User_Picture/User_pic_null.png',
                         width: 26, height: 26),  //사용자 사진
                     const SizedBox(width: 10,),
-                    StringText(test.hostName, 12, 'PretendardRegular', Colors.black),
+                    StringText(test0.hostName, 12, 'PretendardRegular', Colors.black),
                   ],
                 ), //호스트 사진, 이름
 
                 const SizedBox(height: 10,),
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ButtonTheme(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context)
-                              ..removeCurrentSnackBar()
-                              ..showSnackBar(SnackBar(content: Text('미구현 기능입니다 (참가하기)')));
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.fromLTRB(47, 15, 47, 15),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 - 30,
+                        height: 46,
+                        child: ButtonTheme(
+                          child: OutlinedButton.icon(
+                            icon: const Icon(
+                                Icons.person_add_rounded,
+                                color: Color(0xff5E5F68)
+                            ),
+                            onPressed: curUserNum >= test0.userLimit ? () {
+                              if(ref.read(buttonTextProvider.notifier).state == '참가하기'){
+                                ref.read(buttonColorProvider.notifier).state = 0xffC5C5C5;
+                                ref.read(buttonTextProvider.notifier).state = '모집이 마감되었습니다';
+                                null;
+                              } else {
+                                ref.read(curUserNumProvider.notifier).state--;
+                                ref.read(buttonTextProvider.notifier).state = '참가하기';
+                                ref.read(buttonColorProvider.notifier).state = 0xffFFFFFF;
+                              }
+                            } : () {
+                              //서버에 인원수 체크
+                              if(ref.read(buttonTextProvider.notifier).state == '참가하기') {
+                                ref.read(curUserNumProvider.notifier).state++;
+                                showToast('참가했습니다');
+                                ref.read(buttonTextProvider.notifier).state = '참가 취소하기';
+                                ref.read(buttonColorProvider.notifier).state = 0xffC5C5C5;
+                              } else {
+                                ref.read(curUserNumProvider.notifier).state--;
+                                ref.read(buttonTextProvider.notifier).state = '참가하기';
+                                ref.read(buttonColorProvider.notifier).state = 0xffFFFFFF;
+                              }
+                            },
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Color(buttonColor),
+                            ),
+                            label: StringText(buttonText, 14, 'PretendardBold', const Color(0xff5E5F68)),
+                            ),
                           ),
-                          child: Row(
-                            children: [
-                              Image.asset('assets/images/List_Icon/List_icon_participate.png',
-                                  width: 20, height: 20),
-                              const SizedBox(width: 7.75,),
-                              StringText('참가하기', 14, 'PretendardBold', const Color(0xff5E5F68)),
-                            ],
-                          ),
-                        ),
                       ),
-                      ButtonTheme(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            Invitaiton(context, test);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.fromLTRB(47, 15, 47, 15),
-                          ),
-                          child: Row(
-                            children: [
-                              Image.asset('assets/images/List_Icon/List_icon_invite.png',
-                                  width: 20, height: 20),
-                              const SizedBox(width: 7.75,),
-                              StringText('초대하기', 14, 'PretendardBold', const Color(0xff5E5F68)),
-                            ],
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 - 30,
+                        height: 46,
+                        child: ButtonTheme(
+                          child: OutlinedButton.icon(
+                            icon: const Icon(
+                                Icons.mail,
+                                color: Color(0xff5E5F68)
+                            ),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(30)
+                                    ),
+                                  ),
+                                  builder: (BuildContext context) {
+                                    return const Invitaiton();
+                                  }
+                              );
+                            },
+                            style: OutlinedButton.styleFrom(
+                              //padding: const EdgeInsets.fromLTRB(47, 15, 47, 15),
+                            ),
+                            label: StringText('초대하기', 14, 'PretendardBold', const Color(0xff5E5F68)),
                           ),
                         ),
                       ),
@@ -131,10 +173,13 @@ class _ListDetailState extends State<ListDetail> {
                 ButtonTheme(
                   child: OutlinedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context)
-                        ..removeCurrentSnackBar()
-                        ..showSnackBar(SnackBar(content: Text('미구현 기능입니다 (채팅방 입장)')));
+                      // if(ref.read(CompleteProvider.notifier).state) {
+                      //   ref.read(CompleteProvider.notifier).state = false;
+                      // } else {
+                      //   ref.read(CompleteProvider.notifier).state = true;
+                      // }
                     },
+
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(132, 15, 132, 15),
                       backgroundColor: const Color(0xff4874EA),
@@ -159,7 +204,7 @@ class _ListDetailState extends State<ListDetail> {
                   children: [
                     StringText('내용', 12, 'PretendardBold', Colors.black),
                     const SizedBox(width: 50,),
-                    StringText(test.content, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    StringText(test0.content, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                   ],
                 ), //모임 내용
 
@@ -172,15 +217,15 @@ class _ListDetailState extends State<ListDetail> {
                   children: [
                     StringText('시간', 12, 'PretendardBold', Colors.black),
                     const SizedBox(width: 50,),
-                    IntText(test.year, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    IntText(test0.year, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                     StringText('년 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    IntText(test.month, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    IntText(test0.month, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                     StringText('월 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    IntText(test.date, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    IntText(test0.date, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                     StringText('일 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    IntText(test.hour, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    IntText(test0.hour, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                     StringText(':', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    TimeText(test.minute, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    TimeText(test0.minute, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                   ],
                 ), //모임 날짜 및 시각
 
@@ -193,7 +238,7 @@ class _ListDetailState extends State<ListDetail> {
                   children: [
                     StringText('장소', 12, 'PretendardBold', Colors.black),
                     const SizedBox(width: 50,),
-                    StringText(test.location, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    StringText(test0.location, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                   ],
                 ), //모임 장소
 
@@ -202,7 +247,7 @@ class _ListDetailState extends State<ListDetail> {
                   child: Container(
                     height: 300,
                     color: const Color(0xffF0F1F5),
-                    child: Center(child: Text('(지도 출력)')),
+                    child: const Center(child: Text('(지도 출력)')),
                   ),
                 ), //지도 출력
 
@@ -215,7 +260,7 @@ class _ListDetailState extends State<ListDetail> {
                   children: [
                     StringText('참여 연령', 12, 'PretendardBold', Colors.black),
                     const SizedBox(width: 35,),
-                    Age(test.age),
+                    Age(test0.age, test0.hostAge),
                   ],
                 ), //참여 연령 제한
 
@@ -228,7 +273,7 @@ class _ListDetailState extends State<ListDetail> {
                   children: [
                     StringText('참가비', 12, 'PretendardBold', Colors.black),
                     const SizedBox(width: 50,),
-                    IntText(test.fee, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    IntText(test0.fee, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                     StringText('원', 14, 'PretendardRegular', const Color(0xff5E5F68)),
                   ],
                 ), //참가비
@@ -242,9 +287,9 @@ class _ListDetailState extends State<ListDetail> {
                   children: [
                     StringText('참가 인원', 12, 'PretendardBold', Colors.black),
                     const SizedBox(width: 35,),
-                    IntText(test.curUserNum, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    IntText(curUserNum, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                     StringText('명 참여중 / 최대 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    IntText(test.userLimit, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    IntText(test0.userLimit, 14, 'PretendardRegular', const Color(0xff5E5F68)),
                     StringText(' 명까지', 14, 'PretendardRegular', const Color(0xff5E5F68)),
                   ],
                 ), //참가 인원
@@ -256,7 +301,7 @@ class _ListDetailState extends State<ListDetail> {
                     Row(
                       children: [
                         //호스트 사진
-                        StringText(test.hostName, 12, 'PretendardRegular', Colors.black),
+                        StringText(test0.hostName, 12, 'PretendardRegular', Colors.black),
                       ],
                     ),
                     Row(
@@ -277,7 +322,7 @@ class _ListDetailState extends State<ListDetail> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(width: 24,),
+                    const SizedBox(width: 24,),
                     StringText('댓글', 12, 'PretendardBold', const Color(0xffAEAFB3)),
                   ],
                 ), //댓글
@@ -293,7 +338,7 @@ class _ListDetailState extends State<ListDetail> {
                           onPressed: () {
                             ScaffoldMessenger.of(context)
                               ..removeCurrentSnackBar()
-                              ..showSnackBar(SnackBar(content: Text('미구현 기능입니다 (전체 댓글 보기)')));
+                              ..showSnackBar(const SnackBar(content: Text('미구현 기능입니다 (전체 댓글 보기)')));
                           },
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(138, 15, 138, 15),
@@ -321,45 +366,36 @@ class _ListDetailState extends State<ListDetail> {
   }
 }
 
-class Complete extends StatelessWidget {
-  final int complete;
-
-  const Complete(this.complete, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if(complete != 0)
-      {
-        return Container(
-          width: 33,
-          height: 20,
-          decoration: BoxDecoration(
-            color: const Color(0xffD0D1D8),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Center(
-            child: StringText('완료', 9, 'PretendardBold', Colors.white),
-          ),
-        );
-      }
-    else
-      {
-        return const SizedBox(width: 33,);
-      }
+Widget Complete(bool complete) {
+  if(complete)
+  {
+    return Container(
+      width: 33,
+      height: 20,
+      decoration: BoxDecoration(
+        color: const Color(0xffD0D1D8),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Center(
+        child: StringText('완료', 9, 'PretendardBold', Colors.white),
+      ),
+    );
+  }
+  else
+  {
+    return const SizedBox(width: 33,);
   }
 } //모집 완료 여부
 
-Widget Age(bool age) {
-  if(age)
+Widget Age(bool ageSet, int age) {
+  if(ageSet)
   {
-    return Container(
-        child: Row(
-          children: [
-            IntText(test.hostAge - 5, 14, 'PretendardRegular', const Color(0xff5E5F68)),
-            StringText(' ~ ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-            IntText(test.hostAge + 5, 14, 'PretendardRegular', const Color(0xff5E5F68)),
-          ],
-        )
+    return Row(
+      children: [
+        IntText(age - 5, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+        StringText(' ~ ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
+        IntText(age + 5, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+      ],
     );
   }
   else

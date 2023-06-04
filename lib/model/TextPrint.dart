@@ -15,7 +15,7 @@ Widget StringText(String string, double size, String font, Color color) {
   );
 } //문자열 출력
 
-Widget IntText(int num, double size, String font, Color color) {
+Widget IntText(num, double size, String font, Color color) {
   return Text('$num',
     style: TextStyle(
       color: color,

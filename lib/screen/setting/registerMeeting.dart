@@ -14,9 +14,10 @@ import '../registerList/meetLocation.dart';
 class MeetingInfo{
   MeetingInfo();
 
-  late String categoryName;
+  late int categoryNo;
   late String address;
-  late String location;
+  late String lat;
+  late String lon;
   late String time;
   late bool age;
   late int peopleLimit;
@@ -48,7 +49,7 @@ class _RegisterMeetingState extends State<RegisterMeeting> {
           title: const Text('오늘의 건수등록',
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: 15,
+                  fontSize: 16,
                   fontFamily: 'PretendardBold')),
           backgroundColor: Colors.white,
           elevation: 1,
@@ -69,11 +70,13 @@ class _RegisterMeetingState extends State<RegisterMeeting> {
             controller: _scrollController,
             children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 5.0),
+                margin: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 5.0),
                 height: 70,
                 alignment: Alignment.centerLeft,
-                child: const Text("어떤 건 수를\n등록해 볼까요?", style: TextStyle(fontFamily:"PretendardRegular",
-                    fontSize: 23, color: Color(0xff2f3036))),
+                child: const Text("어떤 건 수를\n등록해 볼까요?", style: TextStyle(
+                    fontFamily:"PretendardRegular",
+                    fontSize: 24,
+                    color: Color(0xff2f3036))),
               ),
               const MeetingCategory(),
               const MeetingLocation(),
@@ -96,11 +99,12 @@ class Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 5.0),
-      height: 50,
+      margin: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 6.0),
       alignment: Alignment.centerLeft,
-      child: Text(content, style: const TextStyle(fontFamily: "PretendardRegular",
-          fontSize: 23, color: Color(0xff2f3036))),
+      child: Text(content, style: const TextStyle(
+          fontFamily: "PretendardRegular",
+          fontSize: 23,
+          color: Color(0xff2f3036))),
     );
   }
 }

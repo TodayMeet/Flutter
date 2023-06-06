@@ -34,7 +34,7 @@ class _MeetingTitleState extends State<MeetingTitle> {
               Container(
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 height: 48,
-                margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF5F6FA),
                   borderRadius: BorderRadius.circular(12.0),
@@ -53,8 +53,7 @@ class _MeetingTitleState extends State<MeetingTitle> {
                     ),
                   ),
                   controller: controller,
-                  maxLines: null,
-                  expands: true,
+                  maxLines: 1,
                 ),
               ),
               Container(
@@ -62,7 +61,7 @@ class _MeetingTitleState extends State<MeetingTitle> {
                     borderRadius: BorderRadius.circular(12)),
                 height: 46,
                 width: size.width,
-                margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
                 child: TextButton(
                   style: const ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
@@ -87,9 +86,9 @@ class _MeetingTitleState extends State<MeetingTitle> {
               )
             ]
         ): Container(
-          margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
             border: Border.all(color: Colors.black, width: 1),
           ),
@@ -99,7 +98,7 @@ class _MeetingTitleState extends State<MeetingTitle> {
               child: Text(title,
                   style: const TextStyle(
                       fontFamily: "PretendardBold",
-                      fontSize:15,
+                      fontSize:16,
                       color: Color(0xFF2F3036))
               ),
             ),

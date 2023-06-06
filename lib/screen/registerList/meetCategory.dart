@@ -21,29 +21,29 @@ class _MeetingCategoryState extends State<MeetingCategory> {
   String categoryText = "";
 
   List<Map> categories = [
-    {"name": "맛집", "isChecked": false, "image_color": "0xFFE91E63",
+    {"name": "맛집", "isChecked": false, "image_color": "0xFFE91E63", "categoryNo": 0,
       "category_image": "assets/images/Category/CategoryRestaurant.png"},
-    {"name": "카페", "isChecked": false, "image_color": "0xFFE91E63",
+    {"name": "카페", "isChecked": false, "image_color": "0xFFE91E63", "categoryNo": 1,
       "category_image": "assets/images/Category/CategoryCafe.png"},
-    {"name": "주류", "isChecked": false, "image_color": "0xFF3F51B5",
+    {"name": "주류", "isChecked": false, "image_color": "0xFF3F51B5", "categoryNo": 2,
       "category_image": "assets/images/Category/CategoryAlcohol.png"},
-    {"name": "영화", "isChecked": false, "image_color": "0xFF673AB7",
+    {"name": "영화", "isChecked": false, "image_color": "0xFF673AB7", "categoryNo": 4,
       "category_image": "assets/images/Category/CategoryMovie.png"},
-    {"name": "전시", "isChecked": false, "image_color": "0xFF607D8B",
+    {"name": "전시", "isChecked": false, "image_color": "0xFF607D8B", "categoryNo": 5,
       "category_image": "assets/images/Category/CategoryExhibition.png"},
-    {"name": "공연", "isChecked": false, "image_color": "0xFF607D8B",
+    {"name": "공연", "isChecked": false, "image_color": "0xFF607D8B", "categoryNo": 6,
       "category_image": "assets/images/Category/CategoryPerformance.png"},
-    {"name": "게임", "isChecked": false, "image_color": "0xFFFF5722",
+    {"name": "게임", "isChecked": false, "image_color": "0xFFFF5722", "categoryNo": 7,
       "category_image": "assets/images/Category/CategoryGame.png"},
-    {"name": "봉사", "isChecked": false, "image_color": "0xFF8BC34A",
+    {"name": "봉사", "isChecked": false, "image_color": "0xFF8BC34A", "categoryNo": 8,
       "category_image": "assets/images/Category/CategoryService.png"},
-    {"name": "독서", "isChecked": false, "image_color": "0xFF374046",
+    {"name": "독서", "isChecked": false, "image_color": "0xFF374046", "categoryNo": 9,
       "category_image": "assets/images/Category/CategoryRead.png"},
-    {"name": "스터디", "isChecked": false, "image_color": "0xFF9C27B0",
+    {"name": "스터디", "isChecked": false, "image_color": "0xFF9C27B0", "categoryNo": 10,
       "category_image": "assets/images/Category/CategoryStudy.png"},
-    {"name": "반려동물", "isChecked": false, "image_color": "0xFF795548",
+    {"name": "반려동물", "isChecked": false, "image_color": "0xFF795548", "categoryNo": 11,
       "category_image": "assets/images/Category/CategoryPet.png"},
-    {"name": "운동", "isChecked": false, "image_color": "0xFFDCA966",
+    {"name": "운동", "isChecked": false, "image_color": "0xFFDCA966", "categoryNo": 12,
       "category_image": "assets/images/Category/CategorySports.png"},
   ];
 
@@ -66,7 +66,7 @@ class _MeetingCategoryState extends State<MeetingCategory> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: categories.map((category){
         return Container(
-          margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             color: const Color(0xFFF7F8FA),
@@ -78,17 +78,19 @@ class _MeetingCategoryState extends State<MeetingCategory> {
             onChanged: (newValue){
               setState(() {
                 category["isChecked"] = newValue;
-                meetInfo.categoryName = category["name"];
+                meetInfo.categoryNo = category["categoryNo"];
               });
               categoryText = category["name"];
               categoryChange();
             },
-            title: Text(category["name"],style: const TextStyle(fontFamily: "PretendardBold",
-                fontSize: 15)),
+            title: Text(category["name"],style: const TextStyle(
+                color: Color(0xFF1F2024),
+                fontFamily: "PretendardBold",
+                fontSize: 16)),
             secondary: Container(
               alignment: Alignment.center,
-              width: 30,
-              height: 30,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Color(int.parse(category["image_color"])),
@@ -100,9 +102,9 @@ class _MeetingCategoryState extends State<MeetingCategory> {
         );
       }).toList(),
     ): Container(
-      margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+      margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(12.0),
         color: Colors.white,
         border: Border.all(color: Colors.black, width: 1),
       ),
@@ -112,7 +114,7 @@ class _MeetingCategoryState extends State<MeetingCategory> {
           child: Text(categoryText,
               style: const TextStyle(
                   fontFamily: "PretendardBold",
-                  fontSize:15,
+                  fontSize:14,
                   color: Color(0xFF2F3036))
           ),
         ),

@@ -5,6 +5,8 @@
 //추후 작업예정사항
 // 화면 전체 수정
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
@@ -14,7 +16,6 @@ import 'dart:async';
 import 'signup.dart';
 
 class Phone_ij extends StatefulWidget {
-
   @override
   State<Phone_ij> createState() => _Phone_ijState();
 }
@@ -26,6 +27,37 @@ class _Phone_ijState extends State<Phone_ij> {
   int _countdown = 180;
   bool _isCountdownStarted = false;
   bool _ijSuccess = false;
+  String phoneNumber = '';
+  String apvNum = '';
+
+  Future<void> phonenumDuplicate() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/phone/${phoneNumber}');
+    // final requestData = {
+    //   'phoneNumber': phoneNumber,
+    // };
+    // final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      // headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+      print(phoneNumber);
+      print(url);
+      print(response.body);
+      // final responseData = jsonDecode(response.body);
+      if (response.body == 'phone number duplicate!!') {
+        print("asdf");
+        _login_fail_alrephone(context);
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => accountsetting()));
+      }
+    } else {
+      print('전송 자체가 안됨. 상태 침드: ${response.statusCode}');
+      _login_fail_alrephone(context);
+    }
+  }
 
   void startCountdown() {
     if (!_isCountdownStarted) {
@@ -55,8 +87,9 @@ class _Phone_ijState extends State<Phone_ij> {
     int minutes = _countdown ~/ 60;
     int seconds = _countdown % 60;
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 0,
+          elevation: 1.0,
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(
@@ -141,7 +174,7 @@ class _Phone_ijState extends State<Phone_ij> {
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.horizontal(
-                          right: Radius.circular(12.0),
+                          right: Radius.circular(8.0),
                         ),
                       ),
                       fixedSize: Size(107, 46),
@@ -202,11 +235,12 @@ class _Phone_ijState extends State<Phone_ij> {
                   ElevatedButton(
                     onPressed: () {
                       _login_success_phoneij(context);
+                      //인증번호 틀리면 -> _login_fail_incorrectij
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.horizontal(
-                          right: Radius.circular(10),
+                          right: Radius.circular(9),
                         ),
                       ),
                       fixedSize: Size(107, 46),
@@ -214,7 +248,6 @@ class _Phone_ijState extends State<Phone_ij> {
                     ),
                     child: Text(
                       '확인',
-
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -233,20 +266,28 @@ class _Phone_ijState extends State<Phone_ij> {
               height: 56,
               child: CupertinoButton(
                 onPressed: () {
+                  apvNum = _text3;
+                  phoneNumber = _text2;
+                  if(phoneNumber==''){
+                    _login_fail_noinput(context);
+                  }else if(apvNum==''){
+                    _login_fail_noinput_apvnum(context);
+                  }else if(_countdown==0){
+                    _login_fail_timeover(context);
+                  }else{
+                    phonenumDuplicate();
+                  }
+
                   // 입력시간 초과 -> _login_fail_timeover
                   // 성공했으면 -> _login_success_phoneij
-                  //인증번호 틀리면 -> _login_fail_incorrectij
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => accountsetting()));},
+                },
                 minSize: 0,
                 padding: EdgeInsets.symmetric(),
                 color: CupertinoDynamicColor.resolve(
                   CupertinoColors.systemBlue,
                   context,
                 ).withAlpha(0xFF4874EA),
-
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
-
                 child: Text(
                   '다음',
                   style: TextStyle(
@@ -261,8 +302,6 @@ class _Phone_ijState extends State<Phone_ij> {
         ]));
   }
 }
-
-
 
 void _login_fail_timeover(BuildContext context) {
   showCupertinoModalPopup<void>(
@@ -293,7 +332,6 @@ void _login_success_phoneij(BuildContext context) {
           onPressed: () {
             bool _ijSuccess = true;
             Navigator.pop(context);
-
           },
           child: const Text('확인'),
         ),
@@ -333,8 +371,7 @@ void _backto_login(BuildContext context) {
             Navigator.pop(context);
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => login()),
+              MaterialPageRoute(builder: (context) => login()),
             );
           },
           child: const Text('확인'),
@@ -356,6 +393,60 @@ void _login_fail_notmember(BuildContext context) {
     context: context,
     builder: (BuildContext context) => CupertinoAlertDialog(
       content: const Text('가입되지 않은 휴대전화번호 입니다.\n회원가입을 해주세요.'),
+      actions: <CupertinoDialogAction>[
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('확인'),
+        ),
+      ],
+    ),
+  );
+}
+
+void _login_fail_alrephone(BuildContext context) {
+  showCupertinoModalPopup<void>(
+    context: context,
+    builder: (BuildContext context) => CupertinoAlertDialog(
+      content: const Text('이미 가입된 휴대전화번호 입니다.'),
+      actions: <CupertinoDialogAction>[
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('확인'),
+        ),
+      ],
+    ),
+  );
+}
+
+void _login_fail_noinput(BuildContext context) {
+  showCupertinoModalPopup<void>(
+    context: context,
+    builder: (BuildContext context) => CupertinoAlertDialog(
+      content: const Text('휴대전화번호를 입력해주세요'),
+      actions: <CupertinoDialogAction>[
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('확인'),
+        ),
+      ],
+    ),
+  );
+}
+
+void _login_fail_noinput_apvnum(BuildContext context) {
+  showCupertinoModalPopup<void>(
+    context: context,
+    builder: (BuildContext context) => CupertinoAlertDialog(
+      content: const Text('인증번호를 입력해주세요'),
       actions: <CupertinoDialogAction>[
         CupertinoDialogAction(
           isDefaultAction: true,

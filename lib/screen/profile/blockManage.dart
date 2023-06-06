@@ -52,8 +52,9 @@ class _blockManageState extends State<blockManage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0.0,
+        elevation: 1.0,
         backgroundColor: Colors.white,
         leading: IconButton(
             onPressed: () {

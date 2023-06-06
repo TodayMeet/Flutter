@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:front/screen/login/login.dart';
 import 'package:front/screen/mainMap/mainPageMap.dart';
 
 import 'package:flutter/material.dart';
@@ -183,9 +184,9 @@ class _favoriteState extends State<favorite> {
                   if (checkedCount > 5) {
                     _overFive(context);
                   } else {
-                    Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MainPageMap()));
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            login()), (route) => false);
                   }
                 },
                 minSize: 0,

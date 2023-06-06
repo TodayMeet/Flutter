@@ -4,30 +4,114 @@
 // 최종수정일 2023.05.14
 //추후 작업예정사항
 // 화면 전체 수정
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:front/screen/login/Phone_ij.dart';
+// import 'package:front/screen/login/Phone_ij.dart';
 import 'package:front/screen/login/favorite.dart';
 import 'package:front/screen/profile/privatePolicy.dart';
 import 'package:front/screen/profile/termsofUse.dart';
 import 'package:image_picker/image_picker.dart';
-import 'login.dart';
+// import 'login.dart';
 import 'dart:io';
 
 class registerProfile extends StatefulWidget {
+  final String email;
+  final String password;
+  registerProfile({required this.email, required this.password});
+
   @override
   _registerProfileState createState() => _registerProfileState();
 }
 
 class _registerProfileState extends State<registerProfile> {
-  final _idController = TextEditingController();
+
+  final _idController1 = TextEditingController();
   File? _imageFile;
   int _selectedSegment = 0;
   DateTime? _selectedDate;
   bool isChecked = false;
   bool isChecked1 = false;
+  String username = '';
+  bool isDuplicateUsername = false;
+  bool isJoinSuccess = false;
 
+  String convertIsDuplicateToString(bool isDuplicateUsername) {
+    return isDuplicateUsername
+        ? '* 중복된 닉네임이 존재합니다.'
+        : '                             ';
+  }
+
+  Future<void> usernameDuplicate() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/username/${username}');
+    final requestData = {
+      'username': username,
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      // headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+      print(username);
+      print(url);
+      print(response.body);
+      setState(() {
+        isDuplicateUsername = false;
+      });
+    } else {
+      print('전송 자체가 안됨. 상태 침드: ${response.statusCode}');
+      print(username);
+      print(url);
+      setState(() {
+        isDuplicateUsername = true;
+      });
+    }
+  }
+
+  Future<void> join() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/join');
+    final requestData = {
+      'username': username,
+      'password' : widget.password,
+      'email': widget.email,
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.post(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonData,
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+      print(username);
+      print(url1);
+      print(response.body);
+      print(response);
+      setState(() {
+        isJoinSuccess = true;
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => favorite()),
+      );
+    } else {
+      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+      print(username);
+      print(widget.password);
+      print(widget.email);
+      print(url1);
+      print(jsonData);
+      print(response.body);
+      setState(() {
+        isJoinSuccess = true;
+      });
+
+    }
+  }
   @override
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -41,7 +125,7 @@ class _registerProfileState extends State<registerProfile> {
 
   @override
   void dispose() {
-    _idController.dispose();
+    _idController1.dispose();
 
     super.dispose();
   }
@@ -49,9 +133,9 @@ class _registerProfileState extends State<registerProfile> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(), // 설정된 초기 날짜
-      firstDate: DateTime(1900), // 선택 가능한 가장 이른 날짜
-      lastDate: DateTime(2100), // 선택 가능한 가장 늦은 날짜
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
     );
 
     if (picked != null && picked != _selectedDate) {
@@ -64,8 +148,9 @@ class _registerProfileState extends State<registerProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
+        elevation: 1.0,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(
@@ -74,7 +159,7 @@ class _registerProfileState extends State<registerProfile> {
             size: 25,
           ),
           onPressed: () {
-            _backto_prev(context);
+            // _backto_prev(context);
           },
         ),
         centerTitle: true,
@@ -86,7 +171,7 @@ class _registerProfileState extends State<registerProfile> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric( horizontal: 24.0),
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -140,7 +225,14 @@ class _registerProfileState extends State<registerProfile> {
                     border: Border.all(color: Colors.grey),
                   ),
                   child: TextField(
-                    controller: _idController,
+                    controller: _idController1,
+                    onChanged: (value) {
+                      username = _idController1.text;
+                      usernameDuplicate();
+                      print(isDuplicateUsername);
+                      print(username);
+                      // usernameDuplicate();
+                    },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 16.0,
@@ -162,7 +254,7 @@ class _registerProfileState extends State<registerProfile> {
                 style: TextStyle(color: Colors.red),
               ),
               Text(
-                '* 중복된 닉네임이 존재합니다.',
+                convertIsDuplicateToString(isDuplicateUsername),
                 style: TextStyle(color: Colors.red),
               ),
               SizedBox(height: 24.0),
@@ -242,10 +334,9 @@ class _registerProfileState extends State<registerProfile> {
                   Text(
                     '[필수] 이용약관 동의',
                     style: TextStyle(
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF8F9098)
-                    ),
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF8F9098)),
                   ),
                   Spacer(),
                   IconButton(
@@ -292,8 +383,10 @@ class _registerProfileState extends State<registerProfile> {
                         size: 12,
                       ),
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => termsofUse()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => termsofUse()));
                       },
                     ),
                   ],
@@ -307,10 +400,14 @@ class _registerProfileState extends State<registerProfile> {
                     height: 56,
                     child: CupertinoButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => favorite()),
-                        );
+                        if (isChecked == false || isChecked1 == false) {
+                          _notAgree(context);
+                        } else if (isDuplicateUsername) {
+                          _checkUsername(context);
+                        } else {
+                          join();
+
+                        }
                       },
                       minSize: 0,
                       padding: EdgeInsets.symmetric(),
@@ -330,7 +427,9 @@ class _registerProfileState extends State<registerProfile> {
                   ),
                 ),
               ),
-              SizedBox(height: 24,),
+              SizedBox(
+                height: 24,
+              ),
             ],
           ),
         ),
@@ -358,6 +457,42 @@ class _registerProfileState extends State<registerProfile> {
               Navigator.pop(context);
             },
             child: const Text('취소'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _notAgree(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        content: const Text('동의항목에 체크해주세요'),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('확인'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _checkUsername(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        content: const Text('닉네임을 확인해주세요'),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('확인'),
           ),
         ],
       ),

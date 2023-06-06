@@ -221,7 +221,7 @@ class _registerProfileState extends State<registerProfile> {
                           _selectDate(context);
                         },
                         icon: Icon(
-                          Icons.calendar_today,
+                          Icons.today,
                           color: Colors.black,
                         )),
                   ],

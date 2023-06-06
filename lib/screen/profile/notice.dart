@@ -34,8 +34,9 @@ class _noticeState extends State<notice> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0.0,
+        elevation: 1.0,
         backgroundColor: Colors.white,
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
@@ -71,7 +72,7 @@ class _noticeState extends State<notice> {
                 ),
               ),
               SizedBox(height: 16,),
-              Text(noticetext,style: TextStyle(fontSize: 14),),
+              Text(noticetext,style: TextStyle(fontSize: 14,color: Colors.black),),
 
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/screen/profile/notice.dart';
@@ -20,8 +21,9 @@ class _noticeListState extends State<noticeList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0.0,
+        elevation: 1.0,
         backgroundColor: Colors.white,
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
@@ -89,3 +91,4 @@ class _noticeListState extends State<noticeList> {
     );
   }
 }
+

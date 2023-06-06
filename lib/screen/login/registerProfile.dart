@@ -148,6 +148,7 @@ class _registerProfileState extends State<registerProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 1.0,

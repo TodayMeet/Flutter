@@ -45,6 +45,7 @@ dependencies:
   riverpod_annotation: ^2.1.1
   image_picker: ^0.8.7+5
   dotted_border: ^2.0.0+3
+  chat_bubbles: ^1.4.1
 
 dev_dependencies:
   flutter_test:
@@ -82,6 +83,7 @@ flutter:
     - assets/images/List_Image/
     - assets/images/LoginImage/
     - assets/images/User_Picture/
+    - assets/texts/
 
   fonts:
     - family: PretendardBold

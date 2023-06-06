@@ -22,6 +22,7 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   String _text = '';
   String _text1 = '';
+  bool obscureText = true;
 
   // 비밀번호 찾기 버튼을 눌렀을 때 실행할 코드 작성
 
@@ -55,7 +56,7 @@ class _loginState extends State<login> {
                   height: 26.54,
                 ),
               ),
-              SizedBox(height: 115),
+              SizedBox(height: 100),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: SizedBox(
@@ -70,9 +71,11 @@ class _loginState extends State<login> {
                     decoration: InputDecoration(
                       labelText: '임시아이디 abcd@gmail.com',
                       border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10.0)),
                       filled: true,
                       fillColor: Color(0xFFF5F6FA),
+
                     ),
                   ),
                 ),
@@ -81,9 +84,9 @@ class _loginState extends State<login> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0),
                 child: SizedBox(
-                  height: 48.0,
+                  height: 48,
                   child: TextField(
-                    obscureText: true,
+                    obscureText: obscureText,
                     autofocus: true,
                     onChanged: (value) {
                       setState(() {
@@ -93,13 +96,23 @@ class _loginState extends State<login> {
                     decoration: InputDecoration(
                       labelText: '임시비밀번호 asdf12345',
                       border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10.0)),
                       filled: true,
                       fillColor: Color(0xFFF5F6FA),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          obscureText =! obscureText;
+                        },
+                        icon: Icon(
+                          obscureText ? Icons.visibility : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),),
+                      ),
                     ),
                   ),
                 ),
-              ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

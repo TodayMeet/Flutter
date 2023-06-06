@@ -10,6 +10,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:dotted_border/dotted_border.dart';
 
 import '../setting/registerMeeting.dart' as meet;
 import 'meetApproval.dart';
@@ -22,7 +23,6 @@ class MeetingImage extends StatefulWidget {
 }
 
 class _MeetingImageState extends State<MeetingImage> {
-  String content = "";
   bool enabled = true;
   bool isChecked = false;
   int imageCount = 0;
@@ -36,10 +36,8 @@ class _MeetingImageState extends State<MeetingImage> {
 
     setState(() {
       for (int i = 0; i < 5; i++) {
-        if (imageCount < 4 && i < images.length) {
+        if (imageCount < 5 && i < images.length) {
           _imageFiles[imageCount++] = File(images[i].path);
-        } else {
-          _imageFiles[i] = null;
         }
       }
     });
@@ -47,47 +45,76 @@ class _MeetingImageState extends State<MeetingImage> {
 
   @override
   Widget build(BuildContext context) {
-    final double imageSize = MediaQuery.of(context).size.width * 0.2;
+    const double imageSize = 65;
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [
         enabled? Column(
             children: [
-              meet.Title(content:"참고 이미지를\n등록해주세요.(선택)"),
               Container(
-                margin: const EdgeInsets.fromLTRB(24.0, 5.0, 24.0, 5.0),
+                margin: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 5.0),
+                height: 58,
+                alignment: Alignment.centerLeft,
+                  child: const Text("참고 이미지를\n등록해주세요.(선택)",
+                      style:  TextStyle(fontFamily: "PretendardRegular",
+                        fontSize: 23, color: Color(0xff2f3036))),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(24, 5, 24, 6),
                 alignment: Alignment.centerLeft,
                 child: const Text("5장까지 등록 가능",
                     style: TextStyle(fontFamily: "PretendardRegular",
                         fontSize: 14, color: Color(0xff2f3036))),
               ),
-              Expanded(
+              Container(
+                margin: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+                height: 65,
                 child: Row(
                   children: [
-                    imageCount < 4
-                    ? SizedBox(
-                      height: imageSize,
-                      width: imageSize,
-                      child: ElevatedButton(
-                        onPressed: _pickImages,
-                        child: Center(child: Text("($imageCount/5)")),
+                    imageCount < 5
+                    ? Container(
+                      margin: const EdgeInsets.only(right: 6),
+                      child: DottedBorder(
+                        color: Colors.black,
+                        dashPattern: const [4, 2],
+                        borderType: BorderType.RRect,
+                        radius: const Radius.circular(8),
+                        child: SizedBox(
+                          height: imageSize,
+                          width: imageSize,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shadowColor: Colors.transparent,
+                              backgroundColor: Colors.transparent
+                            ),
+                            onPressed: _pickImages,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.image_outlined, size: 24, color: Color(0xFF2F2F2F)),
+                                Text("($imageCount/5)", style: const TextStyle(
+                                  color: Color(0xFF2F2F2F), fontSize: 10, fontFamily: 'PretendardRegular'
+                                )),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ): const SizedBox.shrink(),
-                    ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (BuildContext context, int index){
-                        return _imageFiles[index] != null
-                            ? Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
+                    Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 5,
+                        itemBuilder: (BuildContext context, int index){
+                          return _imageFiles[index] != null
+                              ? Container(
                                 width: imageSize,
                                 height: imageSize,
-                                margin: EdgeInsets.all(8),
-                                child: Image.file(_imageFiles[index]!),
-                              ),
-                        ): const SizedBox.shrink();
-                    }),
+                                margin: const EdgeInsets.only(right: 6),
+                                child: Image.file(_imageFiles[index]!, fit: BoxFit.cover),
+                              ): const SizedBox.shrink();
+                      }),
+                    ),
                   ],
                 ),
               ),
@@ -96,7 +123,7 @@ class _MeetingImageState extends State<MeetingImage> {
                     borderRadius: BorderRadius.circular(12)),
                 height: 46,
                 width: size.width,
-                margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                margin: const EdgeInsets.fromLTRB(24, 6, 24, 6),
                 child: TextButton(
                   style: const ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
@@ -106,7 +133,6 @@ class _MeetingImageState extends State<MeetingImage> {
                     setState(() {
                       enabled = false;
                       isChecked = true;
-                      meet.meetInfo.content = content;
                     });
                   },
                   child: const Text('다음',
@@ -119,29 +145,24 @@ class _MeetingImageState extends State<MeetingImage> {
                 ),
               )
             ]
-        ): Container(
-          margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: const Color(0xFFF5F6FA),
-            border: Border.all(color: Colors.black, width: 1),
-          ),
-          child: TextButton(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(content,
-                  style: const TextStyle(
-                      fontFamily: "PretendardBold",
-                      fontSize:15,
-                      color: Color(0xFF2F3036))
+        ): imageCount == 0 ? SizedBox.shrink()
+          :Container(
+            height: 65,
+            margin: EdgeInsets.fromLTRB(24, 6, 24, 6),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 5,
+              itemBuilder: (BuildContext context, int index){
+                return _imageFiles[index] != null
+                    ? Container(
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                        width: imageSize,
+                        height: imageSize,
+                        margin: const EdgeInsets.only(right: 6),
+                        child: Image.file(_imageFiles[index]!, fit: BoxFit.cover),
+                    ): const SizedBox.shrink();
+                }
               ),
-            ),
-            onPressed: () {
-              setState(() {
-                enabled = true;
-              });
-            },
-          ),
         ),
         isChecked? MeetingApproval()
             : const SizedBox.shrink(),

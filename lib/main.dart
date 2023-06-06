@@ -17,6 +17,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       builder: (context, child) {
         return MediaQuery(      // 폰트 사이즈 일정하게 하기
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
@@ -34,6 +35,7 @@ class MainPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Main Page'),
@@ -46,6 +48,7 @@ class MainPage extends ConsumerWidget {
                 ElevatedButton(
                   child: Text('로그인'),
                   onPressed: (){
+
                     Navigator.push(context,
                         MaterialPageRoute(
                             builder: (context) => Start()));

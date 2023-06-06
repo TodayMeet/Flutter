@@ -35,7 +35,7 @@ class _MeetingWhoState extends State<MeetingWho> {
                   Expanded(
                     child: Container(
                       height: 46,
-                      margin: EdgeInsets.fromLTRB(20, 0, 10, 20),
+                      margin: const EdgeInsets.fromLTRB(24, 0, 5, 20),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                       child: TextButton(
                         style: const ButtonStyle(
@@ -58,7 +58,7 @@ class _MeetingWhoState extends State<MeetingWho> {
                   Expanded(
                     child: Container(
                       height: 46,
-                      margin: EdgeInsets.fromLTRB(10, 0, 20, 20),
+                      margin: const EdgeInsets.fromLTRB(5, 0, 24, 20),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                       child: TextButton(
                         style: const ButtonStyle(
@@ -82,7 +82,7 @@ class _MeetingWhoState extends State<MeetingWho> {
               ),
             ]
         ): Container(
-          margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             color: Colors.white,

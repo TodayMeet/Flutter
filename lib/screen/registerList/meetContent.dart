@@ -7,7 +7,6 @@
 // 이미지 선택 위젯 완성되면 거기에 연결하기
 
 import 'package:flutter/material.dart';
-import 'package:front/screen/registerList/meetApproval.dart';
 
 import '../setting/registerMeeting.dart' as meet;
 import 'meetImage.dart';
@@ -36,7 +35,7 @@ class _MeetingContentState extends State<MeetingContent> {
               Container(
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 height: 140,
-                margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF5F6FA),
                   borderRadius: BorderRadius.circular(12.0),
@@ -64,7 +63,7 @@ class _MeetingContentState extends State<MeetingContent> {
                     borderRadius: BorderRadius.circular(12)),
                 height: 46,
                 width: size.width,
-                margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
                 child: TextButton(
                   style: const ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
@@ -73,9 +72,10 @@ class _MeetingContentState extends State<MeetingContent> {
                   onPressed: (){
                     setState(() {
                       content = controller.text;
+                      meet.meetInfo.content = content;
+                      print(meet.meetInfo.content);
                       enabled = false;
                       isChecked = true;
-                      meet.meetInfo.content = content;
                     });
                   },
                   child: const Text('다음',
@@ -89,7 +89,7 @@ class _MeetingContentState extends State<MeetingContent> {
               )
             ]
         ): Container(
-          margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             color: Colors.white,
@@ -101,7 +101,7 @@ class _MeetingContentState extends State<MeetingContent> {
               child: Text(content,
                   style: const TextStyle(
                       fontFamily: "PretendardBold",
-                      fontSize:15,
+                      fontSize:16,
                       color: Color(0xFF2F3036))
               ),
             ),
@@ -112,7 +112,7 @@ class _MeetingContentState extends State<MeetingContent> {
             },
           ),
         ),
-        isChecked? const MeetingApproval()
+        isChecked? const MeetingImage()
             : const SizedBox.shrink(),
       ],
     );

@@ -16,8 +16,6 @@ import 'package:front/model/mainList/Invitation.dart';
 import 'package:front/data/dummy_meetList.dart';
 import 'package:intl/intl.dart';
 import '../../data/meet.dart';
-import '../../data/meetList.dart';
-import '../../data/meetList_Provider.dart';
 import 'Comments.dart';
 
 final invitationColorProvider = StateProvider((ref) => 0xffFFFFFF);

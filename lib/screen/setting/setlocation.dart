@@ -23,13 +23,17 @@ class LocationPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFFFFFFFF),
         appBar: AppBar(
           title: const Text('위치 설정',
-              style: TextStyle(color: Colors.black,
-                  fontFamily: 'PretendardBold')),
+              style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'PretendardBold',
+                fontSize: 16
+              )),
           backgroundColor: Colors.white,
           elevation: 1,
           centerTitle: true,
@@ -38,46 +42,55 @@ class LocationPage extends ConsumerWidget {
                 Navigator.pop(context);
               },
               color: Colors.black,
+              iconSize: 24,
               icon: const Icon(Icons.arrow_back_ios)),
         ),
         body: Container(
-          margin: const EdgeInsets.all(20),
+          margin: const EdgeInsets.fromLTRB(24, 24, 24, 0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('검색하고자 하는 지역의 동 이름을 입력해 주세요.',
-                style: TextStyle(fontFamily: "PretendardBold", color: Color(0xFF2F3036)),
+                style: TextStyle(
+                    fontFamily: "PretendardBold",
+                    color: Color(0xFF2F3036),
+                    fontSize: 14,
+                ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                      child: TextField(
-                        onTap: (){
-                          ()=>ref.refresh(addressListProvider);
+              Container(
+                width: size.width,
+                margin: const EdgeInsets.only(top: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: TextField(
+                          onTap: (){
+                            ()=>ref.refresh(addressListProvider);
+                          },
+                          onChanged: (text){
+                            ref.read(addressStringProvider.notifier).state = text;
+                          },
+                            maxLines: 1,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              labelText: "예)용산동, 이곡동",
+                              filled: true,
+                              fillColor: Color(0xFFF5F6FA),
+                              floatingLabelStyle: TextStyle(
+                                  fontFamily: "PretendardRegular", fontSize: 13, color: Color(0xFFC8C8CB)),
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                            ),
+                            controller: controller)
+                    ),
+                    ElevatedButton(
+                        onPressed: (){
+                          addList();
+                          ref.read(addressListProvider.notifier).state = addressList;
                         },
-                        onChanged: (text){
-                          ref.read(addressStringProvider.notifier).state = text;
-                        },
-                          maxLines: 1,
-                          decoration: const InputDecoration(
-                            labelText: "예)용산동, 이곡동",
-                            filled: true,
-                            fillColor: Color(0xFFF5F6FA),
-                            floatingLabelStyle: TextStyle(
-                                fontFamily: "PretendardRegular", fontSize: 5, color: Color(0xFFC8C8CB)),
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                          ),
-                          controller: controller)
-                  ),
-                  ElevatedButton(
-                      onPressed: (){
-                        addList();
-                        ref.read(addressListProvider.notifier).state = addressList;
-                      },
-                      child: const Text('검색')
-                  ),
-                ],
+                        child: const Text('검색')
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child:addressListView(ref.watch(addressListProvider), ref)
@@ -106,14 +119,17 @@ ListView addressListView(List<Address>? lists, WidgetRef ref){
 
   return ListView.builder(
       scrollDirection: Axis.vertical,
-      padding: const EdgeInsets.all(5),
       itemCount: lists.length,
       itemBuilder: (context, index) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextButton(
+        return Container(
+          alignment: Alignment.centerLeft,
+          margin: EdgeInsets.only(top: 12),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFDBDBDB))
+          ),
+          height: 46,
+          child: TextButton(
               onPressed: () async {
                 final webViewController = ref.watch(mapControllerProvider);
                 webViewController?.runJavascript(
@@ -124,19 +140,15 @@ ListView addressListView(List<Address>? lists, WidgetRef ref){
 
                 Navigator.pop(context);
               },
-              child: Container(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Colors.black)
-                ),
-                height: 50,
+              child: Center(
                 child: Text(lists[index].address,
-                    style: const TextStyle(color: Colors.black)),
+                    style: const TextStyle(
+                        color: Color(0xFF707070),
+                        fontSize: 16,
+                        fontFamily: 'PretendardBold',
+                    )),
               ),
             ),
-          ],
         );
       }
   );

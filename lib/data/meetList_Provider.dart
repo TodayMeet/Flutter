@@ -11,13 +11,8 @@ class meetListNotifier extends StateNotifier<List<meetList>> {
   meetListNotifier(): super([]);
 
   // 리스트 추가
-  void addList(List<meetList> meetList) {
-    state = [...state, meetList[0], meetList[1], meetList[2], meetList[3], meetList[4], meetList[5]];
-  }
-
-  // 리스트 초기화
-  void initList(List<meetList> meetList) {
-    state = [meetList[0], meetList[1], meetList[2], meetList[3], meetList[4], meetList[5]];
+  void addList(meetList meetList) {
+    state = [...state, meetList];
   }
 
   // 리스트 클리어

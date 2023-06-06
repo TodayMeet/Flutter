@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/screen/mainList/ListDetail.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -24,6 +25,8 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
   var meetData;
+  late int meetNo;
+  late int userNo;
 
   @override
   void initState() {
@@ -31,28 +34,40 @@ class _LoadingState extends State<Loading> {
     getData();
   }
 
+  //meetNo로 서버에 meetList 데이터 요청
   void getData() async {
+    meetNo = widget.meetNo;
+    userNo = widget.userNo;
 
-    //meetNo로 서버에 meetList 데이터 요청
     try {
-      http.Response jsonData = await http.get(Uri.parse('http://todaymeet.shop:8080/meet/detail/6'));
-      if(jsonData.statusCode == 200) {
+      final url = Uri.parse('http://todaymeet.shop:8080/meet/detail/$meetNo');
+      var postBody =
+      {
+        "userNo": userNo
+      };
 
-        meetData = jsonDecode(utf8.decode(jsonData.bodyBytes));
+      http.Response response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(postBody),
+      );
+
+      if (response.statusCode == 200) {
+        meetData = jsonDecode(utf8.decode(response.bodyBytes));
 
         Navigator.pop(context);
         Navigator.push(context,
             MaterialPageRoute(
-                builder: (context) =>ListDetail(meetData: meetData,))
+                builder: (context) => ListDetail(meetData: meetData,))
         );
       } else {
         print('Data download failed!');
-        await Future.delayed(const Duration(milliseconds: 1000));
+        showToast('Data download failed!');
         Navigator.pop(context);
       }
-    } catch(e) {
+    } catch (e) {
       print('There was a problem with the internet connection.');
-      await Future.delayed(const Duration(milliseconds: 1000));
+      showToast('There was a problem with the internet connection.');
       Navigator.pop(context);
     }
   }
@@ -65,4 +80,14 @@ class _LoadingState extends State<Loading> {
       ),
     );
   }
+}
+
+void showToast(String message) {
+  Fluttertoast.showToast(
+      msg: message,
+      fontSize: 15,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM);
 }

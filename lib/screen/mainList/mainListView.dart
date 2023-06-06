@@ -17,7 +17,7 @@ import 'package:intl/intl.dart';
 
 Widget mainListView(meetList list, WidgetRef ref) {
   final completeContainerProvider = Provider((ref) {
-    if(list.personClosed /*|| list.timeClosed*/) { // 인원수 마감 or 시간 마감
+    if(list.peopleClosed /*|| list.timeClosed*/) { // 인원수 마감 or 시간 마감
       return Container(
         width: 33,
         height: 20,

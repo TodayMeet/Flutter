@@ -12,15 +12,16 @@ _$_meetList _$$_meetListFromJson(Map<String, dynamic> json) => _$_meetList(
       title: json['title'] as String,
       meetNo: json['meetNo'] as int,
       userNo: json['userNo'] as int,
-      userProfileImage: json['userProfileImage'] as String,
+      userProfileImage: json['userProfileImage'],
       username: json['username'] as String,
-      lat: (json['lat'] as num).toDouble(),
-      meetImage: json['meetImage'] as String,
+      lat: json['lat'],
+      lon: json['lon'],
+      meetImage: json['meetImage'],
       commentNum: json['commentNum'] as int,
       peopleLimit: json['peopleLimit'] as int,
       peopleNum: json['peopleNum'] as int,
       address: json['address'] as String,
-      personClosed: json['personClosed'] as bool,
+      peopleClosed: json['peopleClosed'] as bool,
     );
 
 Map<String, dynamic> _$$_meetListToJson(_$_meetList instance) =>
@@ -33,10 +34,11 @@ Map<String, dynamic> _$$_meetListToJson(_$_meetList instance) =>
       'userProfileImage': instance.userProfileImage,
       'username': instance.username,
       'lat': instance.lat,
+      'lon': instance.lon,
       'meetImage': instance.meetImage,
       'commentNum': instance.commentNum,
       'peopleLimit': instance.peopleLimit,
       'peopleNum': instance.peopleNum,
       'address': instance.address,
-      'personClosed': instance.personClosed,
+      'peopleClosed': instance.peopleClosed,
     };

@@ -17,6 +17,8 @@ import 'package:front/data/dummy_meetList.dart';
 import 'package:intl/intl.dart';
 import '../../data/meet.dart';
 import 'Comments.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 final invitationColorProvider = StateProvider((ref) => 0xffFFFFFF);
 final participationColorProvider = StateProvider((ref) => 0xffFFFFFF);
@@ -40,25 +42,101 @@ class ListDetailState extends ConsumerState<ListDetail> {
   @override
   void initState() {
     super.initState();
-    updateData(widget.meetData);
+    upLoadData(widget.meetData);
   }
 
-  void updateData(dynamic meetData) {
-    //불러온 json데이터 클래스 객체화
+  void upLoadData(dynamic meetData) {
     test = meet.fromJson(meetData);
-    print(test); //확인용 출력
-/*
-    test = meet(meetNo: 0, categoryName: "스터디",time: DateTime.parse("2023-07-30 15:00:00"),
-        title: "스터디 모임 모집합니다", userNo: 1, userProfileImage: "image", username: "test", address: "대구",
-        meetImage: "", commentNum: 2, peopleLimit: 5, peopleNum: 3, lat: 35.886714, lon: 128.222,
-        personClosed: false, fee: 5000, content: "스터디 내용 등등", approval: false,
-        timeClosed: false, hostUser: {"userNo": 1, "userProfileImage": "image", "username": "test"},
-        comments: [{"meetCommentNo": 4, "meetNo": 5, "parentNo": null, "content": "comment 2",
-          "userNo": 2, "userProfileImage": null, "username": "b", "createDate": "2023-05-31 04:02:42"},
-          {"meetCommentNo": 3, "meetNo": 5, "parentNo": null, "content": "comment test", "userNo": 1,
-            "userProfileImage": "image", "username": "test", "createDate": "2023-05-31 04:02:35"}],
-        userList: [{"userNo": 1, "userProfileImage": "image", "username": "test"},{"userNo": 2,
-          "userProfileImage": null, "username": "b"}], age: "전연령");*/
+  }
+
+  void updateData() async {
+    try {
+      final url = Uri.parse('http://todaymeet.shop:8080/meet/detail/${test.meetNo}');
+      var postBody =
+      {
+        "userNo": tempUser['userNo']
+      };
+      http.Response response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(postBody),
+      );
+
+      if (response.statusCode == 200) {
+        print('t1');
+        upLoadData(jsonDecode(utf8.decode(response.bodyBytes)));
+      } else {
+        print('Data download failed!');
+        showToast('Data download failed!');
+      }
+    } catch (e) {
+      print('There was a problem with the internet connection.');
+      showToast('There was a problem with the internet connection.');
+    }
+  }
+
+  Future<void> addUser() async {
+    try {
+      final url = Uri.parse('http://todaymeet.shop:8080/meetuseradd');
+      var postBody =
+      {
+        "meet":{
+          "meetNo":test.meetNo
+        },
+        "user":{
+          "userNo":tempUser['userNo']
+        }
+      };
+
+      http.Response response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(postBody),
+      );
+
+      if (response.statusCode == 200) {
+        print(jsonDecode(response.body));
+        updateData();
+
+      } else {
+        print('Data update failed!');
+        showToast('Data update failed!');
+      }
+    } catch (e) {
+      print('There was a problem with the internet connection.');
+      showToast('There was a problem with the internet connection.');
+    }
+  }
+  Future<void> subUser() async {
+    try {
+      final url = Uri.parse('http://todaymeet.shop:8080/meetuserremove');
+      var postBody =
+      {
+        "meet":{
+          "meetNo":test.meetNo
+        },
+        "user":{
+          "userNo":tempUser['userNo']
+        }
+      };
+
+      http.Response response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(postBody),
+      );
+
+      if (response.statusCode == 200) {
+        print(jsonDecode(response.body));
+        updateData();
+      } else {
+        print('Data update failed!');
+        showToast('Data update failed!');
+      }
+    } catch (e) {
+      print('There was a problem with the internet connection.');
+      showToast('There was a problem with the internet connection.');
+    }
   }
 
   @override
@@ -69,7 +147,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
       final curpeopleNum = ref.watch(curpeopleNumProvider);
       int buttonColor = ref.watch(invitationColorProvider);
 
-      if(test.userList.contains(tempUser)) { // 리스트 안에 있음
+      if(test.isInsert) { // 리스트 안에 있음
         if(curpeopleNum < test.peopleLimit) { // 인원수 안 넘침
           return buttonColor = 0xffFFFFFF;
         } else { //인원수 넘침
@@ -100,7 +178,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
       final curpeopleNum = ref.watch(curpeopleNumProvider);
       int buttonColor = ref.watch(participationColorProvider);
 
-      if(test.userList.contains(tempUser)) { //리스트 안에 있음
+      if(test.isInsert) { //리스트 안에 있음
         return buttonColor = 0xffF0F1F5;
       } else { //리스트 안에 없음
         if(curpeopleNum < test.peopleLimit) { // 인원수 안 넘침
@@ -114,7 +192,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
       final curpeopleNum = ref.watch(curpeopleNumProvider);
       String buttonText = ref.watch(participationTextProvider);
 
-      if(test.userList.contains(tempUser)) { //리스트 안에 있음
+      if(test.isInsert) { //리스트 안에 있음
         return buttonText = '참가 취소하기';
       } else { //리스트 안에 없음
         if(curpeopleNum < test.peopleLimit) { // 인원수 안 넘침
@@ -128,7 +206,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
       final curpeopleNum = ref.watch(curpeopleNumProvider);
       IconData buttonIcon = ref.watch(participationIconProvider);
 
-      if(test.userList.contains(tempUser)) { //리스트 안에 있음
+      if(test.isInsert) { //리스트 안에 있음
         return buttonIcon = Icons.person_remove_rounded;
       } else { //리스트 안에 없음
         if(curpeopleNum < test.peopleLimit) { // 인원수 안 넘침
@@ -145,9 +223,6 @@ class ListDetailState extends ConsumerState<ListDetail> {
     final int particitationButtonColor = ref.watch(participationButtonColorProvider);
     final String particitationButtonText = ref.watch(participationButtonTextProvider);
     final IconData particitationButtonIcon = ref.watch(participationButtonIconProvider);
-
-    List<Map> tempUserList = [];
-    int tempPeopleNum = 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -229,30 +304,25 @@ class ListDetailState extends ConsumerState<ListDetail> {
                               color: const Color(0xff5E5F68)
                             ),
                             onPressed: () {
-                              if(test.userList.contains(tempUser)) { //리스트 안에 있음
-                                //ref.read(curpeopleNumProvider.notifier).state--;
-                                tempPeopleNum = test.peopleNum;
-                                tempPeopleNum--;
-                                tempUserList.addAll(test.userList);
-                                tempUserList.remove(tempUser);
-                                test = test.copyWith(userList: tempUserList, peopleNum: tempPeopleNum);
+                              if(test.isInsert) { //리스트 안에 있음
+                                setState(() {
+                                  updateData();
+                                  //subUser();
+                                });
                                 showToast('취소했습니다');
                               } else { //리스트 안에 없음
                                 if(curUserNum < test.peopleLimit) { // 인원수 안 넘침
-                                  //서버에 인원수 체크
-                                  //ref.read(curpeopleNumProvider.notifier).state++;
-                                  tempPeopleNum = test.peopleNum;
-                                  tempPeopleNum++;
-                                  tempUserList.addAll(test.userList);
-                                  tempUserList.add(tempUser);
-                                  test = test.copyWith(userList: tempUserList, peopleNum: tempPeopleNum);
+                                  // 서버에 증원 요청 -> 데이터 갱신 -> 화면 리빌드
+                                  setState(() {
+                                    updateData();
+                                    //addUser();
+                                  });
                                   showToast('참가했습니다');
                                 } else { //인원수 넘침
                                   null;
                                   showToast('모집이 마감되었습니다');
                                 }
                               }
-                              print(test.userList.toString());
                             },
                             style: OutlinedButton.styleFrom(
                               backgroundColor: Color(particitationButtonColor),
@@ -271,7 +341,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                                 color: Color(0xff5E5F68)
                             ),
                             onPressed: () {
-                              if(test.userList.contains(tempUser)) { //리스트 안에 있음
+                              if(test.isInsert) { //리스트 안에 있음
                                 if(curUserNum < test.peopleLimit) { // 인원수 안 넘침
                                   showModalBottomSheet(
                                       context: context,

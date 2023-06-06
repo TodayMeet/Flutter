@@ -33,6 +33,7 @@ _$_meet _$$_meetFromJson(Map<String, dynamic> json) => _$_meet(
       userList: (json['userList'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)
           .toList(),
+      isInsert: json['isInsert'] as bool,
       age: json['age'] as String,
     );
 
@@ -59,5 +60,6 @@ Map<String, dynamic> _$$_meetToJson(_$_meet instance) => <String, dynamic>{
       'hostUser': instance.hostUser,
       'comments': instance.comments,
       'userList': instance.userList,
+      'isInsert': instance.isInsert,
       'age': instance.age,
     };

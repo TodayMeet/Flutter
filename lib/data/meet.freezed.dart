@@ -43,6 +43,7 @@ mixin _$meet {
       throw _privateConstructorUsedError; //주최자 정보
   List<Map> get comments => throw _privateConstructorUsedError; //댓글 정보
   List<Map> get userList => throw _privateConstructorUsedError; //참가자 리스트
+  bool get isInsert => throw _privateConstructorUsedError;
   String get age => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -78,6 +79,7 @@ abstract class $meetCopyWith<$Res> {
       Map<dynamic, dynamic> hostUser,
       List<Map> comments,
       List<Map> userList,
+      bool isInsert,
       String age});
 }
 
@@ -116,6 +118,7 @@ class _$meetCopyWithImpl<$Res, $Val extends meet>
     Object? hostUser = null,
     Object? comments = null,
     Object? userList = null,
+    Object? isInsert = null,
     Object? age = null,
   }) {
     return _then(_value.copyWith(
@@ -207,6 +210,10 @@ class _$meetCopyWithImpl<$Res, $Val extends meet>
           ? _value.userList
           : userList // ignore: cast_nullable_to_non_nullable
               as List<Map>,
+      isInsert: null == isInsert
+          ? _value.isInsert
+          : isInsert // ignore: cast_nullable_to_non_nullable
+              as bool,
       age: null == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
@@ -244,6 +251,7 @@ abstract class _$$_meetCopyWith<$Res> implements $meetCopyWith<$Res> {
       Map<dynamic, dynamic> hostUser,
       List<Map> comments,
       List<Map> userList,
+      bool isInsert,
       String age});
 }
 
@@ -278,6 +286,7 @@ class __$$_meetCopyWithImpl<$Res> extends _$meetCopyWithImpl<$Res, _$_meet>
     Object? hostUser = null,
     Object? comments = null,
     Object? userList = null,
+    Object? isInsert = null,
     Object? age = null,
   }) {
     return _then(_$_meet(
@@ -369,6 +378,10 @@ class __$$_meetCopyWithImpl<$Res> extends _$meetCopyWithImpl<$Res, _$_meet>
           ? _value._userList
           : userList // ignore: cast_nullable_to_non_nullable
               as List<Map>,
+      isInsert: null == isInsert
+          ? _value.isInsert
+          : isInsert // ignore: cast_nullable_to_non_nullable
+              as bool,
       age: null == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
@@ -403,6 +416,7 @@ class _$_meet implements _meet {
       required final Map<dynamic, dynamic> hostUser,
       required final List<Map> comments,
       required final List<Map> userList,
+      required this.isInsert,
       required this.age})
       : _hostUser = hostUser,
         _comments = comments,
@@ -496,11 +510,13 @@ class _$_meet implements _meet {
 
 //참가자 리스트
   @override
+  final bool isInsert;
+  @override
   final String age;
 
   @override
   String toString() {
-    return 'meet(meetNo: $meetNo, categoryName: $categoryName, time: $time, title: $title, userNo: $userNo, userProfileImage: $userProfileImage, username: $username, address: $address, meetImage: $meetImage, commentNum: $commentNum, peopleLimit: $peopleLimit, peopleNum: $peopleNum, lat: $lat, lon: $lon, personClosed: $personClosed, fee: $fee, content: $content, approval: $approval, timeClosed: $timeClosed, hostUser: $hostUser, comments: $comments, userList: $userList, age: $age)';
+    return 'meet(meetNo: $meetNo, categoryName: $categoryName, time: $time, title: $title, userNo: $userNo, userProfileImage: $userProfileImage, username: $username, address: $address, meetImage: $meetImage, commentNum: $commentNum, peopleLimit: $peopleLimit, peopleNum: $peopleNum, lat: $lat, lon: $lon, personClosed: $personClosed, fee: $fee, content: $content, approval: $approval, timeClosed: $timeClosed, hostUser: $hostUser, comments: $comments, userList: $userList, isInsert: $isInsert, age: $age)';
   }
 
   @override
@@ -539,6 +555,8 @@ class _$_meet implements _meet {
             const DeepCollectionEquality().equals(other._hostUser, _hostUser) &&
             const DeepCollectionEquality().equals(other._comments, _comments) &&
             const DeepCollectionEquality().equals(other._userList, _userList) &&
+            (identical(other.isInsert, isInsert) ||
+                other.isInsert == isInsert) &&
             (identical(other.age, age) || other.age == age));
   }
 
@@ -568,6 +586,7 @@ class _$_meet implements _meet {
         const DeepCollectionEquality().hash(_hostUser),
         const DeepCollectionEquality().hash(_comments),
         const DeepCollectionEquality().hash(_userList),
+        isInsert,
         age
       ]);
 
@@ -609,6 +628,7 @@ abstract class _meet implements meet {
       required final Map<dynamic, dynamic> hostUser,
       required final List<Map> comments,
       required final List<Map> userList,
+      required final bool isInsert,
       required final String age}) = _$_meet;
 
   factory _meet.fromJson(Map<String, dynamic> json) = _$_meet.fromJson;
@@ -658,6 +678,8 @@ abstract class _meet implements meet {
   @override //댓글 정보
   List<Map> get userList;
   @override //참가자 리스트
+  bool get isInsert;
+  @override
   String get age;
   @override
   @JsonKey(ignore: true)

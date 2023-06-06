@@ -29,7 +29,8 @@ class meet with _$meet{
     required Map hostUser, //주최자 정보
     required List<Map> comments, //댓글 정보
     required List<Map> userList, //참가자 리스트
-    required String age,
+    required bool isInsert, //유저 참가 여부
+    required String age, //나이 제한
 
   }) = _meet;
 

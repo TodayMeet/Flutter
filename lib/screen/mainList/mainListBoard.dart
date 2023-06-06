@@ -9,7 +9,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:front/data/dummy_meetList.dart';
+import 'package:front/data/meet.dart';
 import 'package:front/model/TextPrint.dart';
+import 'package:front/screen/mainList/serverTest.dart';
 import '../../data/meetList_Provider.dart';
 import '../mainMap/mainPageMap.dart';
 import 'package:front/screen/alarm/alarm.dart';
@@ -35,27 +37,42 @@ class MainListBoard extends ConsumerStatefulWidget {
 }
 
 class MainListBoardState extends ConsumerState<MainListBoard> {
+  List<meetList> tempList = [];
+  int postNo = 0;
+
+  void postListData(String sort, int pageNo) async {
+    try {
+      final url = Uri.parse("http://todaymeet.shop:8080/meet/list/대");
+      var postBody =
+      {
+        "sort":sort,
+        "page":pageNo
+      };
+
+      http.Response response = await http.post(
+        url,
+        headers: {'Content-Type' : 'application/json'},
+        body: json.encode(postBody),
+      );
+
+      if (response.statusCode == 200) {
+        tempList = [];
+        List<dynamic> meetListData = json.decode(utf8.decode(response.bodyBytes));
+        meetListData.forEach((element) => tempList.add(meetList.fromJson(element)));
+      } else {
+        showToast('Data download failed!');
+        print('Failed to post data : ${response.statusCode}');
+      }
+    } catch(e) {
+      showToast('Data download failed!');
+      print('Failed to post data');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-
-  }
-
-  void jsonTest() async{
-    try {
-      http.Response jsontest = await http.get(Uri.parse('http://todaymeet.shop:8080/meet/detail/6'));
-      if(jsontest.statusCode == 200) {
-        String body = jsontest.body;
-        var myjson = jsonDecode(body)["fee"];
-        print('Success!');
-        print(myjson);
-      } else {
-        print('Super Error!!!!!');
-      }
-    } catch(e) {
-      print('There was a problem with the internet connection.');
-    }
+    Future.delayed(const Duration(milliseconds: 300));
   }
 
   @override
@@ -105,14 +122,24 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
         enablePullDown: true,
         enablePullUp: true,
         onRefresh: () async {
-          await Future.delayed(const Duration(milliseconds: 500));
-          ref.read(meetListProvider.notifier).initList(initList);
+          Future.delayed(const Duration(milliseconds: 300));
+          postNo = 0;
+          print(postNo);
+          postListData("최신순", postNo);
+          postNo++;
+          ref.read(meetListProvider.notifier).clearList();
+          tempList.forEach((element) => print(element));
+          tempList.forEach((meetList) => ref.read(meetListProvider.notifier).addList(meetList));
           _refreshController.refreshCompleted();
         },
         onLoading: () async {
-          await Future.delayed(const Duration(milliseconds: 500));
+          Future.delayed(const Duration(milliseconds: 300));
           if(ref.read(meetListProvider).length < 31) {
-            ref.read(meetListProvider.notifier).addList(addList);
+            print(postNo);
+            postListData("최신순", postNo);
+            postNo++;
+            tempList.forEach((element) => print(element));
+            tempList.forEach((meetList) => ref.read(meetListProvider.notifier).addList(meetList));
           }
           _refreshController.loadComplete();
         },
@@ -171,7 +198,10 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
             //test용 버튼
             ElevatedButton(
               onPressed: () {
-                //jsonTest();
+                Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context) =>serverTest())
+                );
               },
               // ignore: prefer_const_constructors
               child: Text('server test'),

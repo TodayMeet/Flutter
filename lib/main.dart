@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'screen/setting/setlocation.dart';
 import 'screen/setting/setFilter.dart';
 import 'screen/mainMap/mainPageMap.dart';
 import 'package:front/screen/mainList/mainListBoard.dart';
@@ -85,4 +84,3 @@ class MainPage extends ConsumerWidget {
     );
   }
 }
-

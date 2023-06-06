@@ -25,16 +25,16 @@ mixin _$meetList {
   String get title => throw _privateConstructorUsedError; //모임 제목
   int get meetNo => throw _privateConstructorUsedError;
   int get userNo => throw _privateConstructorUsedError;
-  String get userProfileImage => throw _privateConstructorUsedError; //유저 아이콘
+  dynamic get userProfileImage => throw _privateConstructorUsedError; //유저 아이콘
   String get username => throw _privateConstructorUsedError; //유저 이름
-  double get lat => throw _privateConstructorUsedError; //위도
-//required double lon, //경도
-  String get meetImage => throw _privateConstructorUsedError; //모임 이미지
+  dynamic get lat => throw _privateConstructorUsedError; //위도
+  dynamic get lon => throw _privateConstructorUsedError; //경도
+  dynamic get meetImage => throw _privateConstructorUsedError; //모임 이미지
   int get commentNum => throw _privateConstructorUsedError; //댓글 수
   int get peopleLimit => throw _privateConstructorUsedError; //모집 인원 수
   int get peopleNum => throw _privateConstructorUsedError; //현재 인원 수
   String get address => throw _privateConstructorUsedError; //주소
-  bool get personClosed => throw _privateConstructorUsedError;
+  bool get peopleClosed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -53,15 +53,16 @@ abstract class $meetListCopyWith<$Res> {
       String title,
       int meetNo,
       int userNo,
-      String userProfileImage,
+      dynamic userProfileImage,
       String username,
-      double lat,
-      String meetImage,
+      dynamic lat,
+      dynamic lon,
+      dynamic meetImage,
       int commentNum,
       int peopleLimit,
       int peopleNum,
       String address,
-      bool personClosed});
+      bool peopleClosed});
 }
 
 /// @nodoc
@@ -82,15 +83,16 @@ class _$meetListCopyWithImpl<$Res, $Val extends meetList>
     Object? title = null,
     Object? meetNo = null,
     Object? userNo = null,
-    Object? userProfileImage = null,
+    Object? userProfileImage = freezed,
     Object? username = null,
-    Object? lat = null,
-    Object? meetImage = null,
+    Object? lat = freezed,
+    Object? lon = freezed,
+    Object? meetImage = freezed,
     Object? commentNum = null,
     Object? peopleLimit = null,
     Object? peopleNum = null,
     Object? address = null,
-    Object? personClosed = null,
+    Object? peopleClosed = null,
   }) {
     return _then(_value.copyWith(
       categoryName: null == categoryName
@@ -113,22 +115,26 @@ class _$meetListCopyWithImpl<$Res, $Val extends meetList>
           ? _value.userNo
           : userNo // ignore: cast_nullable_to_non_nullable
               as int,
-      userProfileImage: null == userProfileImage
+      userProfileImage: freezed == userProfileImage
           ? _value.userProfileImage
           : userProfileImage // ignore: cast_nullable_to_non_nullable
-              as String,
+              as dynamic,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      lat: null == lat
+      lat: freezed == lat
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
-              as double,
-      meetImage: null == meetImage
+              as dynamic,
+      lon: freezed == lon
+          ? _value.lon
+          : lon // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      meetImage: freezed == meetImage
           ? _value.meetImage
           : meetImage // ignore: cast_nullable_to_non_nullable
-              as String,
+              as dynamic,
       commentNum: null == commentNum
           ? _value.commentNum
           : commentNum // ignore: cast_nullable_to_non_nullable
@@ -145,9 +151,9 @@ class _$meetListCopyWithImpl<$Res, $Val extends meetList>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      personClosed: null == personClosed
-          ? _value.personClosed
-          : personClosed // ignore: cast_nullable_to_non_nullable
+      peopleClosed: null == peopleClosed
+          ? _value.peopleClosed
+          : peopleClosed // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -166,15 +172,16 @@ abstract class _$$_meetListCopyWith<$Res> implements $meetListCopyWith<$Res> {
       String title,
       int meetNo,
       int userNo,
-      String userProfileImage,
+      dynamic userProfileImage,
       String username,
-      double lat,
-      String meetImage,
+      dynamic lat,
+      dynamic lon,
+      dynamic meetImage,
       int commentNum,
       int peopleLimit,
       int peopleNum,
       String address,
-      bool personClosed});
+      bool peopleClosed});
 }
 
 /// @nodoc
@@ -193,15 +200,16 @@ class __$$_meetListCopyWithImpl<$Res>
     Object? title = null,
     Object? meetNo = null,
     Object? userNo = null,
-    Object? userProfileImage = null,
+    Object? userProfileImage = freezed,
     Object? username = null,
-    Object? lat = null,
-    Object? meetImage = null,
+    Object? lat = freezed,
+    Object? lon = freezed,
+    Object? meetImage = freezed,
     Object? commentNum = null,
     Object? peopleLimit = null,
     Object? peopleNum = null,
     Object? address = null,
-    Object? personClosed = null,
+    Object? peopleClosed = null,
   }) {
     return _then(_$_meetList(
       categoryName: null == categoryName
@@ -224,22 +232,26 @@ class __$$_meetListCopyWithImpl<$Res>
           ? _value.userNo
           : userNo // ignore: cast_nullable_to_non_nullable
               as int,
-      userProfileImage: null == userProfileImage
+      userProfileImage: freezed == userProfileImage
           ? _value.userProfileImage
           : userProfileImage // ignore: cast_nullable_to_non_nullable
-              as String,
+              as dynamic,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      lat: null == lat
+      lat: freezed == lat
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
-              as double,
-      meetImage: null == meetImage
+              as dynamic,
+      lon: freezed == lon
+          ? _value.lon
+          : lon // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      meetImage: freezed == meetImage
           ? _value.meetImage
           : meetImage // ignore: cast_nullable_to_non_nullable
-              as String,
+              as dynamic,
       commentNum: null == commentNum
           ? _value.commentNum
           : commentNum // ignore: cast_nullable_to_non_nullable
@@ -256,9 +268,9 @@ class __$$_meetListCopyWithImpl<$Res>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      personClosed: null == personClosed
-          ? _value.personClosed
-          : personClosed // ignore: cast_nullable_to_non_nullable
+      peopleClosed: null == peopleClosed
+          ? _value.peopleClosed
+          : peopleClosed // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -276,12 +288,13 @@ class _$_meetList implements _meetList {
       required this.userProfileImage,
       required this.username,
       required this.lat,
+      required this.lon,
       required this.meetImage,
       required this.commentNum,
       required this.peopleLimit,
       required this.peopleNum,
       required this.address,
-      required this.personClosed});
+      required this.peopleClosed});
 
   factory _$_meetList.fromJson(Map<String, dynamic> json) =>
       _$$_meetListFromJson(json);
@@ -300,17 +313,19 @@ class _$_meetList implements _meetList {
   @override
   final int userNo;
   @override
-  final String userProfileImage;
+  final dynamic userProfileImage;
 //유저 아이콘
   @override
   final String username;
 //유저 이름
   @override
-  final double lat;
+  final dynamic lat;
 //위도
-//required double lon, //경도
   @override
-  final String meetImage;
+  final dynamic lon;
+//경도
+  @override
+  final dynamic meetImage;
 //모임 이미지
   @override
   final int commentNum;
@@ -325,11 +340,11 @@ class _$_meetList implements _meetList {
   final String address;
 //주소
   @override
-  final bool personClosed;
+  final bool peopleClosed;
 
   @override
   String toString() {
-    return 'meetList(categoryName: $categoryName, time: $time, title: $title, meetNo: $meetNo, userNo: $userNo, userProfileImage: $userProfileImage, username: $username, lat: $lat, meetImage: $meetImage, commentNum: $commentNum, peopleLimit: $peopleLimit, peopleNum: $peopleNum, address: $address, personClosed: $personClosed)';
+    return 'meetList(categoryName: $categoryName, time: $time, title: $title, meetNo: $meetNo, userNo: $userNo, userProfileImage: $userProfileImage, username: $username, lat: $lat, lon: $lon, meetImage: $meetImage, commentNum: $commentNum, peopleLimit: $peopleLimit, peopleNum: $peopleNum, address: $address, peopleClosed: $peopleClosed)';
   }
 
   @override
@@ -343,13 +358,13 @@ class _$_meetList implements _meetList {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.meetNo, meetNo) || other.meetNo == meetNo) &&
             (identical(other.userNo, userNo) || other.userNo == userNo) &&
-            (identical(other.userProfileImage, userProfileImage) ||
-                other.userProfileImage == userProfileImage) &&
+            const DeepCollectionEquality()
+                .equals(other.userProfileImage, userProfileImage) &&
             (identical(other.username, username) ||
                 other.username == username) &&
-            (identical(other.lat, lat) || other.lat == lat) &&
-            (identical(other.meetImage, meetImage) ||
-                other.meetImage == meetImage) &&
+            const DeepCollectionEquality().equals(other.lat, lat) &&
+            const DeepCollectionEquality().equals(other.lon, lon) &&
+            const DeepCollectionEquality().equals(other.meetImage, meetImage) &&
             (identical(other.commentNum, commentNum) ||
                 other.commentNum == commentNum) &&
             (identical(other.peopleLimit, peopleLimit) ||
@@ -357,8 +372,8 @@ class _$_meetList implements _meetList {
             (identical(other.peopleNum, peopleNum) ||
                 other.peopleNum == peopleNum) &&
             (identical(other.address, address) || other.address == address) &&
-            (identical(other.personClosed, personClosed) ||
-                other.personClosed == personClosed));
+            (identical(other.peopleClosed, peopleClosed) ||
+                other.peopleClosed == peopleClosed));
   }
 
   @JsonKey(ignore: true)
@@ -370,15 +385,16 @@ class _$_meetList implements _meetList {
       title,
       meetNo,
       userNo,
-      userProfileImage,
+      const DeepCollectionEquality().hash(userProfileImage),
       username,
-      lat,
-      meetImage,
+      const DeepCollectionEquality().hash(lat),
+      const DeepCollectionEquality().hash(lon),
+      const DeepCollectionEquality().hash(meetImage),
       commentNum,
       peopleLimit,
       peopleNum,
       address,
-      personClosed);
+      peopleClosed);
 
   @JsonKey(ignore: true)
   @override
@@ -401,15 +417,16 @@ abstract class _meetList implements meetList {
       required final String title,
       required final int meetNo,
       required final int userNo,
-      required final String userProfileImage,
+      required final dynamic userProfileImage,
       required final String username,
-      required final double lat,
-      required final String meetImage,
+      required final dynamic lat,
+      required final dynamic lon,
+      required final dynamic meetImage,
       required final int commentNum,
       required final int peopleLimit,
       required final int peopleNum,
       required final String address,
-      required final bool personClosed}) = _$_meetList;
+      required final bool peopleClosed}) = _$_meetList;
 
   factory _meetList.fromJson(Map<String, dynamic> json) = _$_meetList.fromJson;
 
@@ -424,14 +441,15 @@ abstract class _meetList implements meetList {
   @override
   int get userNo;
   @override
-  String get userProfileImage;
+  dynamic get userProfileImage;
   @override //유저 아이콘
   String get username;
   @override //유저 이름
-  double get lat;
+  dynamic get lat;
   @override //위도
-//required double lon, //경도
-  String get meetImage;
+  dynamic get lon;
+  @override //경도
+  dynamic get meetImage;
   @override //모임 이미지
   int get commentNum;
   @override //댓글 수
@@ -441,7 +459,7 @@ abstract class _meetList implements meetList {
   @override //현재 인원 수
   String get address;
   @override //주소
-  bool get personClosed;
+  bool get peopleClosed;
   @override
   @JsonKey(ignore: true)
   _$$_meetListCopyWith<_$_meetList> get copyWith =>

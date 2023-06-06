@@ -87,6 +87,7 @@ class _Phone_ijState extends State<Phone_ij> {
     int minutes = _countdown ~/ 60;
     int seconds = _countdown % 60;
     return Scaffold(
+        resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 1.0,

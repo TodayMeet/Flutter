@@ -12,10 +12,10 @@ class meet with _$meet{
     required DateTime time, //모집 일자, 시간
     required String title, //모임 제목
     required int userNo,
-    required String ? userProfileImage, //유저 아이콘
+    required dynamic userProfileImage, //유저 아이콘
     required String username, //유저 이름
     required String address, //주소
-    required String ? meetImage, //모임 이미지
+    required dynamic meetImage, //모임 이미지
     required int commentNum, //댓글 수
     required int peopleLimit, //모집 인원 수
     required int peopleNum, //현재 인원 수

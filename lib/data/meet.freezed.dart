@@ -25,10 +25,10 @@ mixin _$meet {
   DateTime get time => throw _privateConstructorUsedError; //모집 일자, 시간
   String get title => throw _privateConstructorUsedError; //모임 제목
   int get userNo => throw _privateConstructorUsedError;
-  String? get userProfileImage => throw _privateConstructorUsedError; //유저 아이콘
+  dynamic get userProfileImage => throw _privateConstructorUsedError; //유저 아이콘
   String get username => throw _privateConstructorUsedError; //유저 이름
   String get address => throw _privateConstructorUsedError; //주소
-  String? get meetImage => throw _privateConstructorUsedError; //모임 이미지
+  dynamic get meetImage => throw _privateConstructorUsedError; //모임 이미지
   int get commentNum => throw _privateConstructorUsedError; //댓글 수
   int get peopleLimit => throw _privateConstructorUsedError; //모집 인원 수
   int get peopleNum => throw _privateConstructorUsedError; //현재 인원 수
@@ -61,10 +61,10 @@ abstract class $meetCopyWith<$Res> {
       DateTime time,
       String title,
       int userNo,
-      String? userProfileImage,
+      dynamic userProfileImage,
       String username,
       String address,
-      String? meetImage,
+      dynamic meetImage,
       int commentNum,
       int peopleLimit,
       int peopleNum,
@@ -142,7 +142,7 @@ class _$meetCopyWithImpl<$Res, $Val extends meet>
       userProfileImage: freezed == userProfileImage
           ? _value.userProfileImage
           : userProfileImage // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -154,7 +154,7 @@ class _$meetCopyWithImpl<$Res, $Val extends meet>
       meetImage: freezed == meetImage
           ? _value.meetImage
           : meetImage // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       commentNum: null == commentNum
           ? _value.commentNum
           : commentNum // ignore: cast_nullable_to_non_nullable
@@ -227,10 +227,10 @@ abstract class _$$_meetCopyWith<$Res> implements $meetCopyWith<$Res> {
       DateTime time,
       String title,
       int userNo,
-      String? userProfileImage,
+      dynamic userProfileImage,
       String username,
       String address,
-      String? meetImage,
+      dynamic meetImage,
       int commentNum,
       int peopleLimit,
       int peopleNum,
@@ -304,7 +304,7 @@ class __$$_meetCopyWithImpl<$Res> extends _$meetCopyWithImpl<$Res, _$_meet>
       userProfileImage: freezed == userProfileImage
           ? _value.userProfileImage
           : userProfileImage // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -316,7 +316,7 @@ class __$$_meetCopyWithImpl<$Res> extends _$meetCopyWithImpl<$Res, _$_meet>
       meetImage: freezed == meetImage
           ? _value.meetImage
           : meetImage // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       commentNum: null == commentNum
           ? _value.commentNum
           : commentNum // ignore: cast_nullable_to_non_nullable
@@ -424,7 +424,7 @@ class _$_meet implements _meet {
   @override
   final int userNo;
   @override
-  final String? userProfileImage;
+  final dynamic userProfileImage;
 //유저 아이콘
   @override
   final String username;
@@ -433,7 +433,7 @@ class _$_meet implements _meet {
   final String address;
 //주소
   @override
-  final String? meetImage;
+  final dynamic meetImage;
 //모임 이미지
   @override
   final int commentNum;
@@ -514,13 +514,12 @@ class _$_meet implements _meet {
             (identical(other.time, time) || other.time == time) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.userNo, userNo) || other.userNo == userNo) &&
-            (identical(other.userProfileImage, userProfileImage) ||
-                other.userProfileImage == userProfileImage) &&
+            const DeepCollectionEquality()
+                .equals(other.userProfileImage, userProfileImage) &&
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.address, address) || other.address == address) &&
-            (identical(other.meetImage, meetImage) ||
-                other.meetImage == meetImage) &&
+            const DeepCollectionEquality().equals(other.meetImage, meetImage) &&
             (identical(other.commentNum, commentNum) ||
                 other.commentNum == commentNum) &&
             (identical(other.peopleLimit, peopleLimit) ||
@@ -552,10 +551,10 @@ class _$_meet implements _meet {
         time,
         title,
         userNo,
-        userProfileImage,
+        const DeepCollectionEquality().hash(userProfileImage),
         username,
         address,
-        meetImage,
+        const DeepCollectionEquality().hash(meetImage),
         commentNum,
         peopleLimit,
         peopleNum,
@@ -593,10 +592,10 @@ abstract class _meet implements meet {
       required final DateTime time,
       required final String title,
       required final int userNo,
-      required final String? userProfileImage,
+      required final dynamic userProfileImage,
       required final String username,
       required final String address,
-      required final String? meetImage,
+      required final dynamic meetImage,
       required final int commentNum,
       required final int peopleLimit,
       required final int peopleNum,
@@ -625,13 +624,13 @@ abstract class _meet implements meet {
   @override //모임 제목
   int get userNo;
   @override
-  String? get userProfileImage;
+  dynamic get userProfileImage;
   @override //유저 아이콘
   String get username;
   @override //유저 이름
   String get address;
   @override //주소
-  String? get meetImage;
+  dynamic get meetImage;
   @override //모임 이미지
   int get commentNum;
   @override //댓글 수

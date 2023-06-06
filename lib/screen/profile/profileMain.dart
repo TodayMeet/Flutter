@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:front/screen/login/favorite.dart';
 import 'package:front/screen/login/registerProfile.dart';
+import 'package:front/screen/mainMap/mainPageMap.dart';
 import 'package:front/screen/profile/blockManage.dart';
 import 'package:front/screen/profile/hostEvent.dart';
 import 'package:front/screen/profile/joinEvent.dart';
@@ -12,6 +14,9 @@ import 'package:front/screen/profile/pwChange.dart';
 import 'package:front/screen/profile/question.dart';
 import 'package:front/screen/profile/secession.dart';
 import 'package:front/screen/profile/termsofUse.dart';
+import '../../model/bottomBar.dart';
+import '../login/login.dart';
+
 
 class profileMain extends StatefulWidget {
   const profileMain({Key? key}) : super(key: key);
@@ -31,21 +36,22 @@ class _profileMainState extends State<profileMain> {
     double halfWidth = MediaQuery.of(context).size.width / 2;
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 0.0,
+          elevation: 1.0,
           backgroundColor: Colors.white,
-          leading: null,
+          leading: IconButton(onPressed: (){
+            Navigator.push(context,
+                MaterialPageRoute(
+                    builder: (context) => MainPageMap()));
+          }, icon: Icon(Icons.arrow_back_ios,color: Colors.black,)),
           title: Text(
             '내정보',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600
-            ),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
           ),
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () => _logout(context),
               child: Text(
                 '로그아웃',
                 style: TextStyle(
@@ -58,72 +64,107 @@ class _profileMainState extends State<profileMain> {
         ),
         body: SingleChildScrollView(
           child: Column(
-
             mainAxisAlignment: MainAxisAlignment.center,
-
             children: [
-              SizedBox(height: 12,),
+              SizedBox(
+                height: 12,
+              ),
               Row(
                 children: [
-                  SizedBox(width: 24,),
+                  SizedBox(
+                    width: 24,
+                  ),
                   CircleAvatar(
                     radius: 35,
-                    backgroundImage: AssetImage("assets/images/LoginImage/kakao_login_large_wide.png"),
+                    backgroundImage: AssetImage(
+                        "assets/images/LoginImage/kakao_login_large_wide.png"),
                   ),
-                  SizedBox(width: 20,),
+                  SizedBox(
+                    width: 20,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('${name}(${gender})',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w600),),
-                          SizedBox(width: 8.0,),
-                          Text('${birthdate} ',style: TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.w400),),
+                          Text(
+                            '${name}(${gender})',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            width: 8.0,
+                          ),
+                          Text(
+                            '${birthdate} ',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400),
+                          ),
                         ],
                       ),
-                      SizedBox(height: 11,),
+                      SizedBox(
+                        height: 11,
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(),
                         child: Container(
-                          width: MediaQuery.of(context).size.width-138,
+                          width: MediaQuery.of(context).size.width - 138,
                           height: 40,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.push(context,
+                              Navigator.push(
+                                  context,
                                   MaterialPageRoute(
                                       builder: (context) => registerProfile()));
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('프로필 수정',style: TextStyle(color: Color(0xFF666666),fontSize: 14),),
+                                Text(
+                                  '프로필 수정',
+                                  style: TextStyle(
+                                      color: Color(0xFF666666), fontSize: 14),
+                                ),
                                 SizedBox(width: 5),
-                                Icon(Icons.arrow_forward_ios,color: Color(0xFF666666),size: 14,),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Color(0xFF666666),
+                                  size: 14,
+                                ),
                               ],
                             ),
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
                               elevation: MaterialStateProperty.all<double>(0),
                               side: MaterialStateProperty.all<BorderSide>(
-                                BorderSide(color: Color(0xFFD8D8D8), width: 2.0), // 테두리 색상과 너비 지정
+                                BorderSide(
+                                    color: Color(0xFFD8D8D8),
+                                    width: 2.0), // 테두리 색상과 너비 지정
                               ),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0), // 테두리 둥글기 지정
+                                  borderRadius:
+                                      BorderRadius.circular(10.0), // 테두리 둥글기 지정
                                 ),
                               ),
                             ),
                           ),
                         ),
                       )
-
                     ],
                   ),
-
                 ],
               ),
-              SizedBox(height: 12,),
+              SizedBox(
+                height: 12,
+              ),
               Row(
                 children: [
                   Container(
@@ -196,7 +237,6 @@ class _profileMainState extends State<profileMain> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
-
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.symmetric(),
@@ -206,7 +246,7 @@ class _profileMainState extends State<profileMain> {
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         '개최한 건수',
@@ -215,7 +255,7 @@ class _profileMainState extends State<profileMain> {
                             fontSize: 16,
                             fontWeight: FontWeight.w600),
                       ),
-                      Spacer(), // 텍스트와 버튼 사이의 간격 조절
+                      Spacer(),
                       IconButton(
                           onPressed: () {
                             Navigator.push(
@@ -238,7 +278,7 @@ class _profileMainState extends State<profileMain> {
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         '참가한 건수',
@@ -247,7 +287,7 @@ class _profileMainState extends State<profileMain> {
                             fontSize: 16,
                             fontWeight: FontWeight.w600),
                       ),
-                      Spacer(), // 텍스트와 버튼 사이의 간격 조절
+                      Spacer(),
                       IconButton(
                         onPressed: () {
                           Navigator.push(
@@ -261,236 +301,268 @@ class _profileMainState extends State<profileMain> {
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
-                  children: [
-                    Text(
-                      '비밀번호 변경',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Container(
+                  margin: EdgeInsets.symmetric(),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
                     ),
-                    Spacer(),
-                    IconButton(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '비밀번호 변경',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Spacer(),
+                      IconButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => pwChange()));
                         },
-                        icon: Icon(Icons.arrow_forward_ios)),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
+                        icon: Icon(Icons.arrow_forward_ios),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
-                  children: [
-                    Text(
-                      '차단관리',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Container(
+                  margin: EdgeInsets.symmetric(),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
                     ),
-                    Spacer(), // 텍스트와 버튼 사이의 간격 조절
-                    IconButton(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '차단관리',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Spacer(),
+                      IconButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => blockManage()));
                         },
-                        icon: Icon(Icons.arrow_forward_ios)),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
+                        icon: Icon(Icons.arrow_forward_ios),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
-                  children: [
-                    Text(
-                      '관심사',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Container(
+                  margin: EdgeInsets.symmetric(),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
                     ),
-                    Spacer(), // 텍스트와 버튼 사이의 간격 조절
-                    IconButton(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '관심사',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Spacer(),
+                      IconButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => favorite()));
-                        }, icon: Icon(Icons.arrow_forward_ios)),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
+                        },
+                        icon: Icon(Icons.arrow_forward_ios),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
-                  children: [
-                    Text(
-                      'FAQ',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Container(
+                  margin: EdgeInsets.symmetric(),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
                     ),
-                    Spacer(), // 텍스트와 버튼 사이의 간격 조절
-                    IconButton(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'FAQ',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Spacer(),
+                      IconButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => oftenQuestion()));
                         },
-                        icon: Icon(Icons.arrow_forward_ios)),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
+                        icon: Icon(Icons.arrow_forward_ios),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
-                  children: [
-                    Text(
-                      '문의하기',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Container(
+                  margin: EdgeInsets.symmetric(),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
                     ),
-                    Spacer(), // 텍스트와 버튼 사이의 간격 조절
-                    IconButton(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '문의하기',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Spacer(),
+                      IconButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => question()));
                         },
-                        icon: Icon(Icons.arrow_forward_ios)),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
+                        icon: Icon(Icons.arrow_forward_ios),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
-                  children: [
-                    Text(
-                      '공지사항',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Container(
+                  margin: EdgeInsets.symmetric(),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
                     ),
-                    Spacer(), // 텍스트와 버튼 사이의 간격 조절
-                    IconButton(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '공지사항',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Spacer(),
+                      IconButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => noticeList()));
                         },
-                        icon: Icon(Icons.arrow_forward_ios)),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
+                        icon: Icon(Icons.arrow_forward_ios),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
-                  children: [
-                    Text(
-                      '개인정보처리방침',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Container(
+                  margin: EdgeInsets.symmetric(),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
                     ),
-                    Spacer(), // 텍스트와 버튼 사이의 간격 조절
-                    IconButton(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '개인정보처리방침',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Spacer(),
+                      IconButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => privatePolicy()));
                         },
-                        icon: Icon(Icons.arrow_forward_ios)),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
+                        icon: Icon(Icons.arrow_forward_ios),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 오른쪽 정렬
-                  children: [
-                    Text(
-                      '이용약관',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Container(
+                  margin: EdgeInsets.symmetric(),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Color(0xFFE3E3E3), width: 1.0),
                     ),
-                    Spacer(), // 텍스트와 버튼 사이의 간격 조절
-                    IconButton(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '이용 약관',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Spacer(),
+                      IconButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => termsofUse()));
                         },
-                        icon: Icon(Icons.arrow_forward_ios)),
-                  ],
+                        icon: Icon(Icons.arrow_forward_ios),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Row(
@@ -516,6 +588,34 @@ class _profileMainState extends State<profileMain> {
               )
             ],
           ),
-        ));
+        ),
+      bottomNavigationBar: const BottomAppBar(child: BottomBar()),);
   }
+}
+
+void _logout(BuildContext context) {
+  showCupertinoModalPopup<void>(
+    context: context,
+    builder: (BuildContext context) => CupertinoAlertDialog(
+      content: const Text('로그아웃 하시겠습니까?'),
+      actions: <CupertinoDialogAction>[
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    login()), (route) => false);
+          },
+          child: const Text('확인'),
+        ),
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('취소'),
+        ),
+      ],
+    ),
+  );
 }

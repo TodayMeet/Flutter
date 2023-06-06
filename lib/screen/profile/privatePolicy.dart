@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:front/screen/profile/profileMain.dart';
-
-
-
-
 
 class privatePolicy extends StatefulWidget {
   const privatePolicy({Key? key}) : super(key: key);
@@ -30,28 +24,24 @@ class _privatePolicyState extends State<privatePolicy> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0.0,
+        elevation: 1.0,
         backgroundColor: Colors.white,
-        leading: IconButton(onPressed: () {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => profileMain()),
-          );
-        },
-            icon: Icon(Icons.arrow_back_ios, color: Colors.black,)),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+        ),
         title: Text(
-          '개인정보처리방침',
+          '이용약관',
           style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
           ),
         ),
         actions: null,
@@ -59,14 +49,12 @@ class _privatePolicyState extends State<privatePolicy> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
           child: Center(
             child: Text(text),
           ),
         ),
       ),
-
     );
   }
-
 }

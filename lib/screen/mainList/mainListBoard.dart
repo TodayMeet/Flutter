@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:front/model/TextPrint.dart';
+import 'package:front/screen/alarm/alarm.dart';
 import '../setting/setFilter.dart';
 import '../setting/setlocation.dart';
 import 'ListDetail.dart';
@@ -58,6 +59,17 @@ class _MainListBoardState extends ConsumerState<MainListBoard> {
               fontFamily: 'PretendardBold',
               color: Colors.black),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => alarm()));
+              },
+              icon: Icon(
+                Icons.notifications_none,
+                color: Colors.black,
+              ))
+        ],
         backgroundColor: Colors.white,
       ),
       bottomNavigationBar: const BottomAppBar(

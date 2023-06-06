@@ -24,25 +24,3 @@ Widget IntText(num, double size, String font, Color color) {
     ),
   );
 } //정수 출력
-
-Widget TimeText(int num, double size, String font, Color color) {
-  if(num == 0)
-  {
-    return Text('00',
-      style: TextStyle(
-        color: color,
-        fontSize: size,
-        fontFamily: font,
-      ),
-    );
-  }
-  else {
-    return Text('$num',
-      style: TextStyle(
-        color: color,
-        fontSize: size,
-        fontFamily: font,
-      ),
-    );
-  }
-} // 분 출력

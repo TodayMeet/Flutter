@@ -1,41 +1,66 @@
 //메인 리스트 게시판
 
-// 최종 수정: 2023.5.17
+// 최종 수정: 2023.6.2
 // 작업자: 정해수
 
 //추가 작업 예정 사항:
 // 주변 이벤트 vs 주변의 새 이벤트
 // 리스트 정렬 순서
-// 리스트 필터 화면 이동 아이콘
-// 지도 화면 이동 아이콘
-// 현재 위치 설정
-// 하단 고정 바
 
 import 'package:flutter/material.dart';
+import 'package:front/data/dummy_meetList.dart';
 import 'package:front/model/TextPrint.dart';
+import '../../data/meetList_Provider.dart';
+import '../mainMap/mainPageMap.dart';
 import '../setting/setFilter.dart';
 import '../setting/setlocation.dart';
-import 'ListDetail.dart';
+import 'Loading.dart';
 import 'mainListView.dart';
 import 'package:front/model/mainList/Advertisement.dart';
 import 'package:front/data/meetList.dart';
 import 'package:front/model/bottomBar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-String dong = "용산동";
+RefreshController _refreshController = RefreshController(initialRefresh: true);
 
 class MainListBoard extends ConsumerStatefulWidget {
   const MainListBoard({Key? key}) : super(key: key);
 
   @override
-  _MainListBoardState createState() => _MainListBoardState();
+  MainListBoardState createState() => MainListBoardState();
 }
 
-class _MainListBoardState extends ConsumerState<MainListBoard> {
+class MainListBoardState extends ConsumerState<MainListBoard> {
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  void jsonTest() async{
+    try {
+      http.Response jsontest = await http.get(Uri.parse('http://todaymeet.shop:8080/meet/detail/6'));
+      if(jsontest.statusCode == 200) {
+        String body = jsontest.body;
+        var myjson = jsonDecode(body)["fee"];
+        print('Success!');
+        print(myjson);
+      } else {
+        print('Super Error!!!!!');
+      }
+    } catch(e) {
+      print('There was a problem with the internet connection.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    
+    List<meetList> viewList = ref.watch(meetListProvider);
+
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 150,
@@ -46,7 +71,7 @@ class _MainListBoardState extends ConsumerState<MainListBoard> {
                       builder: (context) => LocationPage()));
             },
             icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-            label: Text(dong,
+            label: Text(ref.read(dongProvider.notifier).state,
               style: const TextStyle(
                   color: Colors.black,
                   fontFamily: 'PretendardBold'),
@@ -59,34 +84,101 @@ class _MainListBoardState extends ConsumerState<MainListBoard> {
               color: Colors.black),
         ),
         backgroundColor: Colors.white,
+        elevation: 1,
       ),
       bottomNavigationBar: const BottomAppBar(
           child: BottomBar()
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24), //컨테이너 외부 공백 조절
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        onRefresh: () async {
+          await Future.delayed(const Duration(milliseconds: 500));
+          ref.read(meetListProvider.notifier).initList(initList);
+          _refreshController.refreshCompleted();
+        },
+        onLoading: () async {
+          await Future.delayed(const Duration(milliseconds: 500));
+          if(ref.read(meetListProvider).length < 31) {
+            ref.read(meetListProvider.notifier).addList(addList);
+          }
+          _refreshController.loadComplete();
+        },
+        header: CustomHeader(
+          builder: (BuildContext context, RefreshStatus? mode) {
+            Widget body;
+            if (mode == RefreshStatus.idle) {
+              body = StringText('건수 목록 새로고침', 20, 'PretendardBold', Colors.black);
+            } else if (mode == RefreshStatus.refreshing) {
+              body = StringText('건수 불러오는 중...', 20, 'PretendardBold', Colors.black);
+            } else if (mode == RefreshStatus.failed) {
+              body = StringText('불러오는 과정에서 오류가 발생했습니다', 20, 'PretendardBold', Colors.black);
+            } else {
+              body = StringText('건수 목록 새로고침', 20, 'PretendardBold', Colors.black);
+            }
+            return SizedBox(
+              height: 55.0,
+              child: Center(child: body),
+            );
+          },
+        ),
+        footer: CustomFooter(
+          builder: (BuildContext context,LoadStatus? mode){
+            Widget body;
+            if(ref.read(meetListProvider).length > 31) {
+              body = const Text("");
+            } else if(mode==LoadStatus.idle){
+              body =  StringText('건수 더 보기', 20, 'PretendardBold', Colors.black);
+            }
+            else if(mode==LoadStatus.loading){
+              body =  StringText('건수 불러오는 중...', 20, 'PretendardBold', Colors.black);
+            }
+            else if(mode == LoadStatus.failed){
+              body = StringText('불러오는 과정에서 오류가 발생했습니다', 20, 'PretendardBold', Colors.black);
+            }
+            else if(mode == LoadStatus.canLoading){
+              body = StringText('건수 불러오는 중...', 20, 'PretendardBold', Colors.black);
+            }
+            else{
+              body = const Text("");
+            }
+            return SizedBox(
+              height: 55.0,
+              child: Center(child:body),
+            );
+          },
+        ),
+        controller: _refreshController,
         child: ListView(// 메인 리스트 스크롤 뷰
+          padding: const EdgeInsets.all(24),
           children: [
             const SizedBox(height: 24.0,), //
             StringText('📣 주변의 새 이벤트', 24, 'PretendardBold', const Color(0xff2F3036)),
             const SizedBox(height: 19.0,),
 
+            //test용 버튼
             ElevatedButton(
-              onPressed: () => ref.watch(curUserNumProvider.notifier).state++,
-                // ignore: prefer_const_constructors
-              child: Text('test (+)'),
-            ), // test+
-            ElevatedButton(
-              onPressed: () => ref.watch(curUserNumProvider.notifier).state--,
+              onPressed: () {
+                //jsonTest();
+              },
               // ignore: prefer_const_constructors
-              child: Text('test (-)'),
+              child: Text('server test'),
             ), // test-
 
-            //건수 리스트
-            ListViewer(context, ref, test0),
-            ListViewer(context, ref, test1),
+            Column(
+                children: viewList.asMap().entries.map((list) {
+                  if(list.key % 5 == 0 && list.key != 0) { //광고 나오는 조건
+                    return Column(
+                      children: [
+                        Advertisement('광고'), //광고 배너
+                        ListViewer(context, ref, list.value),
+                      ],
+                    );
+                  }
+                  return ListViewer(context, ref, list.value);
+                }).toList()
+            ), //건수 리스트
 
-            Advertisement('광고'), //광고 배너
             StringText('🧭 주변 이벤트', 24, 'PretendardBold', const Color(0xff2F3036)),
           ],
         ),
@@ -145,13 +237,17 @@ class _MainListBoardState extends ConsumerState<MainListBoard> {
 }
 
 Widget ListViewer(BuildContext context, WidgetRef ref, meetList List) {
-
-  return InkWell(
-    child: mainListView(List, ref),
-    onTap: (){
-      Navigator.push(context,
-          MaterialPageRoute(
-              builder: (context) => const ListDetail()));
-    }, // -> 건수 상세 페이지로 이동
+  return Column(
+    children: [
+      InkWell(
+        child: mainListView(List, ref),
+        onTap: (){
+          Navigator.push(context,
+              MaterialPageRoute(
+                  builder: (context) => Loading(meetNo: List.meetNo, userNo: tempUser['userNo'],)));
+        }, // -> 건수 상세 페이지로 이동
+      ),
+      const SizedBox(height: 18,)
+    ],
   );
 }

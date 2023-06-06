@@ -4,21 +4,26 @@
 // 작업자: 정해수
 
 import 'package:flutter/material.dart';
+import 'package:front/model/mainList/Invitation.dart';
 
 Widget Advertisement(String string) {
-  return InkWell(
-    child: Container(
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 18),
-      width: 327,
-      height: 144,
-      decoration: BoxDecoration(
-        color: Color(0xffF7F8FA),
-        borderRadius: BorderRadius.circular(30),
+  return Column(
+    children: [
+      InkWell(
+        child: Container(
+          width: double.maxFinite,
+          height: 144,
+          decoration: BoxDecoration(
+            color: const Color(0xffF7F8FA),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Center(child: Text(string)),
+        ),
+        onTap: (){
+          showToast('외부 페이지로 이동합니다');
+        }, // -> 외부 광고 페이지
       ),
-      child: Center(child: Text(string)),
-    ),
-    onTap: (){
-
-    }, // -> 외부 광고 페이지
+      const SizedBox(height: 18,)
+    ],
   );
 }

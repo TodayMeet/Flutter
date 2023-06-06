@@ -6,7 +6,10 @@ import 'package:front/screen/chat/chatpage.dart';
 import '../mainMap/mainPageMap.dart';
 
 class chatlist extends StatefulWidget {
-  const chatlist({Key? key}) : super(key: key);
+  const chatlist({Key? key,this.lastMessage}) : super(key: key);
+  final ChatMessage? lastMessage;
+
+
 
   @override
   State<chatlist> createState() => _chatlistState();
@@ -51,12 +54,13 @@ class _chatlistState extends State<chatlist> {
         itemCount: chatList.length,
         itemBuilder: (context, index) {
           final chatItem = chatList[index];
+          final message = widget.lastMessage != null ? widget.lastMessage!.content : '';
           return ListTile(
             leading: CircleAvatar(
               child: Text(chatItem[0]),
             ),
             title: Text(chatItem),
-            subtitle: Text(lastMessage[index]),//이미지 삽입
+            subtitle: Text(message),//이미지 넣어야함
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(

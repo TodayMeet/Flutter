@@ -168,6 +168,11 @@ class _ChatPageState extends State<ChatPage> {
                 ],
               ),
             ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('개굴개굴'),
+              onTap: () {},
+            ),
           ],
         ),
       ),
@@ -182,7 +187,7 @@ class _ChatPageState extends State<ChatPage> {
                 itemBuilder: (context, index) {
                   return messages[index];
                 },
-                separatorBuilder: (context, index) => SizedBox(height: 8),
+                separatorBuilder: (context, index) => SizedBox(height: 60),
               ),
             ),
             Padding(

@@ -14,6 +14,7 @@ import 'package:front/screen/profile/pwChange.dart';
 import 'package:front/screen/profile/question.dart';
 import 'package:front/screen/profile/secession.dart';
 import 'package:front/screen/profile/termsofUse.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/bottomBar.dart';
 import '../login/login.dart';
 
@@ -120,7 +121,7 @@ class _profileMainState extends State<profileMain> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => registerProfile()));
+                                      builder: (context) => registerProfile(email: '', password: '')));
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -602,6 +603,7 @@ void _logout(BuildContext context) {
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: () {
+            // _clearLoginCredentials();
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                 builder: (BuildContext context) =>
                     login()), (route) => false);
@@ -618,4 +620,10 @@ void _logout(BuildContext context) {
       ],
     ),
   );
+}
+
+void _clearLoginCredentials() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove('username');
+  await prefs.remove('password');
 }

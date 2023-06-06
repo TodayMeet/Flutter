@@ -58,12 +58,12 @@ class _FilterState extends State<Filter> {
       child: Scaffold(
         backgroundColor: const Color(0xFFFFFFFF),
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: const Text('필터',
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: 15,
+                  fontSize: 16,
                   fontFamily: 'PretendardBold')),
-          backgroundColor: Colors.white,
           elevation: 1,
           centerTitle: true,
           leading: IconButton(
@@ -71,7 +71,7 @@ class _FilterState extends State<Filter> {
                 Navigator.pop(context);
               },
               color: Colors.black,
-              icon: const Icon(Icons.arrow_back_ios)),
+              icon: const Icon(Icons.arrow_back_ios, size: 24,)),
         ),
         body: Scrollbar(
           controller: _scrollController,
@@ -79,7 +79,7 @@ class _FilterState extends State<Filter> {
             controller: _scrollController,
               children:[
                 Container(
-                  margin: const EdgeInsets.fromLTRB(20.0, 20.0, 8.0, 5.0),
+                  margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
                   height: 50,
                   alignment: Alignment.centerLeft,
                   child: const Text("카테고리", style: TextStyle(fontFamily:"PretendardBold",
@@ -89,9 +89,9 @@ class _FilterState extends State<Filter> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: categories.map((category){
                     return Container(
-                      margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                      margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(12.0),
                         color: const Color(0xFFF7F8FA),
                       ),
                       child: CheckboxListTile(
@@ -103,12 +103,14 @@ class _FilterState extends State<Filter> {
                             category["isChecked"] = newValue;
                           });
                         },
-                        title: Text(category["name"],style: const TextStyle(fontFamily: "PretendardBold",
+                        title: Text(category["name"],style: const TextStyle(
+                            color: Color(0xFF1F2024),
+                            fontFamily: "PretendardBold",
                             fontSize: 15)),
                         secondary: Container(
                           alignment: Alignment.center,
-                          width: 30,
-                          height: 30,
+                          width: 36,
+                          height: 36,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Color(int.parse(category["image_color"])),
@@ -122,97 +124,110 @@ class _FilterState extends State<Filter> {
                 ),
                 const SizedBox(height: 50),
                 Container(
-                  margin: const EdgeInsets.fromLTRB(20.0, 20.0, 8.0, 10.0),
-                  height: 50,
+                  margin: const EdgeInsets.fromLTRB(24, 6, 24, 5),
                   alignment: Alignment.centerLeft,
-                  child: const Text("정렬", style: TextStyle(fontFamily: "PretendardBold",
-                      fontSize: 13, fontWeight: FontWeight.bold)),
+                  child: const Text("정렬", style: TextStyle(
+                      fontFamily: "PretendardBold",
+                      fontSize: 14,
+                      color: Color(0xFF2F3036))),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ToggleButtons(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      selectedBorderColor: const Color(0xFF5B5B5B),
-                      selectedColor: const Color(0xFF000000),
-                      borderColor: const Color(0xFFDBDBDB),
-                      color: const Color(0xFF707070),
-                      textStyle: const TextStyle(fontFamily: "PretendardBold"),
-                      fillColor: const Color(0xFFFFFFFF),
-                      splashColor: const Color(0xFFFFFFFF),
-                      constraints: BoxConstraints.expand(
-                        width: size.width * 0.3,
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, right: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ToggleButtons(
+                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        selectedBorderColor: const Color(0xFF5B5B5B),
+                        selectedColor: const Color(0xFF000000),
+                        borderColor: const Color(0xFFDBDBDB),
+                        color: const Color(0xFF707070),
+                        textStyle: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: "PretendardBold"),
+                        fillColor: const Color(0xFFFFFFFF),
+                        splashColor: const Color(0xFFFFFFFF),
+                        constraints: BoxConstraints.expand(
+                          width: size.width * 0.27,
+                        ),
+                        isSelected: isSelected1,
+                        onPressed: (int index){
+                          setState(() {
+                            isSelected1[index] = true;
+                            isSelected2[index] = false;
+                            isSelected3[index] = false;
+                          });
+                        },
+                        children:[
+                          Container(
+                              alignment: Alignment.center,
+                              child: const Text("최신순")),
+                        ],
                       ),
-                      isSelected: isSelected1,
-                      onPressed: (int index){
-                        setState(() {
-                          isSelected1[index] = true;
-                          isSelected2[index] = false;
-                          isSelected3[index] = false;
-                        });
-                      },
-                      children:[
-                        Container(
-                            alignment: Alignment.center,
-                            child: const Text("최신순")),
-                      ],
-                    ),
-                    ToggleButtons(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      selectedBorderColor: const Color(0xFF5B5B5B),
-                      selectedColor: const Color(0xFF000000),
-                      borderColor: const Color(0xFFDBDBDB),
-                      color: const Color(0xFF707070),
-                      textStyle: const TextStyle(fontFamily: "PretendardBold"),
-                      fillColor: const Color(0xFFFFFFFF),
-                      splashColor: const Color(0xFFFFFFFF),
-                      constraints: BoxConstraints.expand(
-                        width: size.width * 0.3,
+                      ToggleButtons(
+                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        selectedBorderColor: const Color(0xFF5B5B5B),
+                        selectedColor: const Color(0xFF000000),
+                        borderColor: const Color(0xFFDBDBDB),
+                        color: const Color(0xFF707070),
+                        textStyle: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: "PretendardBold"),
+                        fillColor: const Color(0xFFFFFFFF),
+                        splashColor: const Color(0xFFFFFFFF),
+                        constraints: BoxConstraints.expand(
+                          width: size.width * 0.27,
+                        ),
+                        isSelected: isSelected2,
+                        onPressed: (int index){
+                          setState(() {
+                            isSelected1[index] = false;
+                            isSelected2[index] = true;
+                            isSelected3[index] = false;
+                          });
+                        },
+                        children: [
+                          Container(
+                              alignment: Alignment.center,
+                              child: const Text("마감 임박 순")),
+                        ],
                       ),
-                      isSelected: isSelected2,
-                      onPressed: (int index){
-                        setState(() {
-                          isSelected1[index] = false;
-                          isSelected2[index] = true;
-                          isSelected3[index] = false;
-                        });
-                      },
-                      children: [
-                        Container(
-                            alignment: Alignment.center,
-                            child: const Text("마감 임박 순")),
-                      ],
-                    ),
-                    ToggleButtons(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      selectedBorderColor: const Color(0xFF5B5B5B),
-                      selectedColor: const Color(0xFF000000),
-                      borderColor: const Color(0xFFDBDBDB),
-                      color: const Color(0xFF707070),
-                      textStyle: const TextStyle(fontFamily: "PretendardBold"),
-                      fillColor: const Color(0xFFFFFFFF),
-                      splashColor: const Color(0xFFFFFFFF),
-                      constraints: BoxConstraints.expand(
-                        width: size.width * 0.3,
+                      ToggleButtons(
+                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        selectedBorderColor: const Color(0xFF5B5B5B),
+                        selectedColor: const Color(0xFF000000),
+                        borderColor: const Color(0xFFDBDBDB),
+                        color: const Color(0xFF707070),
+                        textStyle: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: "PretendardBold"),
+                        fillColor: const Color(0xFFFFFFFF),
+                        splashColor: const Color(0xFFFFFFFF),
+                        constraints: BoxConstraints.expand(
+                          width: size.width * 0.27,
+                        ),
+                        isSelected: isSelected3,
+                        onPressed: (int index){
+                          setState(() {
+                            isSelected1[index] = false;
+                            isSelected2[index] = false;
+                            isSelected3[index] = true;
+                          });
+                        },
+                        children: [
+                          Container(
+                              alignment: Alignment.center,
+                              child: const Text("참여 높은 순")),
+                        ],
                       ),
-                      isSelected: isSelected3,
-                      onPressed: (int index){
-                        setState(() {
-                          isSelected1[index] = false;
-                          isSelected2[index] = false;
-                          isSelected3[index] = true;
-                        });
-                      },
-                      children: [
-                        Container(
-                            alignment: Alignment.center,
-                            child: const Text("참여 높은 순")),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(
-                  height: 100,
+                  height: 50,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -220,10 +235,10 @@ class _FilterState extends State<Filter> {
                     Container(
                       width: size.width * 0.4,
                       decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
                         color: Color(0xFF4874EA)
                       ),
-                      margin: const EdgeInsets.fromLTRB(20, 20, 10, 20),
+                      margin: const EdgeInsets.fromLTRB(24, 0, 5, 20),
                       child: TextButton(
                         onPressed: (){
                           setState(() {
@@ -244,15 +259,17 @@ class _FilterState extends State<Filter> {
                           Navigator.pop(context);
                         },
                         child: const Text("적용", style: TextStyle(
-                            color:Color(0xFFFFFFFF), fontFamily: "PretendardBold"))),
+                            color:Color(0xFFFFFFFF),
+                            fontSize: 16,
+                            fontFamily: "PretendardBold"))),
                     ),
                     Container(
                       width: size.width * 0.4,
                       decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
                         color: Color(0xFFB6B6B6)
                       ),
-                      margin: const EdgeInsets.fromLTRB(10, 20, 20, 20),
+                      margin: const EdgeInsets.fromLTRB(5, 0, 24, 20),
                       child: TextButton(
                         onPressed: (){
                           setState(() {
@@ -265,7 +282,9 @@ class _FilterState extends State<Filter> {
                           });
                         },
                           child: const Text("초기화", style: TextStyle(
-                              color:Color(0xFFFFFFFF), fontFamily: "PretendardBold"))
+                              color:Color(0xFFFFFFFF),
+                              fontSize: 16,
+                              fontFamily: "PretendardBold"))
                       ),
                     ),
                   ],

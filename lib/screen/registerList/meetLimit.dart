@@ -63,9 +63,9 @@ class _MeetingLimitState extends State<MeetingLimit> {
               ),
             ]
         ): Container(
-          margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
             border: Border.all(color: Colors.black, width: 1),
           ),
@@ -75,7 +75,7 @@ class _MeetingLimitState extends State<MeetingLimit> {
               child: Text(numbersOfPeople,
                   style: const TextStyle(
                       fontFamily: "PretendardBold",
-                      fontSize:15,
+                      fontSize:16,
                       color: Color(0xFF2F3036))
               ),
             ),

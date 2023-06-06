@@ -1,19 +1,20 @@
 // 위치 선택 위젯
 
-// 최종 수정일 : 2023.5.28
+// 최종 수정일 : 2023.6.1
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
-// 서버에서 위치 정보 받아오기
-// 받아온 위치 정보로 지도 출력
+// 현재 위치 가져오기 할 시 근처에 건물 없을 시 처리
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'dart:convert';
 
 import '../setting/registerMeeting.dart' as meet;
 import 'meetTime.dart';
 import '../../data/apiKey.dart';
+import '../../model/setting/location.dart';
 
 class MeetingLocation extends StatefulWidget {
   const MeetingLocation({Key? key}) : super(key: key);
@@ -25,9 +26,12 @@ class MeetingLocation extends StatefulWidget {
 class _MeetingLocationState extends State<MeetingLocation> {
   bool meetTime = false;
   bool enabled = true;
+  bool isPicked = false;
   String meetLocation = "";
+  String meetAddress = "";
+  late Size size;
 
-  final String KakaoAPIUrl = "https://dapi.kakao.com/v2/local/search/keyword.json";
+  final String kakaoAPIUrl = "https://dapi.kakao.com/v2/local/search/keyword.json";
   final headers = {
     'Authorization':'KakaoAK $KakaoRestAPIKey'
   };
@@ -35,7 +39,7 @@ class _MeetingLocationState extends State<MeetingLocation> {
   String searchText = '';
   List<dynamic> searchResults = [];
 
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
 
   void categoryChange(){
     setState(() {
@@ -48,8 +52,9 @@ class _MeetingLocationState extends State<MeetingLocation> {
     });
   }
 
+  // 위치 검색 함수
   void _searchAddress(String query) async {
-    final url = Uri.parse("$KakaoAPIUrl?query=$query");
+    final url = Uri.parse("$kakaoAPIUrl?query=$query");
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
@@ -63,20 +68,330 @@ class _MeetingLocationState extends State<MeetingLocation> {
     }
   }
 
-  Widget _buildSearchResults() {
+  // 위치 검색 시 나오는 list
+  Widget _buildSearchResults(BuildContext barcontext) {
     return ListView.builder(
       itemCount: searchResults.length,
       itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Text(searchResults[index]['address_name']),
+        return Container(
+          margin: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+          decoration: BoxDecoration(
+              color: const Color(0xFFF0F1F5),
+              borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListTile(
+            title: Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Text(searchResults[index]['place_name'],
+                  style: const TextStyle(
+                    color: Color(0xFF2F3036),
+                    fontFamily: 'PretendardBold',
+                    fontSize: 18
+                  )),
+            ),
+            subtitle: Text(searchResults[index]['address_name'],
+                style: const TextStyle(
+                  color: Color(0xFF2F3036),
+                  fontFamily: 'PretendardRegular',
+                  fontSize: 14
+            )),
+            onTap: (){
+              meetLocation = searchResults[index]['place_name'];
+              meetAddress = searchResults[index]['address_name'];
+              meet.meetInfo.address = meetLocation;
+              meet.meetInfo.lat = searchResults[index]['y'];
+              meet.meetInfo.lon = searchResults[index]['x'];
+              Navigator.pop(barcontext);
+              _showlocationmap();
+            },
+          ),
         );
       },
     );
   }
 
+  // 현재 위치 정보 받아오기
+  Future _getLocationData(BuildContext barcontext) async {
+    Location location = Location();
+    await location.getCurrentLocation();
+
+    var userLat = location.latitude;
+    var userLong = location.longitude;
+
+    var kakaoGeoUrl = Uri.parse('https://dapi.kakao.com/v2/local/geo/coord2address.json?x=$userLong&y=$userLat');
+    var kakaoGeo = await http.get(kakaoGeoUrl, headers: {"Authorization": "KakaoAK $KakaoRestAPIKey"});
+    if (kakaoGeo.statusCode == 200) {
+      final addrData = json.decode(kakaoGeo.body);
+      print(addrData);
+
+      if(addrData['documents'][0]['road_address'] == null){
+        meetLocation = addrData['documents'][0]['address']['address_name'];
+        meetAddress = '';
+        meet.meetInfo.address = meetLocation;
+      }else {
+        meetLocation = addrData['documents'][0]['road_address']['building_name'];
+        meetAddress = addrData['documents'][0]['road_address']['address_name'];
+        meet.meetInfo.address = meetLocation;
+      }
+
+      meet.meetInfo.lat = userLat.toString();
+      meet.meetInfo.lon = userLong.toString();
+      Navigator.pop(barcontext);
+      _showlocationmap();
+    } else {
+      throw Exception('Failed to load my location');
+    }
+  }
+
+  // 현재 위치 선택하는 위젯
+  Widget _pickNowLocation(BuildContext barcontext){
+    return Column(
+      children: [
+        Container(
+          height: 46,
+          width: size.width,
+          padding: const EdgeInsets.only(left:6),
+          margin: const EdgeInsets.fromLTRB(24, 7, 24, 6),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: const Color(0xFFF0F1F5),
+          ),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: (){
+                _getLocationData(barcontext);
+              },
+              label: const Text('현재 위치로 선택', style: TextStyle(
+                color: Color(0xFF2F3036),
+                fontFamily: 'PretendardRegular',
+                fontSize: 14,
+              )),
+              icon: const Icon(Icons.gps_fixed,
+                  size: 20,
+                  color: Color(0xFF2F3036),
+                  weight: 400
+              ),
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.fromLTRB(24, 50, 24, 0),
+          child: const Text('정확한 약속 장소가 잡히지 않았다면 강남역, 압구정동 같은\n대략적인 위치를 입력해 보세요',
+            style: TextStyle(
+              color: Color(0xFF2F3036),
+              fontFamily: "PretendardRegular",
+              fontSize: 14
+            )),
+        ),
+      ],
+    );
+  }
+
+  // 위치 검색하는 창
+  void _showsearching(){
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top:Radius.circular(30)),
+      ),
+      context: context,
+      builder: (BuildContext barcontext){
+        return Container(
+          height: 600,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Spacer(flex: 30),
+                    const Text("위치",
+                      style: TextStyle(
+                          color: Color(0xFF1F2024),
+                          fontFamily: "PretendardBold",
+                          fontSize: 16),
+                    ),
+                    const Spacer(flex : 24),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: (){
+                        Navigator.pop(barcontext);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 46,
+                width: size.width,
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                margin: const EdgeInsets.fromLTRB(24.0, 5.0, 24.0, 5.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F6FA),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  maxLines: 1,
+                  controller: _controller,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    icon: Icon(Icons.search, size: 20, color: Color(0xFFBFC0C7)),
+                    hintText: '검색할 위치를 입력해주세요.',
+                    hintStyle: TextStyle(
+                        color: Color(0xFFC8C8CB),
+                        fontSize: 14,
+                        fontFamily: "PretendardRegular"
+                    ),
+                  ),
+                  onChanged: (text){
+                    searchText = text;
+                    _searchAddress(searchText);
+                  },
+                ),
+              ),
+              // 입력 전에는 현재 위치 선택 / 입력 후에는 입력 된 정보로 검색
+              searchText == '' ? _pickNowLocation(barcontext)
+                  : Expanded(child: _buildSearchResults(barcontext)),
+            ],
+          ),
+        );
+      }
+    );
+  }
+
+  void _showlocationmap(){
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top:Radius.circular(30)),
+        ),
+        context: context,
+        builder: (BuildContext barcontext){
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0.0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new,
+                  color: Colors.black,
+                  size: 24,
+                  weight: 400,
+                ),
+                onPressed: (){
+                  Navigator.pop(barcontext);
+                  _showsearching();
+                },
+              ),
+              title: const Text('선택한 위치 확인',
+                  style: TextStyle(
+                    color: Color(0xFF1F2024),
+                    fontFamily: 'PretendardBold',
+                    fontSize: 18,
+                  )
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.close,
+                    color: Color(0xFFA6A6A6),
+                    size: 20,
+                    weight: 400,
+                  ),
+                  onPressed: (){
+                    Navigator.pop(barcontext);
+                  },
+                ),
+              ],
+            ),
+            body: Column(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Color(0xFFF0F1F5)),
+                        left: BorderSide(color: Color(0xFFF0F1F5)),
+                        right: BorderSide(color: Color(0xFFF0F1F5)),
+                      )
+                  ),
+                  margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                  child: KakaoMapView(
+                    width: size.width,
+                    height: size.height*0.25,
+                    kakaoMapKey: kakaoMapKey,
+                    lat: double.parse(meet.meetInfo.lat),
+                    lng: double.parse(meet.meetInfo.lon),
+                  ),
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Color(0xFFF0F1F5)),
+                        left: BorderSide(color: Color(0xFFF0F1F5)),
+                        right: BorderSide(color: Color(0xFFF0F1F5)),
+                      )
+                  ),
+                  margin: const EdgeInsets.fromLTRB(24, 0, 24, 6),
+                  padding: const EdgeInsets.fromLTRB(19, 0, 19, 0),
+                  child: ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text(meet.meetInfo.address,
+                        style: const TextStyle(
+                            color: Color(0xFF2F3036),
+                            fontFamily: 'PretendardBold',
+                            fontSize: 18
+                        ),
+                      ),
+                    ),
+                    subtitle: Text(meetAddress,
+                      style: const TextStyle(
+                          color: Color(0xFF2F3036),
+                          fontFamily: 'PretendardRegular',
+                          fontSize: 14
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: const Color(0xFFF0F1F5)
+                  ),
+                  margin: const EdgeInsets.fromLTRB(24, 6, 24, 0),
+                  child: Center(
+                    child: TextButton.icon(
+                      icon: const Icon(Icons.gps_fixed,
+                        color: Color(0xFF2F3036),
+                        size: 20,
+                        weight: 400,
+                      ),
+                      label: const Text('이 위치로 설정',
+                        style: TextStyle(
+                          color: Color(0xFF2F3036),
+                          fontFamily: 'PretendardRegular',
+                          fontSize: 14,
+                        ),
+                      ),
+                      onPressed: (){
+                        categoryChange();
+                        Navigator.pop(barcontext);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    size = MediaQuery.of(context).size;
     return Column(
       children: [
         enabled? Column(
@@ -84,82 +399,14 @@ class _MeetingLocationState extends State<MeetingLocation> {
             meet.Title(content:"어디서 만날까요?"),
             Container(
               width: size.width,
-              margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F6FA),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(12.0),
               ),
               child: TextButton(
                 onPressed: () {
-                  showModalBottomSheet(
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.0),
-                          topRight: Radius.circular(30.0)
-                      )),
-                      context: context,
-                      builder: (BuildContext barcontext){
-                        return Container(
-                          height: 600,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Spacer(flex: 30),
-                                  const Text("위치",
-                                    style: TextStyle(
-                                        color: Color(0xFF1F2024),
-                                        fontFamily: "PretendardBold",
-                                        fontSize: 16),
-                                  ),
-                                  const Spacer(flex : 24),
-                                  IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: (){
-                                      Navigator.pop(barcontext);
-                                    },
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                height: 46,
-                                width: size.width,
-                                padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                                margin: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFF5F6FA),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: TextField(
-                                  controller: _controller,
-                                  decoration: const InputDecoration(
-                                    icon: Icon(Icons.search, size: 20, color: Color(0xFFBFC0C7)),
-                                    hintText: '검색할 위치를 입력해주세요.',
-                                    hintStyle: TextStyle(
-                                      color: Color(0xFFC8C8CB),
-                                      fontSize: 14,
-                                      fontFamily: "PretendardRegular"
-                                    ),
-                                  ),
-                                  onChanged: (text){
-                                    searchText = text;
-                                  },
-                                  onTap: (){
-                                    meetLocation = "강남역 2호선";
-                                    categoryChange();
-                                    Navigator.pop(barcontext);
-                                  },
-                                ),
-                              ),
-                              Expanded(child: _buildSearchResults()),
-                            ],
-                          ),
-                        );
-                      }
-                  );
+                  _showsearching();
                 },
                 child: const Align(
                   alignment: Alignment.centerLeft,
@@ -174,9 +421,9 @@ class _MeetingLocationState extends State<MeetingLocation> {
             ),
           ],
         ): Container(
-          margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
             border: Border.all(color: Colors.black, width: 1),
           ),
@@ -186,7 +433,7 @@ class _MeetingLocationState extends State<MeetingLocation> {
               child: Text(meetLocation,
                   style: const TextStyle(
                       fontFamily: "PretendardBold",
-                      fontSize:15,
+                      fontSize:16,
                       color: Color(0xFF2F3036))
               ),
             ),
@@ -195,7 +442,7 @@ class _MeetingLocationState extends State<MeetingLocation> {
             },
           ),
         ),
-        meetTime? MeetingTime()
+        meetTime? const MeetingTime()
             :const SizedBox.shrink()
       ],
     );

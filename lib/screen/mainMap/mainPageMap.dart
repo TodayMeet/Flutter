@@ -75,6 +75,7 @@ class MainPageMap extends ConsumerWidget {
             label: Text(ref.watch(dongProvider),
             style: const TextStyle(
               color: Colors.black,
+              fontSize: 14,
               fontFamily: 'PretendardBold'),
             )),
         automaticallyImplyLeading: false,
@@ -145,7 +146,7 @@ class MainPageMap extends ConsumerWidget {
                 ''',
                 customOverlayStyle: '''<style>
                   .customoverlay {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
-                  .customoverlay .title {text-align:center;color:#FFF;padding:10px 15px;font-size:12px;font-weight:400;}
+                  .customoverlay .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:700;}
                   .customoverlay::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
                   </style>''',
                 onTapMarker: (message){

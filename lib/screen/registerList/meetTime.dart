@@ -109,6 +109,9 @@ class _MeetingTimeState extends State<MeetingTime> {
 
   void _showTimePicker(BuildContext context) {
     showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top:Radius.circular(30)),
+      ),
       context: context,
       builder: (BuildContext builder) {
         return Container(
@@ -215,7 +218,16 @@ class _MeetingTimeState extends State<MeetingTime> {
                   }
                   _showTime += _selectedTime.format(context);
                   _showTime = _showTime.substring(0, _showTime.length-2);
-                  meet.meetInfo.time = _showTime;
+
+                  var dateTime = DateTime(
+                    singleTimeValue.year,
+                    singleTimeValue.month,
+                    singleTimeValue.day,
+                    _selectedTime.hour,
+                    _selectedTime.minute,
+                  );
+                  var formattedDate = DateFormat('yyyy-MM-ddTHH:mm:ss').format(dateTime);
+                  meet.meetInfo.time = formattedDate;
 
                   setState(() {
                     enabled = false;
@@ -254,14 +266,14 @@ class _MeetingTimeState extends State<MeetingTime> {
             Container(
               width: size.width,
               height: 50,
-              margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.0),
+                borderRadius: BorderRadius.circular(12.0),
               ),
               child: ElevatedButton(
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(const Color(0xFFF5F6FA)),
-                    shadowColor: MaterialStateProperty.all(Colors.white)
+                    shadowColor: MaterialStateProperty.all(Colors.transparent)
                 ),
                 onPressed: () {
                   _showDatePicker(context);
@@ -282,9 +294,9 @@ class _MeetingTimeState extends State<MeetingTime> {
             ),
           ],
         ):Container(
-          margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
             border: Border.all(color: Colors.black, width: 1),
           ),
@@ -294,7 +306,7 @@ class _MeetingTimeState extends State<MeetingTime> {
               child: Text(_showTime,
                   style: const TextStyle(
                       fontFamily: "PretendardBold",
-                      fontSize:15,
+                      fontSize:16,
                       color: Color(0xFF2F3036))
               ),
             ),

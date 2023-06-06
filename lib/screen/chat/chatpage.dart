@@ -87,21 +87,35 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    ChatMessage? lastMessage;
+    if (messages.isNotEmpty) {
+      lastMessage = messages.last;
+    }
+    if (lastMessage != null) {
+      String lastMessageContent = lastMessage.content;
+      bool lastMessageIsSentByMe = lastMessage.isSentByMe;
+      String lastMessageTime = lastMessage.time;
+    } else {}
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 1.0,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => chatlist()));
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            )),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => chatlist(lastMessage: lastMessage),
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+        ),
         title: Text(
           '용산동에서 치맥한잔 하실분',
           style: TextStyle(
@@ -111,7 +125,10 @@ class _ChatPageState extends State<ChatPage> {
           Builder(
             builder: (BuildContext context) {
               return IconButton(
-                icon: Icon(Icons.person,color: Colors.black,),
+                icon: Icon(
+                  Icons.person,
+                  color: Colors.black,
+                ),
                 onPressed: () {
                   Scaffold.of(context).openEndDrawer();
                 },
@@ -125,24 +142,32 @@ class _ChatPageState extends State<ChatPage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            SizedBox(height: 50,),
+            SizedBox(
+              height: 50,
+            ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('참여자',style: TextStyle(fontSize: 16,color: Colors.black,fontWeight: FontWeight.w600),),
-                  Text('8명',style: TextStyle(fontSize: 16,color: Colors.grey,fontWeight: FontWeight.w600),),
-
+                  Text(
+                    '참여자',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    '8명',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ],
               ),
             ),
-
-            // ListTile(
-            //   leading: Icon(Icons.person),
-            //   title: Text('프로필'),
-            //   onTap: () {},
-            // ),
           ],
         ),
       ),
@@ -152,7 +177,7 @@ class _ChatPageState extends State<ChatPage> {
           children: [
             Expanded(
               child: ListView.separated(
-                controller: scrollController, // ScrollController 설정
+                controller: scrollController,
                 itemCount: messages.length,
                 itemBuilder: (context, index) {
                   return messages[index];
@@ -225,25 +250,4 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
-}
-
-void _showCustomDialog(BuildContext context) {
-  showCupertinoDialog(
-    barrierDismissible: true,
-    context: context,
-    builder: (BuildContext context) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          color: Colors.white,
-          width: (MediaQuery.of(context).size.width * 2) / 3,
-          height: MediaQuery.of(context).size.height,
-          child: Text(
-            'asdf',
-            style: TextStyle(fontSize: 10, color: Colors.black),
-          ),
-        ),
-      );
-    },
-  );
 }

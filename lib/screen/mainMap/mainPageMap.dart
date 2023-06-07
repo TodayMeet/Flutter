@@ -27,7 +27,7 @@ final markerProvider = StateProvider<List<Markers>?>((ref) => null);
 final mapControllerProvider = StateProvider<WebViewController?>((ref) => null);
 
 class MainPageMap extends ConsumerWidget {
-  MainPageMap({super.key});
+  const MainPageMap({super.key});
 
   Future<List> getLocationData(WidgetRef ref) async {
     // 현재 위치 데이터 받아오기
@@ -57,7 +57,7 @@ class MainPageMap extends ConsumerWidget {
           meetNo: 1,
           personClose: 5,
           location:
-              LocationLatLng(latitude: 33.450701, longitude: 126.570667)));
+              LocationLatLng(latitude: userLat + 0.001*i, longitude: userLong + 0.001*i)));
     }
     ref.read(markerProvider.notifier).state = markersInfo;
 
@@ -81,7 +81,6 @@ class MainPageMap extends ConsumerWidget {
               color: Colors.black,
               fontSize: 14,
               fontFamily: 'PretendardBold'),
-
             )),
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -96,7 +95,7 @@ class MainPageMap extends ConsumerWidget {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => alarm()));
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.notifications_none,
                 color: Colors.black,
               ))
@@ -105,72 +104,88 @@ class MainPageMap extends ConsumerWidget {
       ),
       body: Center(
           child: FutureBuilder(
-        // 메인페이지 - 지도
-        future: getLocationData(ref),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData == false) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Error: ${snapshot.error}',
-                style: const TextStyle(fontSize: 15),
-              ),
-            );
-          } else {
-            List loc = snapshot.data;
-            return KakaoMapView(
-              width: size.width,
-              height: size.height * 0.9,
-              kakaoMapKey: kakaoMapKey,
-              lat: loc[0],
-              lng: loc[1],
-              mapController: (mapController) {
-                ref.watch(mapControllerProvider.notifier).state = mapController;
-              },
-              cameraIdle: (message) async {
-                KakaoLatLng latLng =
-                    KakaoLatLng.fromJson(jsonDecode(message.message));
-                var userLat = latLng.lat;
-                var userLong = latLng.lng;
-                var kakaoGeoUrl = Uri.parse(
-                    'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=$userLong&y=$userLat');
-                var kakaoGeo = await http.get(kakaoGeoUrl,
-                    headers: {"Authorization": "KakaoAK $KakaoRestAPIKey"});
-                String addr = kakaoGeo.body;
-                var addrData = jsonDecode(addr);
-
-                String dongName =
-                    addrData['documents'][0]['region_3depth_name'];
-                ref.read(dongProvider.notifier).state = dongName;
-              },
-              customOverlay: '''
-                function addMarker(content, position){
-                  var marker = new kakao.maps.CustomOverlay({
-                    position: position,
-                    content: content,
-                    yAnchor: 1
+            // 메인페이지 - 지도
+            future: getLocationData(ref),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData == false) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                );
+              } else {
+                List loc = snapshot.data;
+                final pins_data = ref.watch(markerProvider);
+                final List<Map<String, dynamic>> pins = [];
+                for(var i = 0; i < pins_data!.length; i++){
+                  pins.add({"str":'${pins_data[i].time} ${pins_data[i].categoryName}',
+                    "latitude":pins_data[i].location.latitude,
+                    "longitude":pins_data[i].location.longitude,
                   });
-                  marker.setMap(map);
                 }
+                final String jsonString = jsonEncode({'items':pins});
+                return KakaoMapView(
+                  width: size.width,
+                  height: size.height * 0.9,
+                  kakaoMapKey: kakaoMapKey,
+                  lat: loc[0],
+                  lng: loc[1],
+                  mapController: (mapController) {
+                    ref.watch(mapControllerProvider.notifier).state = mapController;
+                  },
+                  cameraIdle: (message) async {
+                    KakaoLatLng latLng =
+                      KakaoLatLng.fromJson(jsonDecode(message.message));
+                    var userLat = latLng.lat;
+                    var userLong = latLng.lng;
+                    var kakaoGeoUrl = Uri.parse(
+                      'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=$userLong&y=$userLat');
+                    var kakaoGeo = await http.get(kakaoGeoUrl,
+                      headers: {"Authorization": "KakaoAK $KakaoRestAPIKey"});
+                    String addr = kakaoGeo.body;
+                    var addrData = jsonDecode(addr);
+
+                    String dongName =
+                      addrData['documents'][0]['region_3depth_name'];
+                    ref.read(dongProvider.notifier).state = dongName;
+                  },
+                  customOverlay: '''
+                  function addMarker(content, position){
+                    var marker = new kakao.maps.CustomOverlay({
+                      position: position,
+                      content: content,
+                      yAnchor: 1
+                    });
+                    marker.setMap(map);
+                  }
+                  
+                  function acceptList(jsonString){
+                    const data = JSON.parse(jsonString);
+                    const items = data.items;
+                    
+                    for(let i = 0; i < items.length; i++){
+                      var position = new kakao.maps.LatLng(items[i].latitude, items[i].longitude);
+                      var content = '<div class="customoverlay">' +
+                        '    <span class="title">' + items[i].str + '</span>' +
+                        '</div>';
+                      addMarker(content, position);
+                    }
+                  }
                 
-                for(var i = 0; i < 3; i++){
-                  var position = new kakao.maps.LatLng(${loc[0]}+0.001*i, ${loc[1]}+0.001*i);
-                  var content = '<div class="customoverlay">' +
-                    '    <span class="title">6.22 18:00 주류</span>' +
-                    '</div>';
-                  addMarker(content, position);
-                }
-                ''',
-              customOverlayStyle: '''<style>
-                  .customoverlay {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
-                  .customoverlay .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:700;}
-                  .customoverlay::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
-                  </style>''',
-              onTapMarker: (message) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(message.message)));
+                  acceptList('$jsonString');
+                  ''',
+                  customOverlayStyle: '''<style>
+                    .customoverlay {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
+                    .customoverlay .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:700;}
+                    .customoverlay::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
+                    </style>''',
+                  onTapMarker: (message) {
+                    ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(message.message)));
               },
             );
           }

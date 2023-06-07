@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:front/data/dummy_meetList.dart';
 import 'package:front/data/meet.dart';
 import 'package:front/model/TextPrint.dart';
-import 'package:front/screen/mainList/serverTest.dart';
+//import 'package:front/screen/mainList/serverTest.dart';
 import '../../data/meetList_Provider.dart';
 import '../mainMap/mainPageMap.dart';
 import 'package:front/screen/alarm/alarm.dart';
@@ -198,10 +198,10 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
             //test용 버튼
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
+                /*Navigator.push(context,
                     MaterialPageRoute(
                         builder: (context) =>serverTest())
-                );
+                );*/
               },
               // ignore: prefer_const_constructors
               child: Text('server test'),

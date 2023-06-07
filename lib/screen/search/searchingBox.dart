@@ -1,4 +1,4 @@
-// 탐색 페이지
+// 탐색 검색창 페이지
 
 // 최종 수정일 : 2023.6.6
 // 작업자 : 김혁
@@ -8,26 +8,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'searchPageElement.dart' as element;
 import 'searchAppbarBody.dart';
 import '../../model/bottomBar.dart';
 
-class SearchMain extends ConsumerStatefulWidget {
-  const SearchMain({Key? key}) : super(key: key);
+class SearchBox extends ConsumerStatefulWidget {
+  const SearchBox({Key? key}) : super(key: key);
 
   @override
-  SearchMainState createState() => SearchMainState();
+  SearchBoxState createState() => SearchBoxState();
 }
 
-class SearchMainState extends ConsumerState<SearchMain> {
+class SearchBoxState extends ConsumerState<SearchBox> {
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: appbar1(),
-          body: SearchMainPage(),
+          appBar: appbar2(context),
+          body: SearchBoxPage(),
           bottomNavigationBar: const BottomBar(),
         )
     );

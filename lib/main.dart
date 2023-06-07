@@ -70,7 +70,7 @@ class MainPage extends ConsumerWidget {
                   }
                 ),
                 ElevatedButton(    
-                  child: Text('리스트'),
+                  child: Text('게시판'),
                   onPressed: (){
                     Navigator.push(context,
                         MaterialPageRoute(

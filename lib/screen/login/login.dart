@@ -99,7 +99,7 @@ class _loginState extends State<login> {
                       username = _text;
                     },
                     decoration: InputDecoration(
-                      labelText: '아이디',
+                      labelText: '임시 아이디 :m',
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10.0)),
@@ -124,7 +124,7 @@ class _loginState extends State<login> {
                       password = _text1;
                     },
                     decoration: InputDecoration(
-                      labelText: '비밀번호',
+                      labelText: '임시 비밀번호:et',
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10.0)),

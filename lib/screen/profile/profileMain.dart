@@ -31,7 +31,7 @@ class _profileMainState extends State<profileMain> {
   int following = 0;
   String name = '돌고래밥';
   String gender = '남';
-  String birthdate = '2000.03.01';
+  String birthdate = '2000. 03. 01';
   @override
   Widget build(BuildContext context) {
     double halfWidth = MediaQuery.of(context).size.width / 2;

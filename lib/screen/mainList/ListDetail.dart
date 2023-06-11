@@ -16,9 +16,11 @@ import 'package:front/model/mainList/Invitation.dart';
 import 'package:front/data/dummy_meetList.dart';
 import 'package:intl/intl.dart';
 import '../../data/meet.dart';
+import '../../data/apiKey.dart';
 import 'Comments.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:kakaomap_webview/kakaomap_webview.dart';
 
 final invitationColorProvider = StateProvider((ref) => 0xffFFFFFF);
 final participationColorProvider = StateProvider((ref) => 0xffFFFFFF);
@@ -457,7 +459,13 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   child: Container(
                     height: 300,
                     color: const Color(0xffF0F1F5),
-                    child: const Center(child: Text('(지도 출력)')),
+                    child: KakaoMapView(
+                      height: 300,
+                      width: double.infinity,
+                      lat: double.parse(test.lat),
+                      lng: double.parse(test.lon),
+                      kakaoMapKey: kakaoMapKey,
+                    ),
                   ),
                 ), //지도 출력
 

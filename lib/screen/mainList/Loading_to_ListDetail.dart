@@ -10,8 +10,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class Loading extends StatefulWidget {
-  const Loading({Key? key,
+class Loading_to_ListDetail extends StatefulWidget {
+  const Loading_to_ListDetail({Key? key,
     required this.meetNo,
     required this.userNo,
   }) : super(key: key);
@@ -20,10 +20,10 @@ class Loading extends StatefulWidget {
   final int userNo;
 
   @override
-  State<Loading> createState() => _LoadingState();
+  State<Loading_to_ListDetail> createState() => _LoadingState();
 }
 
-class _LoadingState extends State<Loading> {
+class _LoadingState extends State<Loading_to_ListDetail> {
   var meetData;
   late int meetNo;
   late int userNo;

@@ -84,6 +84,7 @@ flutter:
     - assets/images/List_Image/
     - assets/images/LoginImage/
     - assets/images/User_Picture/
+    - assets/images/Comments/
 
   fonts:
     - family: PretendardBold

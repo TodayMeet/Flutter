@@ -3,12 +3,14 @@
 // 최종 수정: 2023.6.3
 // 작업자: 정해수
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:front/data/dummy_meetList.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:front/data/Comment.dart';
 import 'meetList.dart';
 
 class meetListNotifier extends StateNotifier<List<meetList>> {
-  meetListNotifier(): super([]);
+  meetListNotifier(list): super(list);
 
   // 리스트 추가
   void addList(meetList meetList) {
@@ -20,6 +22,10 @@ class meetListNotifier extends StateNotifier<List<meetList>> {
     state = [];
   }
 }
-final meetListProvider = StateNotifierProvider<meetListNotifier, List<meetList>>((ref) {
-  return meetListNotifier();
+
+class CommentsNotifier extends StateNotifier<List<Comment>> {
+  CommentsNotifier(): super([]);
+}
+final commentsProvider = StateNotifierProvider<CommentsNotifier, List<Comment>>((ref) {
+  return CommentsNotifier();
 });

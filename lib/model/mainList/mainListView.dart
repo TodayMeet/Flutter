@@ -106,7 +106,7 @@ Widget mainListView(meetList list, WidgetRef ref) {
               ],
             ), //동네, 날짜, 시간
             const SizedBox(height: 18,),
-            Row(
+            /*Row(
               children: [
                 Image.asset('assets/images/List_Image/List_image_sample1.png',
                     fit: BoxFit.fitHeight,
@@ -115,28 +115,13 @@ Widget mainListView(meetList list, WidgetRef ref) {
                 Image.asset('assets/images/List_Image/List_image_sample2.png',
                     width: 100, height: 100),
               ],
-            ), //등록 이미지
+            ), //등록 이미지*/
 
             const SizedBox(height: 18,),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      child: Image.asset('assets/images/User_Picture/User_pic_sample3.png',
-                          width: 26, height: 26),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      child: Image.asset('assets/images/User_Picture/User_pic_sample2.png',
-                          width: 26, height: 26),
-                    ),
-                    Image.asset('assets/images/User_Picture/User_pic_sample1.png',
-                        width: 26, height: 26),
-                  ],
-                )
+                curUserIcon(list.peopleNum)
               ],
             ), //참여중인 사용자 사진
 
@@ -191,4 +176,44 @@ Widget mainListView(meetList list, WidgetRef ref) {
       ),
     ),
   );
+}
+
+Widget curUserIcon(int num) {
+  if(num == 1) {
+    return Stack(
+        children: [
+          Image.asset('assets/images/User_Picture/User_pic_null.png',
+              width: 26, height: 26),
+        ]
+    );
+  } else if(num == 2) {
+    return Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+            child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+                width: 26, height: 26),
+          ),
+          Image.asset('assets/images/User_Picture/User_pic_null.png',
+              width: 26, height: 26)
+        ]
+    );
+  } else {
+    return Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+            child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+                width: 26, height: 26),
+          ),
+          Container(
+            margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+            child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+                width: 26, height: 26),
+          ),
+          Image.asset('assets/images/User_Picture/User_pic_null.png',
+              width: 26, height: 26),
+        ]
+    );
+  }
 }

@@ -41,9 +41,9 @@ mixin _$meet {
   bool get timeClosed => throw _privateConstructorUsedError; //마감 시간
   Map<dynamic, dynamic> get hostUser =>
       throw _privateConstructorUsedError; //주최자 정보
-  List<Map> get comments => throw _privateConstructorUsedError; //댓글 정보
+  List<Comment> get comments => throw _privateConstructorUsedError; //댓글 정보
   List<Map> get userList => throw _privateConstructorUsedError; //참가자 리스트
-  bool get isInsert => throw _privateConstructorUsedError;
+  bool get isInsert => throw _privateConstructorUsedError; //유저 참가 여부
   String get age => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -77,7 +77,7 @@ abstract class $meetCopyWith<$Res> {
       bool approval,
       bool timeClosed,
       Map<dynamic, dynamic> hostUser,
-      List<Map> comments,
+      List<Comment> comments,
       List<Map> userList,
       bool isInsert,
       String age});
@@ -205,7 +205,7 @@ class _$meetCopyWithImpl<$Res, $Val extends meet>
       comments: null == comments
           ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
-              as List<Map>,
+              as List<Comment>,
       userList: null == userList
           ? _value.userList
           : userList // ignore: cast_nullable_to_non_nullable
@@ -249,7 +249,7 @@ abstract class _$$_meetCopyWith<$Res> implements $meetCopyWith<$Res> {
       bool approval,
       bool timeClosed,
       Map<dynamic, dynamic> hostUser,
-      List<Map> comments,
+      List<Comment> comments,
       List<Map> userList,
       bool isInsert,
       String age});
@@ -373,7 +373,7 @@ class __$$_meetCopyWithImpl<$Res> extends _$meetCopyWithImpl<$Res, _$_meet>
       comments: null == comments
           ? _value._comments
           : comments // ignore: cast_nullable_to_non_nullable
-              as List<Map>,
+              as List<Comment>,
       userList: null == userList
           ? _value._userList
           : userList // ignore: cast_nullable_to_non_nullable
@@ -414,7 +414,7 @@ class _$_meet implements _meet {
       required this.approval,
       required this.timeClosed,
       required final Map<dynamic, dynamic> hostUser,
-      required final List<Map> comments,
+      required final List<Comment> comments,
       required final List<Map> userList,
       required this.isInsert,
       required this.age})
@@ -489,10 +489,10 @@ class _$_meet implements _meet {
   }
 
 //주최자 정보
-  final List<Map> _comments;
+  final List<Comment> _comments;
 //주최자 정보
   @override
-  List<Map> get comments {
+  List<Comment> get comments {
     if (_comments is EqualUnmodifiableListView) return _comments;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_comments);
@@ -511,6 +511,7 @@ class _$_meet implements _meet {
 //참가자 리스트
   @override
   final bool isInsert;
+//유저 참가 여부
   @override
   final String age;
 
@@ -626,7 +627,7 @@ abstract class _meet implements meet {
       required final bool approval,
       required final bool timeClosed,
       required final Map<dynamic, dynamic> hostUser,
-      required final List<Map> comments,
+      required final List<Comment> comments,
       required final List<Map> userList,
       required final bool isInsert,
       required final String age}) = _$_meet;
@@ -674,12 +675,12 @@ abstract class _meet implements meet {
   @override //마감 시간
   Map<dynamic, dynamic> get hostUser;
   @override //주최자 정보
-  List<Map> get comments;
+  List<Comment> get comments;
   @override //댓글 정보
   List<Map> get userList;
   @override //참가자 리스트
   bool get isInsert;
-  @override
+  @override //유저 참가 여부
   String get age;
   @override
   @JsonKey(ignore: true)

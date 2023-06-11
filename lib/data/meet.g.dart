@@ -28,7 +28,7 @@ _$_meet _$$_meetFromJson(Map<String, dynamic> json) => _$_meet(
       timeClosed: json['timeClosed'] as bool,
       hostUser: json['hostUser'] as Map<String, dynamic>,
       comments: (json['comments'] as List<dynamic>)
-          .map((e) => e as Map<String, dynamic>)
+          .map((e) => Comment.fromJson(e as Map<String, dynamic>))
           .toList(),
       userList: (json['userList'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/screen/mainList/Loading_to_mainListBoard.dart';
 import 'screen/setting/setFilter.dart';
 import 'screen/mainMap/mainPageMap.dart';
 import 'package:front/screen/mainList/mainListBoard.dart';
@@ -74,7 +75,7 @@ class MainPage extends ConsumerWidget {
                   onPressed: (){
                     Navigator.push(context,
                         MaterialPageRoute(
-                            builder: (context) => MainListBoard()));
+                            builder: (context) => Loading_to_mainListBoard()));
                   },
                 ),
               ],

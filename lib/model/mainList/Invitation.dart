@@ -92,7 +92,7 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
                             });
                           },
                         ),
-                        Line(),
+                        line(),
                       ],
                     );
                   }).toList(),
@@ -121,7 +121,7 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
   }
 }
 
-Widget Line() {
+Widget line() {
   return const Center(
     child: SizedBox(
       child: Divider(

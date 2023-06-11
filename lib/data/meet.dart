@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:front/data/Comment.dart';
 
 part 'meet.freezed.dart';
 part 'meet.g.dart';
@@ -27,7 +28,7 @@ class meet with _$meet{
     required bool approval, // 자동 승인 여부
     required bool timeClosed, //마감 시간
     required Map hostUser, //주최자 정보
-    required List<Map> comments, //댓글 정보
+    required List<Comment> comments, //댓글 정보
     required List<Map> userList, //참가자 리스트
     required bool isInsert, //유저 참가 여부
     required String age, //나이 제한

@@ -7,10 +7,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/screen/login/pwFind.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Phone_ij.dart';
 import 'package:front/screen/mainMap/mainPageMap.dart';
 import 'idFind.dart';
 import 'pwFind.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -22,15 +25,41 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   String _text = '';
   String _text1 = '';
+  String username = '';
+  String password = '';
   bool obscureText = true;
-
-  // 비밀번호 찾기 버튼을 눌렀을 때 실행할 코드 작성
+  String loginresult2 = 'ㅗ';
+  Future<void> sendCredentialsToServer() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/loginB');
+    final requestData = {
+      'username': username,
+      'password': password,
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.post(
+      url,
+      body: jsonData,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      // 성공적으로 서버로 전송됨
+      print('로그인 성공');
+      final responseData = jsonDecode(response.body);
+      Navigator.pop(context);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MainPageMap()));
+    } else {
+      print('로그인 실패. 상태 코드: ${response.statusCode}');
+      _login_fail_incorrect(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
@@ -67,15 +96,15 @@ class _loginState extends State<login> {
                       setState(() {
                         _text = value;
                       });
+                      username = _text;
                     },
                     decoration: InputDecoration(
-                      labelText: '임시아이디 abcd@gmail.com',
+                      // labelText: '임시 아이디 :m',
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10.0)),
                       filled: true,
                       fillColor: Color(0xFFF5F6FA),
-
                     ),
                   ),
                 ),
@@ -92,9 +121,10 @@ class _loginState extends State<login> {
                       setState(() {
                         _text1 = value;
                       });
+                      password = _text1;
                     },
                     decoration: InputDecoration(
-                      labelText: '임시비밀번호 asdf12345',
+                      // labelText: '임시 비밀번호:et',
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10.0)),
@@ -102,17 +132,17 @@ class _loginState extends State<login> {
                       fillColor: Color(0xFFF5F6FA),
                       suffixIcon: IconButton(
                         onPressed: () {
-                          obscureText =! obscureText;
+                          obscureText = !obscureText;
                         },
                         icon: Icon(
                           obscureText ? Icons.visibility : Icons.visibility_off,
                           color: Colors.grey,
-                        ),),
+                        ),
                       ),
                     ),
                   ),
                 ),
-
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -162,21 +192,7 @@ class _loginState extends State<login> {
                   height: 56.0,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_text == '') {
-                        _login_fail_idnone(context);
-                      } else if (_text1 == '') {
-                        _login_fail_pwnone(context);
-                      } else if (_text1 != 'asdf12345' ||
-                          _text != 'abcd@gmail.com') {
-                        _login_fail_incorrect(context);
-                      } else {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MainPageMap()),
-                        );
-                      }
+                      sendCredentialsToServer();
                     },
                     child: Text(
                       '로그인',
@@ -254,7 +270,8 @@ class _loginState extends State<login> {
                     )),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 24.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6.0, horizontal: 24.0),
                 child: TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -273,7 +290,6 @@ class _loginState extends State<login> {
                   ),
                 ),
               ),
-
             ],
           ),
         ),
@@ -282,22 +298,11 @@ class _loginState extends State<login> {
   }
 }
 
-void _login_fail_idnone(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('아이디를 입력해주세요'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('확인'),
-        ),
-      ],
-    ),
-  );
+// 로그인 성공시 username, userpassword 저장
+void saveLoginCredentials(String username, String password) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('username', username);
+  await prefs.setString('password', password);
 }
 
 void _login_fail_pwnone(BuildContext context) {
@@ -335,46 +340,46 @@ void _login_fail_incorrect(BuildContext context) {
     ),
   );
 }
-
-void _backto_login(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('뒤로가기를 하실 경우 입력된 내용이 삭제됩니다.\n 이전화면으로 이동 하시겠습니까?'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('확인'),
-        ),
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('취소'),
-        ),
-      ],
-    ),
-  );
-}
-
-void _login_fail_alrephone(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('이미 가입된 휴대전화번호 입니다.'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('확인'),
-        ),
-      ],
-    ),
-  );
-}
+//
+// void _backto_login(BuildContext context) {
+//   showCupertinoModalPopup<void>(
+//     context: context,
+//     builder: (BuildContext context) => CupertinoAlertDialog(
+//       content: const Text('뒤로가기를 하실 경우 입력된 내용이 삭제됩니다.\n 이전화면으로 이동 하시겠습니까?'),
+//       actions: <CupertinoDialogAction>[
+//         CupertinoDialogAction(
+//           isDefaultAction: true,
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//           child: const Text('확인'),
+//         ),
+//         CupertinoDialogAction(
+//           isDefaultAction: true,
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//           child: const Text('취소'),
+//         ),
+//       ],
+//     ),
+//   );
+// }
+//
+// void _login_fail_alrephone(BuildContext context) {
+//   showCupertinoModalPopup<void>(
+//     context: context,
+//     builder: (BuildContext context) => CupertinoAlertDialog(
+//       content: const Text('이미 가입된 휴대전화번호 입니다.'),
+//       actions: <CupertinoDialogAction>[
+//         CupertinoDialogAction(
+//           isDefaultAction: true,
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//           child: const Text('확인'),
+//         ),
+//       ],
+//     ),
+//   );
+// }

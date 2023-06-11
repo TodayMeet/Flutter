@@ -56,8 +56,7 @@ class _alarmState extends State<alarm> {
             ),
             title: Text(alarmItem),
             subtitle: Text(alarmItem1),
-            onTap: () {
-            },
+            onTap: () =>_inviteapprove(context),
           );
         },
       ),

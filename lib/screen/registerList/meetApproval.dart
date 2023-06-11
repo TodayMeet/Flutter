@@ -6,7 +6,6 @@
 // 추가 작업 예정 사항
 // 서버로 모임 정보 보내주기
 
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -167,7 +166,7 @@ class _MeetingApprovalState extends State<MeetingApproval> {
               print('title : '+meet.meetInfo.title);
               print('content : '+meet.meetInfo.content);
               print('approval : '+meet.meetInfo.approval.toString());
-              //_registerMeet();
+              _registerMeet();
               Navigator.pop(context);
             },
             child: const Text('등록 완료',

@@ -47,6 +47,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   dotted_border: ^2.0.0+3
   chat_bubbles: ^1.4.1
+  shared_preferences: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +86,7 @@ flutter:
     - assets/images/LoginImage/
     - assets/images/User_Picture/
     - assets/images/Comments/
+
 
   fonts:
     - family: PretendardBold

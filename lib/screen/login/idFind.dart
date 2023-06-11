@@ -58,7 +58,7 @@ class _idFindState extends State<idFind> {
     return Scaffold(
       backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 0,
+          elevation: 1.0,
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(

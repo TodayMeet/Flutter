@@ -105,206 +105,208 @@ class _accountsettingState extends State<accountsetting> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 1.0,
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-            size: 25,
+        appBar: AppBar(
+          elevation: 1.0,
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+              size: 25,
+            ),
+            onPressed: () {
+              // email = _idController.text;
+              // phonenumDuplicate();
+              _backto_login(context);
+            },
           ),
-          onPressed: () {
-            // email = _idController.text;
-            // phonenumDuplicate();
-            _backto_login(context);
-          },
+          centerTitle: true,
+          title: Text(
+            '계정설정',
+            style: TextStyle(
+                fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
         ),
-        centerTitle: true,
-        title: Text(
-          '계정설정',
-          style: TextStyle(
-              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-      ),
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 8.0),
-              Padding(
-                padding: EdgeInsets.only(left: 3.0),
-                child: Text(
-                  '아이디(이메일)',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Center(
-                child: Container(
-                  width: 360,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: TextField(
-                    controller: _idController,
-                    onChanged: (value) {
-                      emailnumDuplicate();
-                      // print(isDuplicate);
-                      // print(convertIsDuplicateToString);
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 16.0,
-                        horizontal: 12.0,
-                      ),
-                      hintText: '아이디를 입력하세요',
-                      hintStyle: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 13,
-                      ),
-                      border: InputBorder.none,
-                    ),
+        body: SafeArea(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 8.0),
+                Padding(
+                  padding: EdgeInsets.only(left: 3.0),
+                  child: Text(
+                    '아이디(이메일)',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                   ),
                 ),
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                '* 이메일 주소는 "@"와 "."을 최소 하나 이상 포함되어야합니다.',
-                style: TextStyle(color: Colors.red),
-              ),
-              Text(
-                convertIsDuplicateToString(isDuplicate),
-                style: TextStyle(color: Colors.red),
-              ),
-              SizedBox(height: 24.0),
-              Padding(
-                padding: EdgeInsets.only(left: 3.0),
-                child: Text(
-                  '비밀번호',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Center(
-                child: Container(
-                  width: 360,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 16.0,
-                        horizontal: 12.0,
-                      ),
-                      hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
-                      hintStyle: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 13,
-                      ),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ),
-              Text(
-                '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
-                style: TextStyle(color: Colors.red),
-              ),
-              SizedBox(height: 24.0),
-              Padding(
-                padding: EdgeInsets.only(left: 3.0),
-                child: Text(
-                  '비밀번호 확인',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Center(
-                child: Container(
-                  width: 360,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: TextField(
-                    controller: _confirmPasswordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 16.0,
-                        horizontal: 12.0,
-                      ),
-                      hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
-                      hintStyle: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 13,
-                      ),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ),
-              Text(
-                '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
-                style: TextStyle(color: Colors.red),
-              ),
-              Text(
-                isPasswordMatch() ? '* 비밀번호가 일치합니다.' : '* 비밀번호가 일치하지 않습니다.',
-                style: TextStyle(color: Colors.red),
-              ),
-              SizedBox(height: 32.0),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.symmetric(),
-                child: Center(
+                SizedBox(height: 8.0),
+                Center(
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 56,
-                    child: CupertinoButton(
-                      onPressed: () {
-                        if(isDuplicate==true || isPasswordMatch()==false){
-                          _login_accountCheck(context);
-                        }else if(_idController.text=='' || _passwordController==''){
-                          _login_accountCheck(context);
-                        }
-
-                        else{
-                          emailnumDuplicate();
-                          _toregisterProfile();
-                        }
+                    width: 360,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: TextField(
+                      controller: _idController,
+                      onChanged: (value) {
+                        emailnumDuplicate();
+                        // print(isDuplicate);
+                        // print(convertIsDuplicateToString);
                       },
-                      padding: EdgeInsets.symmetric(),
-                      color: CupertinoDynamicColor.resolve(
-                        CupertinoColors.systemBlue,
-                        context,
-                      ).withAlpha(0xFF4874EA),
-                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                      child: Text(
-                        '다음',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.0,
+                          horizontal: 12.0,
+                        ),
+                        hintText: '아이디를 입력하세요',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 13,
+                        ),
+                        border: InputBorder.none,
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 24,
-              )
-            ],
+                SizedBox(height: 8.0),
+                Text(
+                  '* 이메일 주소는 "@"와 "."을 최소 하나 이상 포함되어야합니다.',
+                  style: TextStyle(color: Colors.red),
+                ),
+                Text(
+                  convertIsDuplicateToString(isDuplicate),
+                  style: TextStyle(color: Colors.red),
+                ),
+                SizedBox(height: 14.0),
+                Padding(
+                  padding: EdgeInsets.only(left: 3.0),
+                  child: Text(
+                    '비밀번호',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Center(
+                  child: Container(
+                    width: 360,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 12.0,
+                        ),
+                        hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 13,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                Text(
+                  '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                  style: TextStyle(color: Colors.red),
+                ),
+                SizedBox(height: 14.0),
+                Padding(
+                  padding: EdgeInsets.only(left: 3.0),
+                  child: Text(
+                    '비밀번호 확인',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Center(
+                  child: Container(
+                    width: 360,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: TextField(
+                      controller: _confirmPasswordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 12.0,
+                        ),
+                        hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 13,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                Text(
+                  '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                  style: TextStyle(color: Colors.red),
+                ),
+                Text(
+                  isPasswordMatch() ? '* 비밀번호가 일치합니다.' : '* 비밀번호가 일치하지 않습니다.',
+                  style: TextStyle(color: Colors.red),
+                ),
+                SizedBox(height: 12.0),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(),
+                  child: Center(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 56,
+                      child: CupertinoButton(
+                        onPressed: () {
+                          if(isDuplicate==true || isPasswordMatch()==false){
+                            _login_accountCheck(context);
+                          }else if(_idController.text=='' || _passwordController==''){
+                            _login_accountCheck(context);
+                          }
+
+                          else{
+                            emailnumDuplicate();
+                            _toregisterProfile();
+                          }
+                        },
+                        padding: EdgeInsets.symmetric(),
+                        color: CupertinoDynamicColor.resolve(
+                          CupertinoColors.systemBlue,
+                          context,
+                        ).withAlpha(0xFF4874EA),
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                        child: Text(
+                          '다음',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 24,
+                )
+              ],
+            ),
           ),
         ),
       ),

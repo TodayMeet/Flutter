@@ -87,7 +87,7 @@ flutter:
 
 
     - assets/texts/
-    - assets/images/ProfileImage/
+
 
   fonts:
     - family: PretendardBold

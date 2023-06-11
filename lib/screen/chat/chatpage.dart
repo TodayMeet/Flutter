@@ -87,14 +87,14 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    ChatMessage? lastMessage;
+    ChatMessage? lastMessages;
     if (messages.isNotEmpty) {
-      lastMessage = messages.last;
+      lastMessages = messages.last;
     }
-    if (lastMessage != null) {
-      String lastMessageContent = lastMessage.content;
-      bool lastMessageIsSentByMe = lastMessage.isSentByMe;
-      String lastMessageTime = lastMessage.time;
+    if (lastMessages != null) {
+      String lastMessagesContent = lastMessages.content;
+      bool lastMessagesIsSentByMe = lastMessages.isSentByMe;
+      String lastMessagesTime = lastMessages.time;
     } else {}
 
     return Scaffold(
@@ -107,7 +107,7 @@ class _ChatPageState extends State<ChatPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => chatlist(lastMessage: lastMessage),
+                builder: (context) => chatlist(lastMessages: lastMessages),
               ),
             );
           },
@@ -117,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ),
         title: Text(
-          '용산동에서 치맥한잔 하실분',
+          '오늘 같이 놀 사람~!',
           style: TextStyle(
               color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
         ),
@@ -187,7 +187,7 @@ class _ChatPageState extends State<ChatPage> {
                 itemBuilder: (context, index) {
                   return messages[index];
                 },
-                separatorBuilder: (context, index) => SizedBox(height: 60),
+                separatorBuilder: (context, index) => SizedBox(height: 5),
               ),
             ),
             Padding(

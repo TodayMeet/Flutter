@@ -28,10 +28,10 @@ class profileMain extends StatefulWidget {
 
 class _profileMainState extends State<profileMain> {
   int follower = 100;
-  int following = 100;
-  String name = '개굴개굴';
+  int following = 220;
+  String name = '돌고래밥';
   String gender = '남';
-  String birthdate = '1988.05.14';
+  String birthdate = '2000.03.01';
   @override
   Widget build(BuildContext context) {
     double halfWidth = MediaQuery.of(context).size.width / 2;
@@ -78,7 +78,7 @@ class _profileMainState extends State<profileMain> {
                   CircleAvatar(
                     radius: 35,
                     backgroundImage: AssetImage(
-                        "assets/images/LoginImage/kakao_login_large_wide.png"),
+                        "assets/images/ProfileImage/testprofile.jpg"),
                   ),
                   SizedBox(
                     width: 20,

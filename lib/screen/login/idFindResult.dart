@@ -23,7 +23,7 @@ class _idFindResultState extends State<idFindResult> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          elevation: 0,
+          elevation: 1.0,
           backgroundColor: Colors.white,
           leading: null,
           centerTitle: true,
@@ -106,12 +106,15 @@ class _idFindResultState extends State<idFindResult> {
               height: 56,
               child: CupertinoButton(
                 onPressed: () {
-                  // 입력시간 초과 -> _login_fail_timeover
-                  // 성공했으면 -> _login_success_phoneij
-                  //인증번호 틀리면 -> _login_fail_incorrectij
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => login()));
+                  // // 입력시간 초과 -> _login_fail_timeover
+                  // // 성공했으면 -> _login_success_phoneij
+                  // //인증번호 틀리면 -> _login_fail_incorrectij
+                  // Navigator.pop(context);
+                  // Navigator.push(
+                  //     context, MaterialPageRoute(builder: (context) => login()));
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          login()), (route) => false);
                 },
                 minSize: 0,
                 padding: EdgeInsets.symmetric(),

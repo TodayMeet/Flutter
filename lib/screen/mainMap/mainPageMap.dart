@@ -50,15 +50,51 @@ class MainPageMap extends ConsumerWidget {
 
     // 핀 위치 정보 받아오기
     List<Markers> markersInfo = [];
-    for (var i = 0; i < 10; i++) {
+    /*for (var i = 0; i < 5; i++) {
       markersInfo.add(Markers(
-          time: '6.22 18:00',
+          time: '6.13 18:00',
           categoryName: '주류',
           meetNo: 1,
           personClose: 5,
           location:
-              LocationLatLng(latitude: userLat + 0.001*i, longitude: userLong + 0.001*i)));
-    }
+              LocationLatLng(latitude: userLat + 0.0015+ 0.0003*i, longitude: userLong - 0.0065 + 0.0003*i)));
+    }*/
+    markersInfo.add(Markers(
+        time: '6.13 18:00',
+        categoryName: '주류',
+        meetNo: 1,
+        personClose: 5,
+        location:
+        LocationLatLng(latitude: 35.892538200000004, longitude: 128.60885290000002)));
+    markersInfo.add(Markers(
+        time: '6.13 17:00',
+        categoryName: '영화',
+        meetNo: 1,
+        personClose: 5,
+        location:
+        LocationLatLng(latitude: 35.892858200000006, longitude: 128.6099029)));
+    markersInfo.add(Markers(
+        time: '6.13 19:00',
+        categoryName: '운동',
+        meetNo: 1,
+        personClose: 5,
+        location:
+        LocationLatLng(latitude: 35.8925562+0.001, longitude: 128.60885760000002-0.0004)));
+    markersInfo.add(Markers(
+        time: '6.13 17:30',
+        categoryName: '카페',
+        meetNo: 1,
+        personClose: 5,
+        location:
+        LocationLatLng(latitude: 35.8928762+0.001, longitude: 128.6099076-0.0004)));
+    markersInfo.add(Markers(
+        time: '6.13 18:00',
+        categoryName: '맛집',
+        meetNo: 1,
+        personClose: 5,
+        location:
+        LocationLatLng(latitude: 35.8925658+0.0006, longitude: 128.6088583-0.0012)));
+
     ref.read(markerProvider.notifier).state = markersInfo;
 
     return [userLat, userLong];

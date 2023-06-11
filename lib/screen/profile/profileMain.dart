@@ -27,11 +27,11 @@ class profileMain extends StatefulWidget {
 }
 
 class _profileMainState extends State<profileMain> {
-  int follower = 100;
-  int following = 220;
+  int follower = 0;
+  int following = 0;
   String name = '돌고래밥';
   String gender = '남';
-  String birthdate = '2000.03.01';
+  String birthdate = '2000. 03. 01';
   @override
   Widget build(BuildContext context) {
     double halfWidth = MediaQuery.of(context).size.width / 2;

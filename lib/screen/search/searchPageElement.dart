@@ -1,6 +1,6 @@
 // 탐색 페이지 위젯들
 
-// 최종 수정일 : 2023.5.28
+// 최종 수정일 : 2023.6.3
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
@@ -75,34 +75,6 @@ class CustomPageIndicator extends StatelessWidget {
         border: Border.all(color: Colors.white),
         shape: BoxShape.circle,
         color: isCurrentPage ? Colors.white : Colors.grey,
-      ),
-    );
-  }
-}
-
-class Buttons extends StatefulWidget {
-  const Buttons({Key? key}) : super(key: key);
-
-  @override
-  State<Buttons> createState() => _ButtonsState();
-}
-
-class _ButtonsState extends State<Buttons> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(24, 0, 24, 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(child: Row(
-
-          )),
-          Expanded(child: Row()),
-          Expanded(child: Row()),
-          Expanded(child: Row()),
-          Expanded(child: Row()),
-        ],
       ),
     );
   }

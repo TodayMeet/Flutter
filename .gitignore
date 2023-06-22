@@ -45,3 +45,6 @@ app.*.map.json
 
 # pubspec.lock file because of api key
 pubspec.lock
+
+# API KEY
+pubspec.lock

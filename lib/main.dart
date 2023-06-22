@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screen/setting/setlocation.dart';
+import 'package:front/screen/mainList/Loading_to_mainListBoard.dart';
 import 'screen/setting/setFilter.dart';
 import 'screen/mainMap/mainPageMap.dart';
-import 'package:front/screen/mainList/mainListBoard.dart';
 import 'package:front/screen/login/start.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -74,11 +73,11 @@ class MainPage extends ConsumerWidget {
                   }
                 ),
                 ElevatedButton(    
-                  child: Text('리스트'),
+                  child: Text('게시판'),
                   onPressed: (){
                     Navigator.push(context,
                         MaterialPageRoute(
-                            builder: (context) => MainListBoard()));
+                            builder: (context) => Loading_to_mainListBoard()));
                   },
                 ),
               ],
@@ -89,4 +88,3 @@ class MainPage extends ConsumerWidget {
     );
   }
 }
-

@@ -1,42 +1,84 @@
 //메인 리스트 게시판
 
-// 최종 수정: 2023.5.17
+// 최종 수정: 2023.6.8
 // 작업자: 정해수
 
-//추가 작업 예정 사항:
-// 주변 이벤트 vs 주변의 새 이벤트
-// 리스트 정렬 순서
-// 리스트 필터 화면 이동 아이콘
-// 지도 화면 이동 아이콘
-// 현재 위치 설정
-// 하단 고정 바
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:front/model/TextPrint.dart';
+import '../../data/meetList_Provider.dart';
+import '../../model/mainList/meetListView.dart';
+import '../mainMap/mainPageMap.dart';
 import 'package:front/screen/alarm/alarm.dart';
 import '../setting/setFilter.dart';
 import '../setting/setlocation.dart';
-import 'ListDetail.dart';
-import 'mainListView.dart';
-import 'package:front/model/mainList/Advertisement.dart';
 import 'package:front/data/meetList.dart';
 import 'package:front/model/bottomBar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-String dong = "용산동";
+RefreshController _refreshController = RefreshController(initialRefresh: false);
 
 class MainListBoard extends ConsumerStatefulWidget {
-  const MainListBoard({Key? key}) : super(key: key);
+  const MainListBoard({Key? key,
+    required this.meetListData
+  }) : super(key: key);
+
+  final dynamic meetListData;
 
   @override
-  _MainListBoardState createState() => _MainListBoardState();
+  MainListBoardState createState() => MainListBoardState();
 }
 
-class _MainListBoardState extends ConsumerState<MainListBoard> {
+class MainListBoardState extends ConsumerState<MainListBoard> {
+  late var meetListProvider;
+  List<meetList> tempList = [];
+  int postNo = 0;
+
+  void postListData(String sort, int pageNo) async {
+    try {
+      final url = Uri.parse("http://todaymeet.shop:8080/meet/list/대");
+      var postBody =
+      {
+        "sort":sort,
+        "page":pageNo
+      };
+
+      http.Response response = await http.post(
+        url,
+        headers: {'Content-Type' : 'application/json'},
+        body: json.encode(postBody),
+      );
+
+      if (response.statusCode == 200) {
+        tempList = [];
+        List<dynamic> meetListData = json.decode(utf8.decode(response.bodyBytes));
+        meetListData.forEach((element) => tempList.add(meetList.fromJson(element)));
+      } else {
+        showToast('Data download failed! : ${response.statusCode}');
+        print('Failed to post data : ${response.statusCode}');
+      }
+    } catch(e) {
+      showToast('Data download failed!');
+      print('Failed to post data');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.meetListData.forEach((element) => tempList.add(meetList.fromJson(element)));
+    meetListProvider = StateNotifierProvider<meetListNotifier, List<meetList>>((ref) {
+      return meetListNotifier(tempList);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    
+    List<meetList> viewList = ref.watch(meetListProvider);
+
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 150,
@@ -47,7 +89,7 @@ class _MainListBoardState extends ConsumerState<MainListBoard> {
                       builder: (context) => LocationPage()));
             },
             icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-            label: Text(dong,
+            label: Text(ref.read(dongProvider.notifier).state,
               style: const TextStyle(
                   color: Colors.black,
                   fontFamily: 'PretendardBold'),
@@ -63,45 +105,85 @@ class _MainListBoardState extends ConsumerState<MainListBoard> {
           IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => alarm()));
+                    MaterialPageRoute(builder: (context) => const alarm()));
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.notifications_none,
                 color: Colors.black,
               ))
         ],
         backgroundColor: Colors.white,
+        elevation: 1,
       ),
       bottomNavigationBar: const BottomAppBar(
           child: BottomBar()
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24), //컨테이너 외부 공백 조절
-        child: ListView(// 메인 리스트 스크롤 뷰
-          children: [
-            const SizedBox(height: 24.0,), //
-            StringText('📣 주변의 새 이벤트', 24, 'PretendardBold', const Color(0xff2F3036)),
-            const SizedBox(height: 19.0,),
-
-            ElevatedButton(
-              onPressed: () => ref.watch(curUserNumProvider.notifier).state++,
-                // ignore: prefer_const_constructors
-              child: Text('test (+)'),
-            ), // test+
-            ElevatedButton(
-              onPressed: () => ref.watch(curUserNumProvider.notifier).state--,
-              // ignore: prefer_const_constructors
-              child: Text('test (-)'),
-            ), // test-
-
-            //건수 리스트
-            ListViewer(context, ref, test0),
-            ListViewer(context, ref, test1),
-
-            Advertisement('광고'), //광고 배너
-            StringText('🧭 주변 이벤트', 24, 'PretendardBold', const Color(0xff2F3036)),
-          ],
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        onRefresh: () async {
+          postNo = 0;
+          postListData("최신순", postNo++);
+          ref.read(meetListProvider.notifier).clearList();
+          tempList.forEach((meetList) => ref.read(meetListProvider.notifier).addList(meetList));
+          _refreshController.refreshCompleted();
+        },
+        onLoading: () async {
+          if(ref.read(meetListProvider).length < 31) {
+            if(postNo <= 1) {
+              ref.read(meetListProvider.notifier).clearList();
+            }
+            postListData("최신순", postNo++);
+            tempList.forEach((meetList) => ref.read(meetListProvider.notifier).addList(meetList));
+          }
+          _refreshController.loadComplete();
+        },
+        header: CustomHeader(
+          builder: (BuildContext context, RefreshStatus? mode) {
+            Widget body;
+            if (mode == RefreshStatus.idle) {
+              body = StringText('건수 목록 새로고침', 20, 'PretendardBold', Colors.black);
+            } else if (mode == RefreshStatus.refreshing) {
+              body = StringText('건수 불러오는 중...', 20, 'PretendardBold', Colors.black);
+            } else if (mode == RefreshStatus.failed) {
+              body = StringText('불러오는 과정에서 오류가 발생했습니다', 20, 'PretendardBold', Colors.black);
+            } else {
+              body = StringText('건수 목록 새로고침', 20, 'PretendardBold', Colors.black);
+            }
+            return SizedBox(
+              height: 55.0,
+              child: Center(child: body),
+            );
+          },
         ),
+        footer: CustomFooter(
+          builder: (BuildContext context,LoadStatus? mode){
+            Widget body;
+            if(ref.read(meetListProvider).length > 31) {
+              body = const Text("");
+            } else if(mode==LoadStatus.idle){
+              body =  StringText('건수 더 보기', 20, 'PretendardBold', Colors.black);
+            }
+            else if(mode==LoadStatus.loading){
+              body =  StringText('건수 불러오는 중...', 20, 'PretendardBold', Colors.black);
+            }
+            else if(mode == LoadStatus.failed){
+              body = StringText('불러오는 과정에서 오류가 발생했습니다', 20, 'PretendardBold', Colors.black);
+            }
+            else if(mode == LoadStatus.canLoading){
+              body = StringText('건수 불러오는 중...', 20, 'PretendardBold', Colors.black);
+            }
+            else{
+              body = const Text("");
+            }
+            return SizedBox(
+              height: 55.0,
+              child: Center(child:body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        child: meetListView(context, ref, viewList),
       ),
       floatingActionButton: Wrap(
         direction: Axis.vertical,
@@ -156,14 +238,12 @@ class _MainListBoardState extends ConsumerState<MainListBoard> {
   }
 }
 
-Widget ListViewer(BuildContext context, WidgetRef ref, meetList List) {
-
-  return InkWell(
-    child: mainListView(List, ref),
-    onTap: (){
-      Navigator.push(context,
-          MaterialPageRoute(
-              builder: (context) => const ListDetail()));
-    }, // -> 건수 상세 페이지로 이동
-  );
+void showToast(String message) {
+  Fluttertoast.showToast(
+      msg: message,
+      fontSize: 15,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM);
 }

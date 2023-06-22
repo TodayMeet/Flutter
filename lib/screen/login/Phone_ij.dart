@@ -6,6 +6,7 @@
 // 화면 전체 수정
 
 import 'dart:convert';
+import 'package:front/model/dialogEx/backLoginDialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class _Phone_ijState extends State<Phone_ij> {
               size: 25,
             ),
             onPressed: () {
-              _backto_login(context);
+              _backLoginDialog(context);
             },
           ),
           centerTitle: true,
@@ -267,18 +268,20 @@ class _Phone_ijState extends State<Phone_ij> {
               height: 56,
               child: CupertinoButton(
                 onPressed: () {
-                  apvNum = _text3;
-                  phoneNumber = _text2;
-                  if(phoneNumber==''){
-                    _login_fail_noinput(context);
-                  }else if(apvNum==''){
-                    _login_fail_noinput_apvnum(context);
-                  }else if(_countdown==0){
-                    _login_fail_timeover(context);
-                  }else{
-                    phonenumDuplicate();
-                  }
-
+                  // apvNum = _text3;
+                  // phoneNumber = _text2;
+                  // if(phoneNumber==''){
+                  //   _login_fail_noinput(context);
+                  // }else if(apvNum==''){
+                  //   _login_fail_noinput_apvnum(context);
+                  // }else if(_countdown==0){
+                  //   _login_fail_timeover(context);
+                  // }else{
+                  //   phonenumDuplicate();
+                  // }
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => accountsetting()));
                   // 입력시간 초과 -> _login_fail_timeover
                   // 성공했으면 -> _login_success_phoneij
                 },
@@ -359,33 +362,12 @@ void _login_fail_incorrectij(BuildContext context) {
   );
 }
 
-void _backto_login(BuildContext context) {
-  showCupertinoModalPopup<void>(
+void _backLoginDialog(BuildContext context){
+  showDialog(
     context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('뒤로가기를 하실 경우 입력된 내용이 삭제됩니다.\n 이전화면으로 이동 하시겠습니까?'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => login()),
-            );
-          },
-          child: const Text('확인'),
-        ),
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('취소'),
-        ),
-      ],
-    ),
+    builder: (BuildContext context){
+      return backLoginDialog();
+    },
   );
 }
 

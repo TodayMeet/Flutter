@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:front/screen/chat/chatlist.dart';
 import 'package:intl/intl.dart';
 
+import '../profile/profileMain.dart';
+
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
-
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -25,17 +26,20 @@ class ChatMessage extends StatelessWidget {
       mainAxisAlignment:
           isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        Container(
-          child: Text(
-            formatTime(),
-            style: TextStyle(fontSize: 10),
-          ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              formatTime(),
+              style: TextStyle(fontSize: 10,fontFamily: 'PretendardRegular'),
+            ),
+          ],
         ),
         Container(
           alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
             padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               color: isSentByMe ? Colors.yellow : Colors.white,
@@ -57,10 +61,11 @@ class ChatMessage extends StatelessWidget {
     final replacedTime =
         formattedTime.replaceAll('AM', '오전').replaceAll('PM', '오후');
     return replacedTime;
-  }
+  }//시간 형식 지정
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final String appbarText = '오늘 같이 놀 사람~!';
   final List<ChatMessage> messages = <ChatMessage>[];
   TextEditingController textEditingController = TextEditingController();
   ScrollController scrollController = ScrollController();
@@ -100,27 +105,34 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 1.0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => chatlist(lastMessages: lastMessages),
-              ),
-            );
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
+        toolbarHeight: 50,
+        backgroundColor: Color(0xFFFFFFFF),
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            color : Color(0xFFE3E3E3),
+            height: 1.0,
           ),
         ),
-        title: Text(
-          '오늘 같이 놀 사람~!',
-          style: TextStyle(
-              color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+        leading: IconButton(
+            iconSize: 14.93,
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => profileMain()));
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Color(0xFF2F2F2F),
+            )),
+        //leading아이콘 혹시나 필요하면
+
+        title: Text(appbarText,
+          style: TextStyle(fontSize: 16.0,color: Colors.black,fontFamily: 'PretendardBold'),
         ),
+        centerTitle: true,
+
         actions: [
           Builder(
             builder: (BuildContext context) {
@@ -136,7 +148,7 @@ class _ChatPageState extends State<ChatPage> {
             },
           ),
         ],
-        centerTitle: true,
+
       ),
       endDrawer: Drawer(
         child: ListView(
@@ -217,7 +229,7 @@ class _ChatPageState extends State<ChatPage> {
                               controller: textEditingController,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: '메시지 입력',
+                                hintText: '메시지를 입력해주세요.',
                               ),
                             ),
                           ),

@@ -160,7 +160,7 @@ class _registerProfileState extends State<registerProfile> {
             size: 25,
           ),
           onPressed: () {
-            // _backto_prev(context);
+            Navigator.pop(context);
           },
         ),
         centerTitle: true,
@@ -180,7 +180,7 @@ class _registerProfileState extends State<registerProfile> {
               Center(
                 child: CircleAvatar(
                   backgroundColor: Colors.grey,
-                  radius: 50,
+                  radius: 45,
                   backgroundImage:
                       _imageFile != null ? FileImage(_imageFile!) : null,
                   child: _imageFile == null
@@ -209,10 +209,10 @@ class _registerProfileState extends State<registerProfile> {
                     ),
                   ),
                   Text(
-                    "*",
+                    " *",
                     style: TextStyle(
                       color: Colors.red,
-                      fontSize: 17.0,
+                      fontSize: 14.0,
                     ),
                   )
                 ]),
@@ -236,8 +236,8 @@ class _registerProfileState extends State<registerProfile> {
                     },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
-                        vertical: 16.0,
-                        horizontal: 12.0,
+                        vertical: 10.0,
+                        horizontal: 16.0,
                       ),
                       hintText: '아이디를 입력하세요',
                       hintStyle: TextStyle(
@@ -295,7 +295,7 @@ class _registerProfileState extends State<registerProfile> {
                   fontSize: 17.0,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
+              ),//생년월일 선택 텍스트
               Container(
                 decoration: BoxDecoration(
                   color: Color(0xFFEDEDED),
@@ -319,8 +319,8 @@ class _registerProfileState extends State<registerProfile> {
                         )),
                   ],
                 ),
-              ),
-              Spacer(),
+              ),//선택한 생년월일 표시 박스
+              Spacer(),//생년월일 박스 - 이용약관 동의 사이 여백
               Row(
                 children: [
                   Checkbox(
@@ -331,30 +331,30 @@ class _registerProfileState extends State<registerProfile> {
                       });
                     },
                     activeColor: Colors.black,
-                  ),
+                  ),//체크박스
                   Text(
                     '[필수] 이용약관 동의',
                     style: TextStyle(
                         fontSize: 17.0,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF8F9098)),
-                  ),
-                  Spacer(),
+                  ),//필수이용약관동의 텍스트
+                  Spacer(),// 동의 - 화살표 사이 공간
                   IconButton(
                     icon: Icon(
                       Icons.arrow_forward_ios,
-                      color: Color(0xFF8F9098), // Set the desired color here
+                      color: Color(0xFF8F9098),
                       size: 12,
-                    ),
+                    ),//화살표 아이콘
                     onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => privatePolicy()));
                     },
-                  ),
+                  ),//화살표 버튼
                 ],
-              ),
+              ),//[필수]이용약관 동의 Row
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: Row(
@@ -367,7 +367,7 @@ class _registerProfileState extends State<registerProfile> {
                         });
                       },
                       activeColor: Colors.black,
-                    ),
+                    ),//체크박스
                     Text(
                       '[필수] 개인정보처리방침 동의',
                       style: TextStyle(
@@ -375,7 +375,7 @@ class _registerProfileState extends State<registerProfile> {
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF8F9098),
                       ),
-                    ),
+                    ),//[필수] 개인정보처리방침 동의 텍스트
                     Spacer(),
                     IconButton(
                       icon: Icon(
@@ -391,8 +391,8 @@ class _registerProfileState extends State<registerProfile> {
                       },
                     ),
                   ],
-                ),
-              ),
+                ),//row로 정렬
+              ),// 개인정보처리방침 row담은 container
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(),
@@ -401,14 +401,10 @@ class _registerProfileState extends State<registerProfile> {
                     height: 56,
                     child: CupertinoButton(
                       onPressed: () {
-                        if (isChecked == false || isChecked1 == false) {
-                          _notAgree(context);
-                        } else if (isDuplicateUsername) {
-                          _checkUsername(context);
-                        } else {
-                          join();
 
-                        }
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => favorite()));// 임시로 다음 페이지로 넘어가게
                       },
                       minSize: 0,
                       padding: EdgeInsets.symmetric(),
@@ -423,14 +419,14 @@ class _registerProfileState extends State<registerProfile> {
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
-                      ),
-                    ),
+                      ),//저장 텍스트
+                    ),// 저장 버튼
                   ),
                 ),
               ),
               SizedBox(
                 height: 24,
-              ),
+              ),//저장과 마지막 화면간 여백 24로 설정
             ],
           ),
         ),
@@ -462,7 +458,7 @@ class _registerProfileState extends State<registerProfile> {
         ],
       ),
     );
-  }
+  }// 뒤로가기로 전체 프로세스 취소 팝업 알림 함수
 
   void _notAgree(BuildContext context) {
     showCupertinoModalPopup<void>(
@@ -480,7 +476,7 @@ class _registerProfileState extends State<registerProfile> {
         ],
       ),
     );
-  }
+  }// 동의항목에 체크하지 않았을때 띄우는 팝업
 
   void _checkUsername(BuildContext context) {
     showCupertinoModalPopup<void>(
@@ -498,5 +494,5 @@ class _registerProfileState extends State<registerProfile> {
         ],
       ),
     );
-  }
+  }// 닉네임 중복일때 띄우는 팝업 알림
 }

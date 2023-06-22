@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:front/screen/alarm/alarm.dart';
 import 'package:front/screen/chat/chatpage.dart';
 
+import '../../model/bottomBar.dart';
 import '../mainMap/mainPageMap.dart';
+import '../profile/profileMain.dart';
 
 class chatlist extends StatefulWidget {
   const chatlist({Key? key, this.lastMessages}) : super(key: key);
@@ -27,25 +29,36 @@ class _chatlistState extends State<chatlist> {
   ];
   @override
   Widget build(BuildContext context) {
+    String appbarText = '참여한 대화방';
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+
+        toolbarHeight: 50,
+        backgroundColor: Color(0xFFFFFFFF),
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            color : Color(0xFFE3E3E3), // 테두리 선의 색상
+            height: 1.0, // 테두리 선의 높이
+          ),
+        ),
         leading: IconButton(
+            iconSize: 14.93,
             onPressed: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPageMap()));
+                  MaterialPageRoute(builder: (context) => profileMain()));
             },
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Color(0xFF2F2F2F),
             )),
-        elevation: 1,
-        backgroundColor: Colors.white,
-        title: Text(
-          '참여한 대화방',
-          style: TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black),
+
+
+        title: Text(appbarText,
+          style: TextStyle(fontSize: 16.0,color: Colors.black,fontWeight: FontWeight.w700,fontFamily: 'Pretendard'),
         ),
         centerTitle: true,
         actions: [
@@ -81,6 +94,7 @@ class _chatlistState extends State<chatlist> {
           );
         },
       ),
+      bottomNavigationBar: const BottomAppBar(child: BottomBar()),
     );
     ;
   }

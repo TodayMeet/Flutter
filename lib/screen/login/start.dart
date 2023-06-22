@@ -52,8 +52,8 @@ class _Start extends State<Start> {
         Spacer(),
         Image.asset(
           'assets/images/LoginImage/logoimage.png',
-          width: 100,
-          height: 100,
+          // width: 100,
+          // height: 56,
           fit: BoxFit.cover,
         ),
         Padding(

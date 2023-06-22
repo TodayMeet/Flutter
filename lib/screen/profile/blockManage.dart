@@ -47,28 +47,40 @@ class _blockManageState extends State<blockManage> {
       }
     });
   }
-
+String appbarText = '차단 관리';
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 1.0,
-        backgroundColor: Colors.white,
+
+        toolbarHeight: 50,
+        backgroundColor: Color(0xFFFFFFFF),
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            color : Color(0xFFE3E3E3), // 테두리 선의 색상
+            height: 1.0, // 테두리 선의 높이
+          ),
+        ),
         leading: IconButton(
+            iconSize: 14.93,
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => profileMain()));
             },
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Color(0xFF2F2F2F),
             )),
-        title: Text(
-          '차단 관리',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+        //leading아이콘 혹시나 필요하면
+
+        title: Text(appbarText,
+          style: TextStyle(fontSize: 16.0,color: Colors.black,fontFamily: 'PretendardBold'),
         ),
-        actions: null,
         centerTitle: true,
       ),
       body: ListView.builder(

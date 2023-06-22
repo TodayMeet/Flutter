@@ -1,9 +1,4 @@
-// 로그인 화면
-//
-// 남재혁
-// 최종수정일 2023.05.14
-//추후 작업예정사항
-// sns 로그인 추가 디자인 수정
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/screen/login/pwFind.dart';
@@ -20,7 +15,7 @@ class login extends StatefulWidget {
 
   @override
   State<login> createState() => _loginState();
-}
+}//login statefulwidget
 
 class _loginState extends State<login> {
   String _text = '';
@@ -83,6 +78,7 @@ class _loginState extends State<login> {
                   "assets/images/LoginImage/titleimage.png",
                   width: 121,
                   height: 26.54,
+                  fit: BoxFit.cover,
                 ),
               ),
               SizedBox(height: 100),
@@ -99,7 +95,7 @@ class _loginState extends State<login> {
                       username = _text;
                     },
                     decoration: InputDecoration(
-                      // labelText: '임시 아이디 :m',
+                      hintText: '아이디',
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10.0)),
@@ -124,7 +120,7 @@ class _loginState extends State<login> {
                       password = _text1;
                     },
                     decoration: InputDecoration(
-                      // labelText: '임시 비밀번호:et',
+                      hintText: '비밀번호',
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10.0)),
@@ -142,7 +138,7 @@ class _loginState extends State<login> {
                     ),
                   ),
                 ),
-              ),
+              ),//아이디 입력 텍스트 필드
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -186,7 +182,7 @@ class _loginState extends State<login> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 6.0),
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: 56.0,
@@ -216,59 +212,86 @@ class _loginState extends State<login> {
                   height: 1.0, // 선의 높이
                   color: Colors.grey.withOpacity(0.5), // 희미한 선의 색상
                 ),
-              ),
+              ),//로그인 - 카카오로그인 사이 구분선
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MainPageMap()),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 1.0),
-                    child: Image.asset(
-                      'assets/images/LoginImage/kakao_login_large_wide.png',
-                      width: MediaQuery.of(context).size.width,
-                      height: 56,
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 56.0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      sendCredentialsToServer();
+                    },
+                    child: Text(
+                      '카카오톡 로그인',
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w700,color: Color(0xFF070E04)),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      primary: Color(0xFFFFE711),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
                     ),
                   ),
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-                child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainPageMap()),
-                      );
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 56.0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      sendCredentialsToServer();
                     },
-                    child: Image.asset(
-                      'assets/images/LoginImage/naverlogin.png',
-                      width: 327,
-                      height: 56,
-                    )),
-              ),
+                    child: Text(
+                      '네이버 로그인',
+                      style:
+                      TextStyle(fontSize: 16,fontWeight: FontWeight.w700,color: Color(0xFFFFFFFF)),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      primary: Color(0xFF02C63C),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),//네이버 로그인
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-                child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainPageMap()),
-                      );
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 56.0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      sendCredentialsToServer();
                     },
-                    child: Image.asset(
-                      'assets/images/LoginImage/googlelogin.png',
-                      width: 327,
-                      height: 56,
-                    )),
-              ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/LoginImage/Vector.png',width: 18,height: 18,fit: BoxFit.cover,),
+                          SizedBox(width: 12.0,),
+                          Text('구글 로그인', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,color: Color(0xFF333333)),),
+                        ],
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      primary: Color(0xFFFFF56),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Color(0xFFCBCBCB)),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),//구글 로그인
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 6.0, horizontal: 24.0),
@@ -290,20 +313,21 @@ class _loginState extends State<login> {
                   ),
                 ),
               ),
+              
             ],
           ),
         ),
       ),
     );
   }
-}
+}// loginState class
 
 // 로그인 성공시 username, userpassword 저장
 void saveLoginCredentials(String username, String password) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('username', username);
   await prefs.setString('password', password);
-}
+}// 서버로 username, password 보내는 함수
 
 void _login_fail_pwnone(BuildContext context) {
   showCupertinoModalPopup<void>(
@@ -321,7 +345,7 @@ void _login_fail_pwnone(BuildContext context) {
       ],
     ),
   );
-}
+}//비밀번호 확인 팝업
 
 void _login_fail_incorrect(BuildContext context) {
   showCupertinoModalPopup<void>(
@@ -339,7 +363,9 @@ void _login_fail_incorrect(BuildContext context) {
       ],
     ),
   );
-}
+}//아이디 또는 비밀번호가 일치하지 않습니다 팝업
+
+//testcode -> 전체 주석처리
 //
 // void _backto_login(BuildContext context) {
 //   showCupertinoModalPopup<void>(

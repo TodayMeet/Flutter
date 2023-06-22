@@ -8,16 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:front/model/bottomBar.dart';
 import 'package:front/screen/profile/profileMain.dart';
 
-import 'accountsetting.dart';
 
-class favorite extends StatefulWidget {
-  const favorite({Key? key}) : super(key: key);
+
+class proflieFavorite extends StatefulWidget {
+  const proflieFavorite({Key? key}) : super(key: key);
 
   @override
-  State<favorite> createState() => _favoriteState();
+  State<proflieFavorite> createState() => _proflieFavoriteState();
 }
 
-class _favoriteState extends State<favorite> {
+class _proflieFavoriteState extends State<proflieFavorite> {
   final ScrollController _scrollController = ScrollController();
 
   List<Map> categories = [
@@ -96,28 +96,41 @@ class _favoriteState extends State<favorite> {
   ];
   @override
   Widget build(BuildContext context) {
+    String appbarText = '관심사';
     int checkedCount =
         categories.where((category) => category["isChecked"]).length;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
-        title: const Text('관심사',
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-               fontWeight: FontWeight.w700)),
-        backgroundColor: Colors.white,
-        elevation: 1,
-        centerTitle: true,
+        toolbarHeight: 50,
+        backgroundColor: Color(0xFFFFFFFF),
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            color : Color(0xFFE3E3E3), // 테두리 선의 색상
+            height: 1.0, // 테두리 선의 높이
+          ),
+        ),
         leading: IconButton(
+            iconSize: 14.93,
             onPressed: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPageMap()));
+                  MaterialPageRoute(builder: (context) => profileMain()));
             },
-            color: Colors.black,
-            icon: const Icon(Icons.arrow_back_ios)),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Color(0xFF2F2F2F),
+            )),
+        //leading아이콘 혹시나 필요하면
+
+        title: Text(appbarText,
+          style: TextStyle(fontSize: 16.0,color: Colors.black,fontWeight: FontWeight.w700),
+        ),
+
+        centerTitle: true,
       ),
       body: Scrollbar(
         controller: _scrollController,
@@ -139,7 +152,7 @@ class _favoriteState extends State<favorite> {
               return Container(
                 margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(10.0),//전체 테두리
                   color: const Color(0xFFF7F8FA),
                 ),
                 child: CheckboxListTile(
@@ -153,7 +166,7 @@ class _favoriteState extends State<favorite> {
                   },
                   title: Text(category["name"],
                       style: const TextStyle(
-                         fontWeight: FontWeight.w700, fontSize: 15)),
+                          fontWeight: FontWeight.w700, fontSize: 15)),
                   secondary: Container(
                     alignment: Alignment.center,
                     width: 30,
@@ -162,11 +175,10 @@ class _favoriteState extends State<favorite> {
                       shape: BoxShape.circle,
                       color: Color(int.parse(category["image_color"])),
                     ),
-                    child: ClipOval(
-                        child: Image.asset(
+                    child: Image.asset(
                       category["category_image"],
                       scale: 4,
-                    )),
+                    ),
                   ),
                   isThreeLine: false,
                 ),
@@ -197,10 +209,10 @@ class _favoriteState extends State<favorite> {
                 ).withAlpha(0xFF4874EA),
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 child: Text(
-                  '다음',
+                  '저장하기',
                   style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontFamily: 'PretendardBold',
                       color: Colors.white),
                 ),
               ),

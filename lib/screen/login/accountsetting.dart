@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:front/screen/login/Phone_ij.dart';
 import 'package:front/screen/login/registerProfile.dart';
 import 'package:http/http.dart' as http;
+import '../../model/dialogEx/backLoginDialog.dart';
 import 'login.dart';
 
 class accountsetting extends StatefulWidget {
@@ -119,9 +120,10 @@ class _accountsettingState extends State<accountsetting> {
               size: 25,
             ),
             onPressed: () {
+              Navigator.pop(context);
               // email = _idController.text;
               // phonenumDuplicate();
-              _backto_login(context);
+              // backLoginDialog(context);
             },
           ),
           centerTitle: true,
@@ -146,32 +148,30 @@ class _accountsettingState extends State<accountsetting> {
                   ),
                 ),
                 SizedBox(height: 8.0),
-                Center(
-                  child: Container(
-                    width: 360,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: TextField(
-                      controller: _idController,
-                      onChanged: (value) {
-                        emailnumDuplicate();
-                        // print(isDuplicate);
-                        // print(convertIsDuplicateToString);
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 15.0,
-                          horizontal: 12.0,
-                        ),
-                        hintText: '아이디를 입력하세요',
-                        hintStyle: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 13,
-                        ),
-                        border: InputBorder.none,
+                Container(
+                  width: 360,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: TextField(
+                    controller: _idController,
+                    onChanged: (value) {
+                      emailnumDuplicate();
+                      // print(isDuplicate);
+                      // print(convertIsDuplicateToString);
+                    },
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 15.0,
+                        horizontal: 12.0,
                       ),
+                      hintText: '아이디를 입력하세요',
+                      hintStyle: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 13,
+                      ),
+                      border: InputBorder.none,
                     ),
                   ),
                 ),
@@ -193,28 +193,26 @@ class _accountsettingState extends State<accountsetting> {
                   ),
                 ),
                 SizedBox(height: 8.0),
-                Center(
-                  child: Container(
-                    width: 360,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: TextField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 16.0,
-                          horizontal: 12.0,
-                        ),
-                        hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
-                        hintStyle: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 13,
-                        ),
-                        border: InputBorder.none,
+                Container(
+                  width: 360,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 16.0,
+                        horizontal: 12.0,
                       ),
+                      hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                      hintStyle: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 13,
+                      ),
+                      border: InputBorder.none,
                     ),
                   ),
                 ),
@@ -231,28 +229,26 @@ class _accountsettingState extends State<accountsetting> {
                   ),
                 ),
                 SizedBox(height: 8.0),
-                Center(
-                  child: Container(
-                    width: 360,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: TextField(
-                      controller: _confirmPasswordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 16.0,
-                          horizontal: 12.0,
-                        ),
-                        hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
-                        hintStyle: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 13,
-                        ),
-                        border: InputBorder.none,
+                Container(
+                  width: 360,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: TextField(
+                    controller: _confirmPasswordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 16.0,
+                        horizontal: 12.0,
                       ),
+                      hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                      hintStyle: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 13,
+                      ),
+                      border: InputBorder.none,
                     ),
                   ),
                 ),
@@ -274,16 +270,19 @@ class _accountsettingState extends State<accountsetting> {
                       height: 56,
                       child: CupertinoButton(
                         onPressed: () {
-                          if(isDuplicate==true || isPasswordMatch()==false){
-                            _login_accountCheck(context);
-                          }else if(_idController.text=='' || _passwordController==''){
-                            _login_accountCheck(context);
-                          }
-
-                          else{
-                            emailnumDuplicate();
-                            _toregisterProfile();
-                          }
+                          // if(isDuplicate==true || isPasswordMatch()==false){
+                          //   _login_accountCheck(context);
+                          // }else if(_idController.text=='' || _passwordController==''){
+                          //   _login_accountCheck(context);
+                          // }
+                          //
+                          // else{
+                          //   emailnumDuplicate();
+                          //   _toregisterProfile();
+                          // }
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => registerProfile(email: 'asdf', password: 'asdfff')));
                         },
                         padding: EdgeInsets.symmetric(),
                         color: CupertinoDynamicColor.resolve(
@@ -313,34 +312,13 @@ class _accountsettingState extends State<accountsetting> {
     );
   }
 }
-
-void _backto_login(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('뒤로가기를 하실 경우 입력된 내용이 삭제됩니다.\n 이전화면으로 이동 하시겠습니까?'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (BuildContext context) => login()),
-                (route) => false);
-          },
-          child: const Text('확인'),
-        ),
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('취소'),
-        ),
-      ],
-    ),
-  );
-}
+// void backLoginDialog(BuildContext context){
+//   showDialog(context: context,
+//     builder: (BuildContext context){
+//       return _backLoginDialog();
+//     },
+//   );
+// }
 
 void _login_accountCheck(BuildContext context) {
   showCupertinoModalPopup<void>(
@@ -359,3 +337,5 @@ void _login_accountCheck(BuildContext context) {
     ),
   );
 }
+
+

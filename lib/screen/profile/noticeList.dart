@@ -17,34 +17,45 @@ class noticeList extends StatefulWidget {
 class _noticeListState extends State<noticeList> {
   List<String> entries = <String>['업데이트 안내드립니다.','업데이트 안내드립니다.','업데이트 안내드립니다.','업데이트 안내드립니다.','업데이트 안내드립니다.'];
   List<String> entries1 = <String>['googlelogin','kakao_login_large_wide','logoimage','naverlogin','titleimage'];
+  String appbarText = '공지사항';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 1.0,
-        backgroundColor: Colors.white,
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => profileMain()),
-          );
-        }, icon: Icon(Icons.arrow_back_ios,color: Colors.black,)),
-        title: Text(
-          '공지사항',
-          style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600
+
+        toolbarHeight: 50,
+        backgroundColor: Color(0xFFFFFFFF),
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            color : Color(0xFFE3E3E3), // 테두리 선의 색상
+            height: 1.0, // 테두리 선의 높이
           ),
         ),
-        actions: null,
+        leading: IconButton(
+            iconSize: 14.93,
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => profileMain()));
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Color(0xFF2F2F2F),
+            )),
+        //leading아이콘 혹시나 필요하면
+
+        title: Text(appbarText,
+          style: TextStyle(fontSize: 16.0,color: Colors.black,fontFamily: 'PretendardBold'),
+        ),
+
         centerTitle: true,
       ),
       body:ListView.builder(
-          padding:const EdgeInsets.symmetric(horizontal: 24,vertical: 22),
+          padding:const EdgeInsets.symmetric(horizontal: 16,vertical: 22),
           itemCount:entries.length,
           itemBuilder: (BuildContext context, int index){
             return Column(
@@ -69,9 +80,9 @@ class _noticeListState extends State<noticeList> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${entries[index]}',style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.w400),),
+                            Text('${entries[index]}',style: TextStyle(color: Colors.black,fontSize: 14.0,fontFamily: 'PretendardRegular'),),
                             SizedBox(height: 4,),
-                            Text('2022.06.15',style: TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.w400),),
+                            Text('2022.06.15',style: TextStyle(color: Color(0xFF71727A),fontSize: 12,fontFamily: 'PretendardRegular'),),
 
                           ],
                         ),

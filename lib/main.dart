@@ -18,6 +18,9 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Pretendard'
+      ),
       builder: (context, child) {
         return MediaQuery(      // 폰트 사이즈 일정하게 하기
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
@@ -81,6 +84,7 @@ class MainPage extends ConsumerWidget {
               ],
             )
         ),
+
       ),
     );
   }

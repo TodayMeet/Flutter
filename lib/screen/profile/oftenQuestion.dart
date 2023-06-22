@@ -11,6 +11,7 @@ class oftenQuestion extends StatefulWidget {
 }
 
 class _oftenQuestionState extends State<oftenQuestion> {
+  String appbarText = '자주 묻는 질문';
   List<String> entries = <String>[
     '건수 등록은 어떻게 하나요?',
     '건수 등록은 어떻게 하나요?',
@@ -29,21 +30,34 @@ class _oftenQuestionState extends State<oftenQuestion> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.white,
+
+        toolbarHeight: 50,
+        backgroundColor: Color(0xFFFFFFFF),
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            color : Color(0xFFE3E3E3), // 테두리 선의 색상
+            height: 1.0, // 테두리 선의 높이
+          ),
+        ),
         leading: IconButton(
+            iconSize: 14.93,
             onPressed: () {
               Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => profileMain()));
             },
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Color(0xFF2F2F2F),
             )),
-        title: Text(
-          '자주 묻는 질문',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+        //leading아이콘 혹시나 필요하면
+
+        title: Text(appbarText,
+          style: TextStyle(fontSize: 16.0,color: Colors.black,fontFamily: 'PretendardBold'),
         ),
-        actions: null,
+
         centerTitle: true,
       ),
       body: ListView.builder(
@@ -64,9 +78,9 @@ class _oftenQuestionState extends State<oftenQuestion> {
                         Text(
                           "Q",
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Color(0xFF3182F5),
                             fontSize: 20,
-                            fontWeight: FontWeight.w600,
+                              fontFamily: 'PretendardBold',
                           ),
                         ),
                         SizedBox(width: 10),
@@ -75,7 +89,7 @@ class _oftenQuestionState extends State<oftenQuestion> {
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
-                            fontWeight: FontWeight.w600,
+                            fontFamily: 'PretendardBold',
                           ),
                         ),
                         Spacer(),
@@ -115,6 +129,7 @@ class _oftenQuestionState extends State<oftenQuestion> {
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
+                                  fontFamily: 'PretendardRegular',
                                 ),
                                 softWrap: true,
                               ),

@@ -1,2 +1,2 @@
-//유저 정보 더미
-Map tempUser = {"userNo": 0, "userProfileImage": "Image", "username": "User"};
+//유저 정보 더미( k@test )
+Map tempUser = {"userNo": 18, "userProfileImage": "Image", "username": "User"};

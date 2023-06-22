@@ -10,13 +10,13 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:front/screen/alarm/alarm.dart';
+import 'package:front/screen/mainList/Loading_to_mainListBoard.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../setting/setlocation.dart';
-import '../mainList/mainListBoard.dart';
 import '../../model/setting/location.dart';
 import '../../model/bottomBar.dart';
 import '../../model/setting/mapClass.dart';
@@ -277,7 +277,7 @@ class MainPageMap extends ConsumerWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const MainListBoard()));
+                        builder: (context) => const Loading_to_mainListBoard()));
               },
               child: const Icon(Icons.list, color: Color(0xFF4874EA)),
             ),

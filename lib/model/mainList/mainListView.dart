@@ -106,16 +106,23 @@ Widget mainListView(meetList list, WidgetRef ref) {
               ],
             ), //동네, 날짜, 시간
             const SizedBox(height: 18,),
-            /*Row(
+            Row(
               children: [
-                Image.asset('assets/images/List_Image/List_image_sample1.png',
-                    fit: BoxFit.fitHeight,
-                    width: 100, height: 100),  //건수 등록 이미지
-                const SizedBox(width: 2,),
-                Image.asset('assets/images/List_Image/List_image_sample2.png',
-                    width: 100, height: 100),
+                Container(
+                  width: 100,
+                  height: 100,
+                  color: const Color(0xffF0F1F5),
+                  child: const Center(child: Text('(모임 사진 1)'),),
+                ),
+                const SizedBox(width: 4,),
+                Container(
+                  width: 100,
+                  height: 100,
+                  color: const Color(0xffF0F1F5),
+                  child: const Center(child: Text('(모임 사진 2)'),),
+                ),
               ],
-            ), //등록 이미지*/
+            ), //건수 등록 이미지
 
             const SizedBox(height: 18,),
             Row(

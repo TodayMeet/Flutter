@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:front/screen/mainList/Loading_to_mainListBoard.dart';
 import 'screen/setting/setFilter.dart';
 import 'screen/mainMap/mainPageMap.dart';
-import 'package:front/screen/mainList/mainListBoard.dart';
 import 'package:front/screen/login/start.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -15,7 +15,7 @@ Widget Advertisement(String string) {
           height: 144,
           decoration: BoxDecoration(
             color: const Color(0xffF7F8FA),
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Center(child: Text(string)),
         ),

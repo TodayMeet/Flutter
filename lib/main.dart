@@ -35,6 +35,9 @@ class MainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          fontFamily: "Pretendard",
+      ),
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Main Page'),

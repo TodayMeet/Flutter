@@ -1,6 +1,6 @@
 // 모임 상세정보 로딩 페이지
 
-// 최종 수정: 2023.6.5
+// 최종 수정: 2023.6.27
 // 작업자: 정해수
 
 import 'package:flutter/material.dart';
@@ -76,7 +76,7 @@ class _LoadingState extends State<Loading_to_ListDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: StringText('건수 정보 불러오는 중...', 24, 'PretendardBold', Colors.black),
+        child: StringText('건수 정보 불러오는 중...', 24, FontWeight.w700, Colors.black),
       ),
     );
   }

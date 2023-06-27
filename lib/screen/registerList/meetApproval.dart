@@ -1,10 +1,9 @@
 // 참가 승인 위젯
 
-// 최종 수정일 : 2023.5.28
+// 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
-// 서버로 모임 정보 보내주기
 
 import 'dart:convert';
 
@@ -67,73 +66,102 @@ class _MeetingApprovalState extends State<MeetingApproval> {
         enabled? Column(
             children: [
               meet.Title(content:"참가 승인은 어떻게 할까요?"),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 46,
-                      margin: const EdgeInsets.fromLTRB(20, 0, 10, 20),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                      child: TextButton(
-                        style: const ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFF4874EA)),
+              Padding(
+                padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 46,
+                        child: TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFF4874EA)),
+                            shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                            )
+                          ),
+                          onPressed: (){
+                            setState(() {
+                              _valueApproval = '자동 승인';
+                              meet.meetInfo.approval = true;
+                              isChecked = true;
+                              enabled = false;
+                            });
+                          },
+                          child: const Center(
+                              child: Text('자동 승인',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  letterSpacing: -0.5,
+                                )
+                              )
+                          ),
                         ),
-                        onPressed: (){
-                          setState(() {
-                            _valueApproval = '자동 승인';
-                            meet.meetInfo.approval = true;
-                            isChecked = true;
-                            enabled = false;
-                          });
-                        },
-                        child: const Center(child: Text('자동 승인', style: TextStyle(
-                            fontFamily: 'PretendardBold', color: Colors.white, fontSize: 16
-                        ))),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 46,
-                      margin: const EdgeInsets.fromLTRB(10, 0, 20, 20),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                      child: TextButton(
-                        style: const ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFB6B6B6)),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: SizedBox(
+                        height: 46,
+                        child: TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFB6B6B6)),
+                            shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                            )
+                          ),
+                          onPressed: (){
+                            setState(() {
+                              _valueApproval = '확인 후 승인';
+                              meet.meetInfo.approval = false;
+                              isChecked = true;
+                              enabled = false;
+                            });
+                          },
+                          child: const Center(
+                            child: Text('확인 후 승인',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                fontSize: 16,
+                                letterSpacing: -0.5,
+                              )
+                            )
+                          ),
                         ),
-                        onPressed: (){
-                          setState(() {
-                            _valueApproval = '확인 후 승인';
-                            meet.meetInfo.approval = false;
-                            isChecked = true;
-                            enabled = false;
-                          });
-                        },
-                        child: const Center(child: Text('확인 후 승인', style: TextStyle(
-                            fontFamily: 'PretendardBold', color: Colors.white, fontSize: 16
-                        ))),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ]
         ): Container(
-          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+          margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
-            border: Border.all(color: Colors.black, width: 1),
+            border: Border.all(
+                color: const Color(0xFFC5C6CC),
+                width: 1
+            ),
           ),
           child: TextButton(
+            style: const ButtonStyle(
+              padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+                EdgeInsets.all(16),
+              )
+            ),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(_valueApproval,
                   style: const TextStyle(
-                      fontFamily: "PretendardBold",
-                      fontSize:15,
-                      color: Color(0xFF2F3036))
+                      fontWeight: FontWeight.w700,
+                      fontSize:14,
+                      color: Color(0xFF2F3036),
+                      letterSpacing: -0.5,
+                  )
               ),
             ),
             onPressed: () {
@@ -144,15 +172,16 @@ class _MeetingApprovalState extends State<MeetingApproval> {
           ),
         ),
         isChecked?  Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12)),
           height: 46,
           width: size.width,
-          margin: const EdgeInsets.fromLTRB(24, 5, 24, 10),
+          margin: const EdgeInsets.all(24),
           child: TextButton(
-            style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
+            style: ButtonStyle(
+              backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
               alignment: Alignment.center,
+              shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+              )
             ),
             onPressed: (){
               print('category : ' + meet.meetInfo.categoryNo.toString());
@@ -166,14 +195,15 @@ class _MeetingApprovalState extends State<MeetingApproval> {
               print('title : '+meet.meetInfo.title);
               print('content : '+meet.meetInfo.content);
               print('approval : '+meet.meetInfo.approval.toString());
-              _registerMeet();
+              //_registerMeet();
               Navigator.pop(context);
             },
             child: const Text('등록 완료',
               style: TextStyle(
                 color: Color(0xFF2F3036),
                 fontSize: 14,
-                fontFamily: 'PretendardBold'
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.5,
               ),
             ),
           ),

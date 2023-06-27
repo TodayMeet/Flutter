@@ -4,9 +4,10 @@
 // 작업자: 정해수 -> 김혁
 
 import 'package:flutter/material.dart';
-import 'package:front/screen/mainList/mainListBoard.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:front/screen/mainList/mainListBoard.dart';
 import '../../model/TextPrint.dart';
 
 class Loading_to_mainListBoard extends StatefulWidget {

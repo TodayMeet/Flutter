@@ -1,4 +1,4 @@
-//메인 리스트 게시판
+//메인 리스트
 
 // 최종 수정: 2023.6.27
 // 작업자: 정해수 -> 김혁
@@ -21,6 +21,7 @@ import 'package:front/data/meetList.dart';
 import 'package:front/model/bottomBar.dart';
 
 RefreshController _refreshController = RefreshController(initialRefresh: false);
+late StateNotifierProvider<meetListNotifier, List<meetList>> meetListProvider;
 
 class MainListBoard extends ConsumerStatefulWidget {
   const MainListBoard({Key? key,
@@ -34,7 +35,6 @@ class MainListBoard extends ConsumerStatefulWidget {
 }
 
 class MainListBoardState extends ConsumerState<MainListBoard> {
-  late StateNotifierProvider<meetListNotifier, List<meetList>> meetListProvider;
   List<meetList> tempList = [];
   int postNo = 0;
 

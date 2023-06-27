@@ -15,7 +15,7 @@ import 'Advertisement.dart';
 
 Widget meetListView(BuildContext context, WidgetRef ref, List<meetList> viewList) {
   return ListView(// 메인 리스트 스크롤 뷰
-    padding: const EdgeInsets.all(24),
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
     children: [
       //const SizedBox(height: 24.0,),
       //StringText('📣 주변의 새 이벤트', 24, FontWeight.w700, const Color(0xff2F3036)),
@@ -53,5 +53,24 @@ Widget ListViewer(BuildContext context, WidgetRef ref, meetList List) {
       ),
       const SizedBox(height: 18,)
     ],
+  );
+}
+
+Widget meetListViews(BuildContext context, WidgetRef ref, List<meetList> viewList) {
+  return Padding(
+    padding: const EdgeInsets.all(24),
+    child: Column(
+        children: viewList.asMap().entries.map((list) {
+          if(list.key % 5 == 0 && list.key != 0) { //광고 나오는 조건
+            return Column(
+              children: [
+                Advertisement('광고'), //광고 배너
+                ListViewer(context, ref, list.value),
+              ],
+            );
+          }
+          return ListViewer(context, ref, list.value);
+        }).toList()
+    ),
   );
 }

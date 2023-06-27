@@ -1,22 +1,22 @@
 // 탐색 페이지 appbar와 body
 
-// 최종 수정일 : 2023.6.26
+// 최종 수정일 : 2023.6.27
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
-// mainpage body 추천 호스트 추가, 밑에 게시판 추가
+// 게시판 필터 적용
 // searchbox body 두 번째 페이지 만들기
 // 서버 연결
-
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../model/mainList/meetListView.dart';
 import 'searchPageElement.dart' as element;
 import '../../data/recentSearches.dart';
-import 'searchMain.dart';
+import '../mainList/mainListBoard.dart';
+import '../../data/meetList.dart';
 import 'searchingBox.dart';
 
 appbar1() {
@@ -79,7 +79,7 @@ appbar2(BuildContext context) {
               onChanged: (text){
               },
             ),
-      ),
+          ),
         ),
       ]
   );
@@ -94,6 +94,8 @@ class SearchMainPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<meetList> viewList = ref.watch(meetListProvider);
+
     return Scrollbar(
       controller: _scrollController,
       child: ListView(
@@ -250,7 +252,8 @@ class SearchMainPage extends ConsumerWidget {
                 },
               ),
             ),
-          )
+          ),
+          meetListViews(context, ref, viewList),
         ],
       ),
     );

@@ -48,6 +48,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   chat_bubbles: ^1.4.1
   shared_preferences: ^2.1.1
+  flutter_svg: ^2.0.5
 
 dev_dependencies:
   flutter_test:
@@ -85,16 +86,18 @@ flutter:
     - assets/images/List_Image/
     - assets/images/LoginImage/
     - assets/images/User_Picture/
-    - assets/images/Comments/
+    - assets/images/ProfileImage/
+    - assets/icons/
+    - assets/icons/detail/
 
 
   fonts:
-    - family: PretendardBold
+    - family: Pretendard
       fonts:
         - asset: assets/fonts/Pretendard-Bold.otf
-    - family: PretendardRegular
-      fonts:
+          weight: 700
         - asset: assets/fonts/Pretendard-Regular.otf
+          weight: 400
 
   # To add assets to your application, add an assets section, like this:
   # assets:

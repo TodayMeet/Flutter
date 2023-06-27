@@ -1,7 +1,7 @@
 // 모임 리스트 로딩 페이지
 
-// 최종 수정: 2023.6.8
-// 작업자: 정해수
+// 최종 수정: 2023.6.27
+// 작업자: 정해수 -> 김혁
 
 import 'package:flutter/material.dart';
 import 'package:front/screen/mainList/mainListBoard.dart';
@@ -64,7 +64,11 @@ class _Loading_to_mainListBoardState extends State<Loading_to_mainListBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: StringText('건수 정보 불러오는 중...', 24, 'PretendardBold', Colors.black),
+        child: StringText(
+            '건수 정보 불러오는 중...',
+            24,
+            FontWeight.w700,
+            Colors.black),
       ),
     );
   }

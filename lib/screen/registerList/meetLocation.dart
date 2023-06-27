@@ -1,6 +1,6 @@
 // 위치 선택 위젯
 
-// 최종 수정일 : 2023.6.1
+// 최종 수정일 : 2023.6.23
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'dart:convert';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../setting/registerMeeting.dart' as meet;
 import 'meetTime.dart';
@@ -85,15 +86,17 @@ class _MeetingLocationState extends State<MeetingLocation> {
               child: Text(searchResults[index]['place_name'],
                   style: const TextStyle(
                     color: Color(0xFF2F3036),
-                    fontFamily: 'PretendardBold',
-                    fontSize: 18
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                    letterSpacing: -0.5,
                   )),
             ),
             subtitle: Text(searchResults[index]['address_name'],
                 style: const TextStyle(
                   color: Color(0xFF2F3036),
-                  fontFamily: 'PretendardRegular',
-                  fontSize: 14
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  letterSpacing: -0.5,
             )),
             onTap: (){
               meetLocation = searchResults[index]['place_name'];
@@ -149,7 +152,6 @@ class _MeetingLocationState extends State<MeetingLocation> {
       children: [
         Container(
           height: 46,
-          width: size.width,
           padding: const EdgeInsets.only(left:6),
           margin: const EdgeInsets.fromLTRB(24, 7, 24, 6),
           decoration: BoxDecoration(
@@ -164,24 +166,26 @@ class _MeetingLocationState extends State<MeetingLocation> {
               },
               label: const Text('현재 위치로 선택', style: TextStyle(
                 color: Color(0xFF2F3036),
-                fontFamily: 'PretendardRegular',
+                fontWeight: FontWeight.w400,
                 fontSize: 14,
+                letterSpacing: -0.5,
               )),
-              icon: const Icon(Icons.gps_fixed,
-                  size: 20,
-                  color: Color(0xFF2F3036),
-                  weight: 400
+              icon: SvgPicture.asset(
+                "assets/icons/current_location.svg",
+                height: 20,
+                width: 20,
               ),
             ),
           ),
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(24, 50, 24, 0),
-          child: const Text('정확한 약속 장소가 잡히지 않았다면 강남역, 압구정동 같은\n대략적인 위치를 입력해 보세요',
+          child: const Text('정확한 약속 장소가 잡히지 않았다면 강남역, 압구정동 같은 대략적인 위치를 입력해 보세요',
             style: TextStyle(
               color: Color(0xFF2F3036),
-              fontFamily: "PretendardRegular",
-              fontSize: 14
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              letterSpacing: -0.5
             )),
         ),
       ],
@@ -192,42 +196,59 @@ class _MeetingLocationState extends State<MeetingLocation> {
   void _showsearching(){
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top:Radius.circular(30)),
+        borderRadius: BorderRadius.vertical(top:Radius.circular(24)),
       ),
+      backgroundColor: Colors.white,
       context: context,
       builder: (BuildContext barcontext){
         return Container(
-          height: 600,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 30,
+                blurStyle: BlurStyle.outer
+              )
+            ],
+            borderRadius: const BorderRadius.vertical(top:Radius.circular(24)),
           ),
           child: Column(
             children: [
-              SizedBox(
-                height: 50,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Spacer(flex: 30),
-                    const Text("위치",
-                      style: TextStyle(
-                          color: Color(0xFF1F2024),
-                          fontFamily: "PretendardBold",
-                          fontSize: 16),
+              AppBar(
+                  toolbarHeight: 50,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top:Radius.circular(24))
+                  ),
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  centerTitle: true,
+                  title: const Text("위치",
+                    style: TextStyle(
+                      color: Color(0xFF1F2024),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                      letterSpacing: 0.09,
                     ),
-                    const Spacer(flex : 24),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: (){
-                        Navigator.pop(barcontext);
-                      },
+                  ),
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          "assets/icons/close.svg",
+                          height: 20,
+                          width: 20,
+                        ),
+                        onPressed: (){
+                          Navigator.pop(barcontext);
+                        },
+                      ),
                     ),
-                  ],
-                ),
+                  ]
               ),
               Container(
                 height: 46,
-                width: size.width,
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                 margin: const EdgeInsets.fromLTRB(24.0, 5.0, 24.0, 5.0),
                 decoration: BoxDecoration(
@@ -237,14 +258,17 @@ class _MeetingLocationState extends State<MeetingLocation> {
                 child: TextField(
                   maxLines: 1,
                   controller: _controller,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
-                    icon: Icon(Icons.search, size: 20, color: Color(0xFFBFC0C7)),
+                    icon: SvgPicture.asset(
+                      "assets/icons/search.svg",
+                    ),
                     hintText: '검색할 위치를 입력해주세요.',
-                    hintStyle: TextStyle(
-                        color: Color(0xFFC8C8CB),
-                        fontSize: 14,
-                        fontFamily: "PretendardRegular"
+                    hintStyle: const TextStyle(
+                      color: Color(0xFFC8C8CB),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: -0.5,
                     ),
                   ),
                   onChanged: (text){
@@ -257,7 +281,7 @@ class _MeetingLocationState extends State<MeetingLocation> {
               searchText == '' ? _pickNowLocation(barcontext)
                   : Expanded(child: _buildSearchResults(barcontext)),
             ],
-          ),
+          )
         );
       }
     );
@@ -266,48 +290,67 @@ class _MeetingLocationState extends State<MeetingLocation> {
   void _showlocationmap(){
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top:Radius.circular(30)),
+          borderRadius: BorderRadius.vertical(top:Radius.circular(24)),
         ),
         context: context,
         builder: (BuildContext barcontext){
-          return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0.0,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new,
-                  color: Colors.black,
-                  size: 24,
-                  weight: 400,
-                ),
-                onPressed: (){
-                  Navigator.pop(barcontext);
-                  _showsearching();
-                },
-              ),
-              title: const Text('선택한 위치 확인',
-                  style: TextStyle(
-                    color: Color(0xFF1F2024),
-                    fontFamily: 'PretendardBold',
-                    fontSize: 18,
+          return Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 30,
+                      blurStyle: BlurStyle.outer
                   )
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.close,
-                    color: Color(0xFFA6A6A6),
-                    size: 20,
-                    weight: 400,
-                  ),
-                  onPressed: (){
-                    Navigator.pop(barcontext);
-                  },
-                ),
-              ],
+                ],
+                borderRadius: const BorderRadius.vertical(top:Radius.circular(24)),
             ),
-            body: Column(
+            child: Column(
               children: [
+                AppBar(
+                  toolbarHeight: 50,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  backgroundColor: Colors.white,
+                  elevation: 0.0,
+                  centerTitle: true,
+                  leading: IconButton(
+                    icon: SvgPicture.asset(
+                      "assets/icons/back_icon.svg",
+                      width: 24,
+                      height: 24,
+                    ),
+                    onPressed: (){
+                      Navigator.pop(barcontext);
+                      _showsearching();
+                    },
+                  ),
+                  title: const Text('선택한 위치 확인',
+                      style: TextStyle(
+                          color: Color(0xFF1F2024),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          letterSpacing: 0.09
+                      )
+                  ),
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          "assets/icons/close.svg",
+                          width: 20,
+                          height: 20,
+                        ),
+                        onPressed: (){
+                          Navigator.pop(barcontext);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
                 Container(
                   decoration: const BoxDecoration(
                       border: Border(
@@ -341,16 +384,18 @@ class _MeetingLocationState extends State<MeetingLocation> {
                       child: Text(meet.meetInfo.address,
                         style: const TextStyle(
                             color: Color(0xFF2F3036),
-                            fontFamily: 'PretendardBold',
-                            fontSize: 18
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                            letterSpacing: -0.5
                         ),
                       ),
                     ),
                     subtitle: Text(meetAddress,
                       style: const TextStyle(
-                          color: Color(0xFF2F3036),
-                          fontFamily: 'PretendardRegular',
-                          fontSize: 14
+                        color: Color(0xFF2F3036),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        letterSpacing: -0.5,
                       ),
                     ),
                   ),
@@ -370,9 +415,10 @@ class _MeetingLocationState extends State<MeetingLocation> {
                       ),
                       label: const Text('이 위치로 설정',
                         style: TextStyle(
-                          color: Color(0xFF2F3036),
-                          fontFamily: 'PretendardRegular',
-                          fontSize: 14,
+                            color: Color(0xFF2F3036),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            letterSpacing: -0.5
                         ),
                       ),
                       onPressed: (){
@@ -383,7 +429,7 @@ class _MeetingLocationState extends State<MeetingLocation> {
                   ),
                 ),
               ],
-            ),
+            )
           );
         }
     );
@@ -399,12 +445,17 @@ class _MeetingLocationState extends State<MeetingLocation> {
             meet.Title(content:"어디서 만날까요?"),
             Container(
               width: size.width,
-              margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+              margin: const EdgeInsets.fromLTRB(24, 0, 24, 12),
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F6FA),
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: TextButton(
+                style: const ButtonStyle(
+                  padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+                    EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                ),
                 onPressed: () {
                   _showsearching();
                 },
@@ -412,29 +463,42 @@ class _MeetingLocationState extends State<MeetingLocation> {
                   alignment: Alignment.centerLeft,
                   child: Text("위치를 선택해 주세요.",
                     style: TextStyle(
-                        fontFamily: "PretendardRegular",
-                        fontSize: 15,
-                        color: Color(0xFFC8C8CB)),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Color(0xFFC8C8CB),
+                        letterSpacing: -0.5
+                    ),
                   ),
                 ),
               ),
             ),
           ],
         ): Container(
-          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+          margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
-            border: Border.all(color: Colors.black, width: 1),
+            border: Border.all(
+                color: const Color(0xFFC5C6CC),
+                width: 1
+            ),
           ),
           child: TextButton(
+
+            style: const ButtonStyle(
+              padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+                EdgeInsets.all(16)
+              )
+            ),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(meetLocation,
                   style: const TextStyle(
-                      fontFamily: "PretendardBold",
-                      fontSize:16,
-                      color: Color(0xFF2F3036))
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: Color(0xFF2F3036),
+                      letterSpacing: -0.5,
+                  )
               ),
             ),
             onPressed: () {

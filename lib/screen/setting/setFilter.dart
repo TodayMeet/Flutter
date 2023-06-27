@@ -1,12 +1,13 @@
 // 게시판에서 필터 설정 페이지
 
-// 최종 수정일 : 2023.5.14
+// 최종 수정일 : 2023.6.22
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
 // 적용 버튼 입력 시 서버에 데이터 전송하기
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:front/model/bottomBar.dart';
 
@@ -22,56 +23,61 @@ class _FilterState extends State<Filter> {
 
   List<Map> categories = [
     {"name": "맛집", "isChecked": false, "image_color": "0xFFE91E63",
-      "category_image": "assets/images/Category/CategoryRestaurant.png"},
+      "category_image": "assets/images/Category/Restaurant.svg"},
     {"name": "카페", "isChecked": false, "image_color": "0xFFE91E63",
-      "category_image": "assets/images/Category/CategoryCafe.png"},
+      "category_image": "assets/images/Category/Cafe.svg"},
     {"name": "주류", "isChecked": false, "image_color": "0xFF3F51B5",
-      "category_image": "assets/images/Category/CategoryAlcohol.png"},
+      "category_image": "assets/images/Category/Alcohol.svg"},
     {"name": "영화", "isChecked": false, "image_color": "0xFF673AB7",
-      "category_image": "assets/images/Category/CategoryMovie.png"},
+      "category_image": "assets/images/Category/Movie.svg"},
     {"name": "전시", "isChecked": false, "image_color": "0xFF607D8B",
-      "category_image": "assets/images/Category/CategoryExhibition.png"},
+      "category_image": "assets/images/Category/Exhibition.svg"},
     {"name": "공연", "isChecked": false, "image_color": "0xFF607D8B",
-      "category_image": "assets/images/Category/CategoryPerformance.png"},
+      "category_image": "assets/images/Category/Performance.svg"},
     {"name": "게임", "isChecked": false, "image_color": "0xFFFF5722",
-      "category_image": "assets/images/Category/CategoryGame.png"},
+      "category_image": "assets/images/Category/Game.svg"},
     {"name": "봉사", "isChecked": false, "image_color": "0xFF8BC34A",
-      "category_image": "assets/images/Category/CategoryService.png"},
+      "category_image": "assets/images/Category/Service.svg"},
     {"name": "독서", "isChecked": false, "image_color": "0xFF374046",
-      "category_image": "assets/images/Category/CategoryRead.png"},
+      "category_image": "assets/images/Category/Read.svg"},
     {"name": "스터디", "isChecked": false, "image_color": "0xFF9C27B0",
-      "category_image": "assets/images/Category/CategoryStudy.png"},
+      "category_image": "assets/images/Category/Study.svg"},
     {"name": "반려동물", "isChecked": false, "image_color": "0xFF795548",
-      "category_image": "assets/images/Category/CategoryPet.png"},
+      "category_image": "assets/images/Category/Pet.svg"},
     {"name": "운동", "isChecked": false, "image_color": "0xFFDCA966",
-      "category_image": "assets/images/Category/CategorySports.png"},
+      "category_image": "assets/images/Category/Sports.svg"},
   ];
 
-  List<bool> isSelected1 = [true];
-  List<bool> isSelected2 = [false];
-  List<bool> isSelected3 = [false];
+  bool isSelected1 = true;
+  bool isSelected2 = false;
+  bool isSelected3 = false;
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: const Text('필터',
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 16,
-                  fontFamily: 'PretendardBold')),
-          elevation: 1,
+                  fontWeight: FontWeight.w700,
+              )),
+          elevation: 0,
           centerTitle: true,
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
               },
               color: Colors.black,
-              icon: const Icon(Icons.arrow_back_ios, size: 24,)),
+              icon: SvgPicture.asset(
+                "assets/icons/back_icon.svg",
+                height: 24,
+                width: 24,
+              ),
+          ),
         ),
         body: Scrollbar(
           controller: _scrollController,
@@ -79,24 +85,31 @@ class _FilterState extends State<Filter> {
             controller: _scrollController,
               children:[
                 Container(
-                  margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-                  height: 50,
-                  alignment: Alignment.centerLeft,
-                  child: const Text("카테고리", style: TextStyle(fontFamily:"PretendardBold",
-                      fontSize: 13, color: Color(0xff2f3036))),
+                  margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
+                  child: const Text("카테고리", style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: Color(0xff2f3036))),
                 ),
-                Column( // 카테고리
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                // 카테고리 리스트 타일
+                Column(
                   children: categories.map((category){
                     return Container(
-                      margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+                      margin: const EdgeInsets.fromLTRB(24, 10, 24, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
                         color: const Color(0xFFF7F8FA),
                       ),
                       child: CheckboxListTile(
-                        checkboxShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        checkboxShape: const CircleBorder(
+                            side: BorderSide(
+                              color: Color(0xFFD8D8DC),
+                              width: 2,
+                            )
+                        ),
+                        tileColor: Colors.white,
+                        activeColor: const Color(0xFF5881EB),
                         value: category["isChecked"],
                         onChanged: (newValue){
                           setState(() {
@@ -105,8 +118,9 @@ class _FilterState extends State<Filter> {
                         },
                         title: Text(category["name"],style: const TextStyle(
                             color: Color(0xFF1F2024),
-                            fontFamily: "PretendardBold",
-                            fontSize: 15)),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                        )),
                         secondary: Container(
                           alignment: Alignment.center,
                           width: 36,
@@ -115,179 +129,216 @@ class _FilterState extends State<Filter> {
                             shape: BoxShape.circle,
                             color: Color(int.parse(category["image_color"])),
                           ),
-                          child: Image.asset(category["category_image"],scale: 4),
+                          child: SvgPicture.asset(
+                            category["category_image"],
+                          ),
                         ),
                         isThreeLine: false,
                       ),
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 48),
                 Container(
-                  margin: const EdgeInsets.fromLTRB(24, 6, 24, 5),
-                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.fromLTRB(24, 0, 24, 10),
                   child: const Text("정렬", style: TextStyle(
-                      fontFamily: "PretendardBold",
+                      fontWeight: FontWeight.w700,
                       fontSize: 14,
                       color: Color(0xFF2F3036))),
                 ),
+                // 정렬 버튼
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ToggleButtons(
-                        borderRadius: const BorderRadius.all(Radius.circular(12)),
-                        selectedBorderColor: const Color(0xFF5B5B5B),
-                        selectedColor: const Color(0xFF000000),
-                        borderColor: const Color(0xFFDBDBDB),
-                        color: const Color(0xFF707070),
-                        textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: "PretendardBold"),
-                        fillColor: const Color(0xFFFFFFFF),
-                        splashColor: const Color(0xFFFFFFFF),
-                        constraints: BoxConstraints.expand(
-                          width: size.width * 0.27,
+                      Expanded(
+                        child: SizedBox(
+                          height: 46,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius : BorderRadius.circular(12),
+                                  side: BorderSide(
+                                    color: isSelected1 ? const Color(0xFF5B5B5B)
+                                        : const Color(0xFFDBDBDB)
+                                  ),
+                                ),
+                              ),
+                              backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white)
+                            ),
+                            onPressed: (){
+                              setState(() {
+                                isSelected1 = true;
+                                isSelected2 = false;
+                                isSelected3 = false;
+                              });
+                            },
+                            child: Center(
+                              child: Text("최신순",
+                                style: TextStyle(
+                                  color : isSelected1 ? Colors.black : const Color(0xFF707070),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.5,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        isSelected: isSelected1,
-                        onPressed: (int index){
-                          setState(() {
-                            isSelected1[index] = true;
-                            isSelected2[index] = false;
-                            isSelected3[index] = false;
-                          });
-                        },
-                        children:[
-                          Container(
-                              alignment: Alignment.center,
-                              child: const Text("최신순")),
-                        ],
                       ),
-                      ToggleButtons(
-                        borderRadius: const BorderRadius.all(Radius.circular(12)),
-                        selectedBorderColor: const Color(0xFF5B5B5B),
-                        selectedColor: const Color(0xFF000000),
-                        borderColor: const Color(0xFFDBDBDB),
-                        color: const Color(0xFF707070),
-                        textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: "PretendardBold"),
-                        fillColor: const Color(0xFFFFFFFF),
-                        splashColor: const Color(0xFFFFFFFF),
-                        constraints: BoxConstraints.expand(
-                          width: size.width * 0.27,
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: SizedBox(
+                          height: 46,
+                          child: TextButton(
+                            style: ButtonStyle(
+                                shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius : BorderRadius.circular(12),
+                                    side: BorderSide(
+                                        color: isSelected2 ? const Color(0xFF5B5B5B)
+                                            : const Color(0xFFDBDBDB)
+                                    ),
+                                  ),
+                                ),
+                                backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white)
+                            ),
+                            onPressed: (){
+                              setState(() {
+                                isSelected1 = false;
+                                isSelected2 = true;
+                                isSelected3 = false;
+                              });
+                            },
+                            child: Center(
+                              child: Text("마감 임박 순",
+                                style: TextStyle(
+                                  color : isSelected2 ? Colors.black : const Color(0xFF707070),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.5,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        isSelected: isSelected2,
-                        onPressed: (int index){
-                          setState(() {
-                            isSelected1[index] = false;
-                            isSelected2[index] = true;
-                            isSelected3[index] = false;
-                          });
-                        },
-                        children: [
-                          Container(
-                              alignment: Alignment.center,
-                              child: const Text("마감 임박 순")),
-                        ],
                       ),
-                      ToggleButtons(
-                        borderRadius: const BorderRadius.all(Radius.circular(12)),
-                        selectedBorderColor: const Color(0xFF5B5B5B),
-                        selectedColor: const Color(0xFF000000),
-                        borderColor: const Color(0xFFDBDBDB),
-                        color: const Color(0xFF707070),
-                        textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: "PretendardBold"),
-                        fillColor: const Color(0xFFFFFFFF),
-                        splashColor: const Color(0xFFFFFFFF),
-                        constraints: BoxConstraints.expand(
-                          width: size.width * 0.27,
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: SizedBox(
+                          height: 46,
+                          child: TextButton(
+                            style: ButtonStyle(
+                                shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius : BorderRadius.circular(12),
+                                    side: BorderSide(
+                                        color: isSelected3 ? const Color(0xFF5B5B5B)
+                                            : const Color(0xFFDBDBDB)
+                                    ),
+                                  ),
+                                ),
+                                backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white)
+                            ),
+                            onPressed: (){
+                              setState(() {
+                                isSelected1 = false;
+                                isSelected2 = false;
+                                isSelected3 = true;
+                              });
+                            },
+                            child: Center(
+                              child: Text("참여 높은 순",
+                                style: TextStyle(
+                                  color : isSelected3 ? Colors.black : const Color(0xFF707070),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.5,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        isSelected: isSelected3,
-                        onPressed: (int index){
-                          setState(() {
-                            isSelected1[index] = false;
-                            isSelected2[index] = false;
-                            isSelected3[index] = true;
-                          });
-                        },
-                        children: [
-                          Container(
-                              alignment: Alignment.center,
-                              child: const Text("참여 높은 순")),
-                        ],
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(
-                  height: 50,
+                  height: 24,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      width: size.width * 0.4,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        color: Color(0xFF4874EA)
-                      ),
-                      margin: const EdgeInsets.fromLTRB(24, 0, 5, 20),
-                      child: TextButton(
-                        onPressed: (){
-                          setState(() {
-                            for(var i = 0; i < categories.length; i++){
-                              if(categories[i]["isChecked"] == true){
-                                print(categories[i]["name"]);
+                // 적용, 초기화 버튼 출력
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 46,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: const Color(0xFF4874EA)
+                          ),
+                          child: TextButton(
+                            onPressed: (){
+                              for(var i = 0; i < categories.length; i++) {
+                                  if (categories[i]["isChecked"] == true) {
+                                    print(categories[i]["name"]);
+                                  }
                               }
-                            }
-
-                            if(isSelected1[0] == true){
-                              print('정렬 순 : 최신 순');
-                            }else if(isSelected2[0] == true){
-                              print('정렬 순 : 마감 임박 순');
-                            }else{
-                              print('정렬 순 : 참여 높은 순');
-                            }
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: const Text("적용", style: TextStyle(
-                            color:Color(0xFFFFFFFF),
-                            fontSize: 16,
-                            fontFamily: "PretendardBold"))),
-                    ),
-                    Container(
-                      width: size.width * 0.4,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        color: Color(0xFFB6B6B6)
+                              if(isSelected1 == true){
+                                print('정렬 순 : 최신 순');
+                              }else if(isSelected2 == true){
+                                print('정렬 순 : 마감 임박 순');
+                              }else{
+                                print('정렬 순 : 참여 높은 순');
+                              }
+                              Navigator.pop(context);
+                            },
+                            child: const Text("적용",
+                                style: TextStyle(
+                                  color:Color(0xFFFFFFFF),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.5)
+                            )
+                          ),
+                        ),
                       ),
-                      margin: const EdgeInsets.fromLTRB(5, 0, 24, 20),
-                      child: TextButton(
-                        onPressed: (){
-                          setState(() {
-                            for(int index = 0; index < categories.length; index++) {
-                              categories[index]["isChecked"] = false;
-                            }
-                            isSelected1[0] = true;
-                            isSelected2[0] = false;
-                            isSelected3[0] = false;
-                          });
-                        },
-                          child: const Text("초기화", style: TextStyle(
-                              color:Color(0xFFFFFFFF),
-                              fontSize: 16,
-                              fontFamily: "PretendardBold"))
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Container(
+                          height: 46,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            color: Color(0xFFB6B6B6)
+                          ),
+                          child: TextButton(
+                            onPressed: (){
+                              setState(() {
+                                for(int index = 0; index < categories.length; index++) {
+                                  categories[index]["isChecked"] = false;
+                                }
+                                isSelected1 = true;
+                                isSelected2 = false;
+                                isSelected3 = false;
+                              });
+                            },
+                              child: const Text("초기화",
+                                  style: TextStyle(
+                                    color:Color(0xFFFFFFFF),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.5,)
+                              )
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ]
           ),

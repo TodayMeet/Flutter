@@ -1,6 +1,6 @@
 // 참가 나이 선택 위젯
 
-// 최종 수정일 : 2023.5.28
+// 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
@@ -35,11 +35,13 @@ class _MeetingWhoState extends State<MeetingWho> {
                   Expanded(
                     child: Container(
                       height: 46,
-                      margin: const EdgeInsets.fromLTRB(24, 0, 5, 20),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                      margin: const EdgeInsets.fromLTRB(24, 0, 5, 12),
                       child: TextButton(
-                        style: const ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFF4874EA)),
+                        style: ButtonStyle(
+                          backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFF4874EA)),
+                          shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                          ),
                         ),
                         onPressed: (){
                           setState(() {
@@ -49,20 +51,30 @@ class _MeetingWhoState extends State<MeetingWho> {
                             enabled = false;
                           });
                         },
-                        child: const Center(child: Text('누구나', style: TextStyle(
-                            fontFamily: 'PretendardBold', color: Colors.white, fontSize: 16
-                        ))),
+                        child: const Center(
+                          child: Text('누구나',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: Colors.white,
+                              letterSpacing: -0.5,
+                            )
+                          )
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
                     child: Container(
                       height: 46,
-                      margin: const EdgeInsets.fromLTRB(5, 0, 24, 20),
+                      margin: const EdgeInsets.fromLTRB(5, 0, 24, 12),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                       child: TextButton(
-                        style: const ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFB6B6B6)),
+                        style: ButtonStyle(
+                          backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFB6B6B6)),
+                          shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                          ),
                         ),
                         onPressed: (){
                           setState(() {
@@ -72,9 +84,16 @@ class _MeetingWhoState extends State<MeetingWho> {
                             enabled = false;
                           });
                         },
-                        child: const Center(child: Text('또래만', style: TextStyle(
-                            fontFamily: 'PretendardBold', color: Colors.white, fontSize: 16
-                        ))),
+                        child: const Center(
+                          child: Text('또래만',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: Colors.white,
+                              letterSpacing: -0.5,
+                            )
+                          )
+                        ),
                       ),
                     ),
                   ),
@@ -82,20 +101,30 @@ class _MeetingWhoState extends State<MeetingWho> {
               ),
             ]
         ): Container(
-          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+          margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             color: Colors.white,
-            border: Border.all(color: Colors.black, width: 1),
+            border: Border.all(
+                color: const Color(0xFFC5C6CC),
+                width: 1
+            ),
           ),
           child: TextButton(
+            style: const ButtonStyle(
+                padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+                  EdgeInsets.all(16),
+                )
+            ),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(_valueWho,
                   style: const TextStyle(
-                      fontFamily: "PretendardBold",
+                      fontWeight: FontWeight.w700,
                       fontSize:15,
-                      color: Color(0xFF2F3036))
+                      color: Color(0xFF2F3036),
+                      letterSpacing: -0.5,
+                  )
               ),
             ),
             onPressed: () {
@@ -105,7 +134,7 @@ class _MeetingWhoState extends State<MeetingWho> {
             },
           ),
         ),
-        isChecked? MeetingLimit()
+        isChecked? const MeetingLimit()
             : const SizedBox.shrink(),
       ],
     );

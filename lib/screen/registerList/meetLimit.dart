@@ -1,6 +1,6 @@
 // 참가 인원 선택 위젯
 
-// 최종 수정일 : 2023.5.28
+// 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
@@ -36,17 +36,20 @@ class _MeetingLimitState extends State<MeetingLimit> {
                 children: List.generate(
                   5,
                   (index) => Container(
-                    margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+                    margin: const EdgeInsets.fromLTRB(24, 0, 24, 10),
                     height: 54,
                     child: CheckboxListTile(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                      activeColor: const Color(0xFF5881EB),
                       tileColor: const Color(0xFFF7F8FA),
                       checkboxShape: const CircleBorder(),
                       controlAffinity: ListTileControlAffinity.leading,
-                      title: Text(peoples[index], style: const TextStyle(
-                          color: Color(0xFF1F2024),
-                          fontFamily: "PretendardBold",
-                          fontSize: 16
+                      title: Text(peoples[index],
+                          style: const TextStyle(
+                            color: Color(0xFF1F2024),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16
                       )),
                       value: checked[index],
                       onChanged: (bool? value){
@@ -63,20 +66,30 @@ class _MeetingLimitState extends State<MeetingLimit> {
               ),
             ]
         ): Container(
-          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+          margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
-            border: Border.all(color: Colors.black, width: 1),
+            border: Border.all(
+                color: const Color(0xFFC5C6CC),
+                width: 1
+            ),
           ),
           child: TextButton(
+            style: const ButtonStyle(
+                padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+                  EdgeInsets.all(16),
+                )
+            ),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(numbersOfPeople,
                   style: const TextStyle(
-                      fontFamily: "PretendardBold",
-                      fontSize:16,
-                      color: Color(0xFF2F3036))
+                      fontWeight: FontWeight.w700,
+                      fontSize:14,
+                      color: Color(0xFF2F3036),
+                      letterSpacing: -0.5
+                  )
               ),
             ),
             onPressed: () {
@@ -87,7 +100,7 @@ class _MeetingLimitState extends State<MeetingLimit> {
             },
           ),
         ),
-        isChecked? MeetingFee()
+        isChecked? const MeetingFee()
             : const SizedBox.shrink(),
       ],
     );

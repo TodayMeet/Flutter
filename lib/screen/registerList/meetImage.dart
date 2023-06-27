@@ -1,13 +1,14 @@
 // 이미지 선택 위젯
 
-// 최종 수정일 : 2023.5.28
+// 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
 // 이미지 추가하고 뺴는 알고리즘 추가하기
-// row 출력 충돌 해결하기
+// x 버튼 구현하기
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
@@ -52,22 +53,30 @@ class _MeetingImageState extends State<MeetingImage> {
         enabled? Column(
             children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 5.0),
+                margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
                 height: 58,
                 alignment: Alignment.centerLeft,
                   child: const Text("참고 이미지를\n등록해주세요.(선택)",
-                      style:  TextStyle(fontFamily: "PretendardRegular",
-                        fontSize: 23, color: Color(0xff2f3036))),
+                      style:  TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 24,
+                        color: Color(0xff2f3036)
+                      )
+                  ),
               ),
               Container(
-                margin: const EdgeInsets.fromLTRB(24, 5, 24, 6),
+                margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
                 alignment: Alignment.centerLeft,
                 child: const Text("5장까지 등록 가능",
-                    style: TextStyle(fontFamily: "PretendardRegular",
-                        fontSize: 14, color: Color(0xff2f3036))),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Color(0xff2f3036),
+                    )
+                ),
               ),
               Container(
-                margin: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+                margin: const EdgeInsets.fromLTRB(24, 12, 24, 12),
                 height: 65,
                 child: Row(
                   children: [
@@ -91,9 +100,13 @@ class _MeetingImageState extends State<MeetingImage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.image_outlined, size: 24, color: Color(0xFF2F2F2F)),
-                                Text("($imageCount/5)", style: const TextStyle(
-                                  color: Color(0xFF2F2F2F), fontSize: 10, fontFamily: 'PretendardRegular'
+                                SvgPicture.asset("assets/icons/picture.svg"),
+                                Text("($imageCount/5)",
+                                  style: const TextStyle(
+                                    color: Color(0xFF2F2F2F),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: -1,
                                 )),
                               ],
                             ),
@@ -110,8 +123,13 @@ class _MeetingImageState extends State<MeetingImage> {
                               ? Container(
                                 width: imageSize,
                                 height: imageSize,
-                                margin: const EdgeInsets.only(right: 6),
-                                child: Image.file(_imageFiles[index]!, fit: BoxFit.cover),
+                                margin: const EdgeInsets.only(right: 8),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.file(_imageFiles[index]!,
+                                        fit: BoxFit.fill
+                                    )
+                                ),
                               ): const SizedBox.shrink();
                       }),
                     ),
@@ -119,15 +137,16 @@ class _MeetingImageState extends State<MeetingImage> {
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12)),
                 height: 46,
                 width: size.width,
-                margin: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+                margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                 child: TextButton(
-                  style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
+                  style: ButtonStyle(
+                    backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
                     alignment: Alignment.center,
+                    shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                    )
                   ),
                   onPressed: (){
                     setState(() {
@@ -139,32 +158,37 @@ class _MeetingImageState extends State<MeetingImage> {
                     style: TextStyle(
                         color: Color(0xFF2F3036),
                         fontSize: 14,
-                        fontFamily: 'PretendardBold'
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.5,
                     ),
                   ),
                 ),
               )
             ]
-        ): imageCount == 0 ? SizedBox.shrink()
+        ): imageCount == 0 ? const SizedBox.shrink()
           :Container(
-            height: 65,
-            margin: EdgeInsets.fromLTRB(24, 6, 24, 6),
+            height: 60,
+            margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: 5,
               itemBuilder: (BuildContext context, int index){
                 return _imageFiles[index] != null
                     ? Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                         width: imageSize,
                         height: imageSize,
                         margin: const EdgeInsets.only(right: 6),
-                        child: Image.file(_imageFiles[index]!, fit: BoxFit.cover),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(_imageFiles[index]!,
+                                fit: BoxFit.cover
+                            )
+                        ),
                     ): const SizedBox.shrink();
                 }
               ),
         ),
-        isChecked? MeetingApproval()
+        isChecked? const MeetingApproval()
             : const SizedBox.shrink(),
       ],
     );

@@ -1,11 +1,12 @@
 // 초대하기 버튼 팝업 페이지
 
-// 최종 수정: 2023.6.2
-// 작업자: 정해수
+// 최종 수정: 2023.6.27
+// 작업자: 정해수 -> 김혁
 
 // 컨테이너 크기 자동 조절
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,50 +48,72 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 2, //바텀바 크기
+      height: 284, //바텀바 크기
       width: double.infinity,
+      decoration: const BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x1A000000),
+            blurStyle: BlurStyle.outer,
+            blurRadius: 30,
+          )
+        ]
+      ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(width: 50,),
-              StringText('초대하기', 18, 'PretendardBold', Colors.black),
-              IconButton(
-                onPressed: (){
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.close),
-              ),
-            ],
+          SizedBox(
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(width: 50,),
+                StringText_letterspacing('초대하기', 18, FontWeight.w700, Colors.black, 0.09),
+                Padding(
+                  padding: const EdgeInsets.only(right: 17),
+                  child: IconButton(
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                    icon: SvgPicture.asset(
+                        "assets/icons/close.svg"
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ), // 바텀 시트 제목, 나가기 버튼
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(24.0),
-                height: MediaQuery.of(context).size.height / 3,
+                height: 170,
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
                 child: ListView(
                   children: friend.map((friend){
                     return Column(
                       children: [
-                        CheckboxListTile(
-                          checkboxShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          title: StringText(friend['name'], 12, 'PretendardRegular', Colors.black),
-                          secondary: Image.asset('assets/images/User_Picture/User_pic_null.png',
-                              width: 26, height: 26),
-                          value: friend['ischecked'],
-                          onChanged: (value) {
-                            setState(() {
-                              if(total >= widget.userLimit - widget.curUserNum && value!) {
-                                showToast('남은 모집 인원수보다 많이 초대할 수 없습니다');
-                              } else {
-                                friend['ischecked'] = value!;
-                                friend['ischecked'] ? total++ : total--;
-                              }
-                            });
-                          },
+                        SizedBox(
+                          height:50,
+                          child: CheckboxListTile(
+                            contentPadding: const EdgeInsets.all(0),
+                            activeColor: const Color(0xFF5881EB),
+                            checkboxShape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            title: StringText_letterspacing(friend['name'], 12, FontWeight.w400, Colors.black, -0.5),
+                            secondary: Image.asset('assets/images/User_Picture/User_pic_null.png',
+                                width: 26, height: 26),
+                            value: friend['ischecked'],
+                            onChanged: (value) {
+                              setState(() {
+                                if(total >= widget.userLimit - widget.curUserNum && value!) {
+                                  showToast('남은 모집 인원수보다 많이 초대할 수 없습니다');
+                                } else {
+                                  friend['ischecked'] = value!;
+                                  friend['ischecked'] ? total++ : total--;
+                                }
+                              });
+                            },
+                          ),
                         ),
                         line(),
                       ],
@@ -99,7 +122,7 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
                 ),
               ), // 초대 가능 리스트
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
                 child: SizedBox(
                   width: double.infinity,
                   height: 46,
@@ -109,7 +132,14 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
                       total = 0;
                       Navigator.pop(context);
                     },
-                    child: StringText('초대하기', 14, 'PretendardBold', Colors.white),
+                    style: ButtonStyle(
+                      shadowColor: const MaterialStatePropertyAll<Color>(Colors.transparent),
+                      backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
+                      shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                      ),
+                    ),
+                    child: StringText_letterspacing('초대하기', 14, FontWeight.w700, const Color(0xFFA8A8B2), -0.5),
                   ),
                 ),
               ), //초대하기 버튼
@@ -122,13 +152,10 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
 }
 
 Widget line() {
-  return const Center(
-    child: SizedBox(
-      child: Divider(
-        color: Color(0xffEBEBEB),
-        thickness: 1.0,
-      ),
-    ),
+  return const Divider(
+    color: Color(0xffEBEBEB),
+    thickness: 1.0,
+    height: 1,
   );
 }
 

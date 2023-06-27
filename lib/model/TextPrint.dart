@@ -5,22 +5,44 @@
 
 import 'package:flutter/material.dart';
 
-Widget StringText(String string, double size, String font, Color color) {
+Widget StringText(String string, double size, FontWeight fontweight, Color color) {
   return Text(string,
     style: TextStyle(
       color: color,
       fontSize: size,
-      fontFamily: font,
+      fontWeight: fontweight,
     ),
   );
 } //문자열 출력
 
-Widget IntText(num, double size, String font, Color color) {
+Widget IntText(int num, double size, FontWeight fontweight, Color color) {
   return Text('$num',
     style: TextStyle(
       color: color,
       fontSize: size,
-      fontFamily: font,
+      fontWeight: fontweight,
+    ),
+  );
+} //정수 출력
+
+Widget StringText_letterspacing(String string, double size, FontWeight fontweight, Color color, double space) {
+  return Text(string,
+    style: TextStyle(
+      color: color,
+      fontSize: size,
+      fontWeight: fontweight,
+      letterSpacing: space,
+    ),
+  );
+} //문자열 출력
+
+Widget IntText_letterspacing(int num, double size, FontWeight fontweight, Color color, double space) {
+  return Text('$num',
+    style: TextStyle(
+      color: color,
+      fontSize: size,
+      fontWeight: fontweight,
+      letterSpacing: space,
     ),
   );
 } //정수 출력

@@ -1,11 +1,13 @@
 // 건수 등록 페이지
 
-// 최종 수정일 : 2023.5.28
+// 최종 수정일 : 2023.6.23
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
+// 시간 설정 수정
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:front/model/bottomBar.dart';
 import '../registerList/meetCategory.dart';
@@ -50,16 +52,21 @@ class _RegisterMeetingState extends State<RegisterMeeting> {
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 16,
-                  fontFamily: 'PretendardBold')),
+                  fontWeight: FontWeight.w700)),
           backgroundColor: Colors.white,
-          elevation: 1,
+          elevation: 0,
           centerTitle: true,
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
               },
               color: Colors.black,
-              icon: const Icon(Icons.arrow_back_ios)),
+              icon: SvgPicture.asset(
+                "assets/icons/back_icon.svg",
+                height: 24,
+                width: 24,
+              )
+          ),
         ),
         body: Scrollbar(
           controller: _scrollController,
@@ -70,13 +77,15 @@ class _RegisterMeetingState extends State<RegisterMeeting> {
             controller: _scrollController,
             children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 5.0),
-                height: 70,
+                margin: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 2.0),
                 alignment: Alignment.centerLeft,
-                child: const Text("어떤 건 수를\n등록해 볼까요?", style: TextStyle(
-                    fontFamily:"PretendardRegular",
+                child: const Text("어떤 건 수를\n등록해 볼까요?",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
                     fontSize: 24,
-                    color: Color(0xff2f3036))),
+                    color: Color(0xff2f3036)
+                  )
+                ),
               ),
               const MeetingCategory(),
               const MeetingLocation(),
@@ -99,11 +108,12 @@ class Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 6.0),
+      margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 12.0),
       alignment: Alignment.centerLeft,
-      child: Text(content, style: const TextStyle(
-          fontFamily: "PretendardRegular",
-          fontSize: 23,
+      child: Text(content,
+        style: const TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 24,
           color: Color(0xff2f3036))),
     );
   }

@@ -9,6 +9,7 @@
 
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:front/screen/alarm/alarm.dart';
 import 'package:front/screen/mainList/Loading_to_mainListBoard.dart';
 import 'package:http/http.dart' as http;
@@ -105,37 +106,43 @@ class MainPageMap extends ConsumerWidget {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 150,
-        leading: TextButton.icon(
+        leadingWidth: 110,
+        leading: TextButton(
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => LocationPage()));
             },
-            icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-            label: Text(ref.watch(dongProvider),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: 'PretendardBold'),
-            )),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 12, top: 13, bottom: 13),
+                  child: Text(
+                    ref.watch(dongProvider),
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    ),
+                  ),
+                ),
+                SvgPicture.asset(
+                  "assets/icons/drop_down.svg",
+                  height: 24,
+                  width: 24,
+                ),
+              ],
+            ),
+        ),
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: const Text(
           "오늘의 건수",
           style: TextStyle(
-              fontSize: 16, fontFamily: 'PretendardBold', color: Colors.black),
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.black
+          ),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => alarm()));
-              },
-              icon: const Icon(
-                Icons.notifications_none,
-                color: Colors.black,
-              ))
-        ],
         backgroundColor: Colors.white,
       ),
       body: Center(
@@ -244,7 +251,7 @@ class MainPageMap extends ConsumerWidget {
               ],
             ),
             margin: const EdgeInsets.all(10.0),
-            child: FloatingActionButton(
+            child:FloatingActionButton(
               heroTag: "현재 위치 불러오기",
               backgroundColor: const Color(0xFF4874EA),
               onPressed: () async {
@@ -254,7 +261,9 @@ class MainPageMap extends ConsumerWidget {
                     map.panTo(new kakao.maps.LatLng(${location[0]},${location[1]}));
                     ''');
               },
-              child: const Icon(Icons.place, color: Colors.white),
+              child: SvgPicture.asset(
+                "assets/icons/location.svg",
+              ),
             ),
           ),
           Container(
@@ -279,7 +288,9 @@ class MainPageMap extends ConsumerWidget {
                     MaterialPageRoute(
                         builder: (context) => const Loading_to_mainListBoard()));
               },
-              child: const Icon(Icons.list, color: Color(0xFF4874EA)),
+              child: SvgPicture.asset(
+                "assets/icons/list.svg",
+              ),
             ),
           ),
         ],

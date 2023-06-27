@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../setting/registerMeeting.dart' as meet;
 import 'meetWho.dart';
@@ -33,70 +34,109 @@ class _MeetingTimeState extends State<MeetingTime> {
     weekdayLabels: ['일', '월', '화', '수', '목', '금', '토'],
     weekdayLabelTextStyle: const TextStyle(
       color: Color(0xFF8F9098),
-      fontFamily: 'PretendardBold',
+      fontWeight: FontWeight.w700,
       fontSize: 12,
+      letterSpacing: -0.5
     ),
     dayTextStyle: const TextStyle(
       color: Color(0xFF494A50),
     ),
+
   );
 
   void _showDatePicker(BuildContext context) {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top:Radius.circular(30)),
+        borderRadius: BorderRadius.vertical(top:Radius.circular(24)),
       ),
       context: context,
       builder: (BuildContext builder) {
+        Size size = MediaQuery.of(context).size;
         return Container(
-          height: 521.0,
+          decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 30,
+                    blurStyle: BlurStyle.inner,
+                    offset: const Offset(0, 8),
+                )
+              ],
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(top:Radius.circular(24)),
+          ),
           child: Column(
             children: [
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Spacer(flex: 30),
-                    const Text("날짜 선택",
-                      style: TextStyle(
-                          color: Color(0xFF1F2024),
-                          fontFamily: "PretendardBold",
-                          fontSize: 16),
+              AppBar(
+                toolbarHeight: 50,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top:Radius.circular(24))
+                ),
+                backgroundColor: Colors.white,
+                centerTitle: true,
+                elevation: 0,
+                title: const Text("날짜 선택",
+                  style: TextStyle(
+                      color: Color(0xFF1F2024),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                      letterSpacing: 0.09
+                  ),
+                ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: IconButton(
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                        icon: SvgPicture.asset(
+                          "assets/icons/close.svg",
+                          height: 20,
+                          width: 20,
+                        )
                     ),
-                    const Spacer(flex : 24),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: (){
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+                child: CalendarDatePicker2(
+                  value: _singleDateValue,
+                  config: config,
+                  onValueChanged: (dates) => setState(() => _singleDateValue = dates),
                 ),
               ),
-              CalendarDatePicker2(
-                value: _singleDateValue,
-                config: config,
-                onValueChanged: (dates) => setState(() => _singleDateValue = dates),
-              ),
-              TextButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
-                  alignment: Alignment.center,
-                ),
-                onPressed: (){
-                  Navigator.pop(context);
-                  print(_singleDateValue);
-                  _showTimePicker(context);
-                },
-                child: const Text('다음',
-                    style: TextStyle(
-                        color: Color(0xFF2F3036),
-                        fontSize: 14,
-                        fontFamily: 'PretendardBold')
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: SizedBox(
+                  height: 46,
+                  width: size.width,
+                  child: TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
+                      alignment: Alignment.center,
+                      shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)))
+                    ),
+                    onPressed: (){
+                      Navigator.pop(context);
+                      print(_singleDateValue);
+                      _showTimePicker(context);
+                    },
+                    child: const Text('다음',
+                        style: TextStyle(
+                            color: Color(0xFF2F3036),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.5
+                        )
+                    ),
+                  ),
                 ),
               ),
             ],
-          ),
+          )
         );
       },
     );
@@ -110,137 +150,177 @@ class _MeetingTimeState extends State<MeetingTime> {
   void _showTimePicker(BuildContext context) {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top:Radius.circular(30)),
+        borderRadius: BorderRadius.vertical(top:Radius.circular(24)),
       ),
       context: context,
       builder: (BuildContext builder) {
+        Size size = MediaQuery.of(context).size;
         return Container(
-          height: 521.0,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 30,
+                blurStyle: BlurStyle.inner,
+                offset: const Offset(0, 8),
+              )
+            ],
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(top:Radius.circular(24)),
+          ),
           child: Column(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Spacer(flex: 30),
-                  const Text("시간 선택",
-                    style: TextStyle(
-                        color: Color(0xFF1F2024),
-                        fontFamily: "PretendardBold",
-                        fontSize: 16),
+              AppBar(
+                toolbarHeight: 50,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top:Radius.circular(24))
+                ),
+                backgroundColor: Colors.white,
+                centerTitle: true,
+                elevation: 0,
+                title: const Text("시간 선택",
+                  style: TextStyle(
+                      color: Color(0xFF1F2024),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                      letterSpacing: 0.09
                   ),
-                  const Spacer(flex : 24),
-                  IconButton(
-                    icon: const Icon(Icons.close),
+                ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: IconButton(
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                        icon: SvgPicture.asset(
+                          "assets/icons/close.svg",
+                          height: 20,
+                          width: 20,
+                        )
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 300,
+                        child: CupertinoPicker(
+                          backgroundColor: Color(0xFFFFFFFF),
+                          itemExtent: 50,
+                          onSelectedItemChanged: (index) {
+                            setState(() {
+                              _selectedPeriodIndex = index;
+                            });
+                          },
+                          children: const [
+                            Center(child: Text('오전')),
+                            Center(child: Text('오후')),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 300,
+                        child: CupertinoPicker(
+                          backgroundColor: Color(0xFFFFFFFF),
+                          itemExtent: 50,
+                          onSelectedItemChanged: (int value) {
+                            setState(() {
+                              _selectedHour = value+1;
+                            });
+                          },
+                          children: List<Widget>.generate(12, (int index) {
+                            return Center(child: Text('${index+1}시'));
+                          }),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 300,
+                        child: CupertinoPicker(
+                          backgroundColor: Color(0xFFFFFFFF),
+                          itemExtent: 50 ,
+                          onSelectedItemChanged: (int value) {
+                            setState(() {
+                              _selectedMinute = value * 10;
+                            });
+                          },
+                          children: List<Widget>.generate(6, (int index) {
+                            final minute = index * 10;
+                            return Center(child: Text('$minute분'));
+                          }),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: SizedBox(
+                  width: size.width,
+                  height: 46,
+                  child: TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
+                      shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                      ),
+                      alignment: Alignment.center,
+                    ),
                     onPressed: (){
+                      if(_selectedPeriodIndex == 0) {
+                        _selectedTime = TimeOfDay(
+                            hour: _selectedHour, minute: _selectedMinute);
+                      }else{
+                        _selectedTime = TimeOfDay(
+                            hour: _selectedHour + 12, minute: _selectedMinute);
+                      }
+
+                      final singleTimeValue = _singleDateValue.last!;
+                      _showTime = DateFormat('yyyy-MM-dd').format(singleTimeValue);
+                      if(_selectedPeriodIndex == 0){
+                        _showTime += ' 오전 ';
+                      }else{
+                        _showTime += ' 오후 ';
+                      }
+                      _showTime += _selectedTime.format(context);
+                      _showTime = _showTime.substring(0, _showTime.length-2);
+
+                      var dateTime = DateTime(
+                        singleTimeValue.year,
+                        singleTimeValue.month,
+                        singleTimeValue.day,
+                        _selectedTime.hour,
+                        _selectedTime.minute,
+                      );
+                      var formattedDate = DateFormat('yyyy-MM-ddTHH:mm:ss').format(dateTime);
+                      meet.meetInfo.time = formattedDate;
+
+                      setState(() {
+                        enabled = false;
+                        isChecked = true;
+                      });
+
                       Navigator.pop(builder);
                     },
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 300,
-                      child: CupertinoPicker(
-                        backgroundColor: Color(0xFFFFFFFF),
-                        itemExtent: 50,
-                        onSelectedItemChanged: (index) {
-                          setState(() {
-                            _selectedPeriodIndex = index;
-                          });
-                        },
-                        children: const [
-                          Center(child: Text('오전')),
-                          Center(child: Text('오후')),
-                        ],
-                      ),
+                    child: const Text('완료',
+                        style: TextStyle(
+                            color: Color(0xFF2F3036),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.5,
+                        )
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      height: 300,
-                      child: CupertinoPicker(
-                        backgroundColor: Color(0xFFFFFFFF),
-                        itemExtent: 50,
-                        onSelectedItemChanged: (int value) {
-                          setState(() {
-                            _selectedHour = value+1;
-                          });
-                        },
-                        children: List<Widget>.generate(12, (int index) {
-                          return Center(child: Text('${index+1}시'));
-                        }),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 300,
-                      child: CupertinoPicker(
-                        backgroundColor: Color(0xFFFFFFFF),
-                        itemExtent: 50 ,
-                        onSelectedItemChanged: (int value) {
-                          setState(() {
-                            _selectedMinute = value * 10;
-                          });
-                        },
-                        children: List<Widget>.generate(6, (int index) {
-                          final minute = index * 10;
-                          return Center(child: Text('$minute분'));
-                        }),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              TextButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
-                  alignment: Alignment.center,
-                ),
-                onPressed: (){
-                  if(_selectedPeriodIndex == 0) {
-                    _selectedTime = TimeOfDay(
-                        hour: _selectedHour, minute: _selectedMinute);
-                  }else{
-                    _selectedTime = TimeOfDay(
-                        hour: _selectedHour + 12, minute: _selectedMinute);
-                  }
-
-                  final singleTimeValue = _singleDateValue.last!;
-                  _showTime = DateFormat('yyyy-MM-dd').format(singleTimeValue);
-                  if(_selectedPeriodIndex == 0){
-                    _showTime += ' 오전 ';
-                  }else{
-                    _showTime += ' 오후 ';
-                  }
-                  _showTime += _selectedTime.format(context);
-                  _showTime = _showTime.substring(0, _showTime.length-2);
-
-                  var dateTime = DateTime(
-                    singleTimeValue.year,
-                    singleTimeValue.month,
-                    singleTimeValue.day,
-                    _selectedTime.hour,
-                    _selectedTime.minute,
-                  );
-                  var formattedDate = DateFormat('yyyy-MM-ddTHH:mm:ss').format(dateTime);
-                  meet.meetInfo.time = formattedDate;
-
-                  setState(() {
-                    enabled = false;
-                    isChecked = true;
-                  });
-
-                  Navigator.pop(builder);
-                },
-                child: const Text('완료',
-                    style: TextStyle(
-                        color: Color(0xFF2F3036),
-                        fontSize: 14,
-                        fontFamily: 'PretendardBold')
                 ),
               ),
             ],
@@ -266,48 +346,62 @@ class _MeetingTimeState extends State<MeetingTime> {
             Container(
               width: size.width,
               height: 50,
-              margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
+              margin: const EdgeInsets.fromLTRB(24, 12, 24, 12),
               child: ElevatedButton(
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(const Color(0xFFF5F6FA)),
-                    shadowColor: MaterialStateProperty.all(Colors.transparent)
+                  backgroundColor: MaterialStateProperty.all(const Color(0xFFF5F6FA)),
+                  shadowColor: MaterialStateProperty.all(Colors.transparent),
+                  shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                  ),
                 ),
                 onPressed: () {
                   _showDatePicker(context);
                 },
                 child: Row(
-                  children: const [
-                    Text("날짜를 선택해 주세요.",
+                  children: [
+                    const Text("날짜를 선택해 주세요.",
                       style: TextStyle(
-                          fontFamily: "PretendardRegular",
-                          fontSize: 15,
-                          color: Color(0xFFC8C8CB)),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Color(0xFFC8C8CB),
+                          letterSpacing: -0.5,
+                      ),
                     ),
-                    Spacer(flex: 30),
-                    Icon(Icons.event, color: Color(0xFF49454F),)
+                    const Spacer(flex: 30),
+                    SvgPicture.asset(
+                        "assets/icons/calendar.svg"
+                    )
                   ],
                 ),
               ),
             ),
           ],
         ):Container(
-          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+          margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
-            border: Border.all(color: Colors.black, width: 1),
+            border: Border.all(
+                color: const Color(0xFFC5C6CC),
+                width: 1
+            ),
           ),
           child: TextButton(
+            style: const ButtonStyle(
+                padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+                  EdgeInsets.all(16),
+                )
+            ),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(_showTime,
                   style: const TextStyle(
-                      fontFamily: "PretendardBold",
-                      fontSize:16,
-                      color: Color(0xFF2F3036))
+                      fontWeight: FontWeight.w700,
+                      fontSize:14,
+                      color: Color(0xFF2F3036),
+                      letterSpacing: -0.5
+                  )
               ),
             ),
             onPressed: () {

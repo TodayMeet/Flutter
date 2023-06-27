@@ -8,6 +8,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:front/data/designconst/constants.dart';
 import 'package:front/screen/login/Phone_ij.dart';
 
 import 'login.dart';
@@ -57,39 +58,34 @@ class _pwFindResultState extends State<pwFindResult> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 24.0),
+        padding: EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 24.0),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 0,
-            ),
-            child: Row(children: [
-              Text(
-                "새 비밀번호 ",
-                style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.bold,
-                ),
+
+          Row(children: [
+            Text(
+              "새 비밀번호 ",
+              style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                "*",
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14.0,
-                ),
-              )
-            ]),
-          ),
-            SizedBox(height: 8.0),
-            Center(
+            ),
+            Text(
+              "*",
+              style: TextStyle(
+                color: messageRed,
+                fontSize: 14.0,
+              ),
+            )
+          ]),
+          SizedBox(height: 8.0),
+          Center(
               child: Container(
-                width: 360,
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(12.0),
+                  border: Border.all(color: textfieldColor),
                 ),
                 child: TextField(
                   controller: _passwordController,

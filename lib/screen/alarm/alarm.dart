@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/screen/mainMap/mainPageMap.dart';
+import 'package:front/model/dialogEx/dialoglist.dart';
+import '../../model/dialogEx/CustomDialog.dart';
+
 
 class alarm extends StatefulWidget {
   const alarm({Key? key}) : super(key: key);
@@ -10,6 +13,7 @@ class alarm extends StatefulWidget {
 }
 
 class _alarmState extends State<alarm> {
+  String host = '000';
   List<String> alarmList = [
     "000님이 나를 팔로우 합니다.",
     "000님이 나를 팔로우 합니다.",
@@ -56,7 +60,7 @@ class _alarmState extends State<alarm> {
             ),
             title: Text(alarmItem),
             subtitle: Text(alarmItem1),
-            onTap: () =>_inviteapprove(context),
+            onTap: () => twobutton.inviteDialog(context, host),
           );
         },
       ),
@@ -64,38 +68,7 @@ class _alarmState extends State<alarm> {
   }
 }
 
-void _inviteapprove(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) =>
-        CupertinoAlertDialog(
-          content: const Text('000님이 참가를 요청했습니다.\n참가를 승인하시겠습니까?'),
-          actions: <CupertinoDialogAction>[
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('프로필보기'),
-            ),
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('승인'),
-            ),
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('거절'),
-            ),
-          ],
-        ),
-  );
-}
+
 
 
 

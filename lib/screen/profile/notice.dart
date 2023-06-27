@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:front/model/TextPrint.dart';
+import 'package:front/screen/profile/noticeList.dart';
+
+import '../../model/profile/CustomAppBar.dart';
 
 
 
@@ -33,23 +36,22 @@ class _noticeState extends State<notice> {
 
   @override
   Widget build(BuildContext context) {
+    String appbarText = '공지사항';
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 1.0,
-        backgroundColor: Colors.white,
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back_ios,color: Colors.black,)),
-        title: Text(
-          '공지사항',
-          style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600
+      appBar: CustomAppBar(
+        leadingWidget: IconButton(
+          iconSize: 14.93,
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => noticeList()));
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Color(0xFF2F2F2F),
           ),
         ),
-        actions: null,
-        centerTitle: true,
+        title: appbarText,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -57,8 +59,8 @@ class _noticeState extends State<notice> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 24,),
-              Text(titletext,style: TextStyle(fontSize: 18),),
+
+              Text(titletext,style: TextStyle(fontSize: 18,),),
               SizedBox(height: 4,),
               Text(date,style: TextStyle(fontSize: 14,color: Color(0xFF71727A)),),
               SizedBox(height: 16,),

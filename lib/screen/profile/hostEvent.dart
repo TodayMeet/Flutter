@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/screen/profile/profileMain.dart';
+
+import '../../model/profile/CustomAppBar.dart';
+import '../../model/svgbutton/svgbutton.dart';
 // import 'mainListView.dart';
 
 
@@ -13,27 +16,24 @@ class hostEvent extends StatefulWidget {
 }
 
 class _hostEventState extends State<hostEvent> {
+  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
+  String appbarText = '개최한 건수';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-
-        }, icon: Icon(Icons.arrow_back_ios,color: Colors.black,)),
-        title: Text(
-          '개최한 건수',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600
-          ),
+      appBar: CustomAppBar(
+        leadingWidget: SvgButton(
+          imagePath: backarrow,
+          onPressed:() {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => profileMain()));},
         ),
-        actions: null,
-        centerTitle: true,
+        title: appbarText,
       ),
+
 
     );
   }
 }
+

@@ -4,19 +4,27 @@ import 'screen/setting/setFilter.dart';
 import 'screen/mainMap/mainPageMap.dart';
 import 'package:front/screen/login/start.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:front/data/designconst/constants.dart';
+Color myBlue = Color(0xFF4874EA);
 void main() {
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
+
+
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Pretendard'
+      ),
       builder: (context, child) {
         return MediaQuery(      // 폰트 사이즈 일정하게 하기
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
@@ -33,7 +41,9 @@ class MainPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     return MaterialApp(
+
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           fontFamily: "Pretendard",
@@ -83,6 +93,7 @@ class MainPage extends ConsumerWidget {
               ],
             )
         ),
+
       ),
     );
   }

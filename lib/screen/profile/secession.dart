@@ -1,7 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/main.dart';
+
+import 'package:front/model/dialogEx/dialoglist.dart';
 import 'package:front/screen/profile/profileMain.dart';
+import 'package:front/data/designconst/constants.dart';
+
+
+import '../../model/dialogEx/CustomDialog.dart';
+import '../../model/profile/CustomAppBar.dart';
+import '../../model/svgbutton/svgbutton.dart';
+import '../login/login.dart';
 
 class secession extends StatefulWidget {
   const secession({Key? key}) : super(key: key);
@@ -12,164 +21,94 @@ class secession extends StatefulWidget {
 
 class _secessionState extends State<secession> {
   TextEditingController textarea = TextEditingController();
+  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
+
+
+  Color hintTextColor = Color(0xFFC8C8CB);
+  Color textfieldColor = Color(0xFFF5F6FA);
   @override
   Widget build(BuildContext context) {
+    String appbarText = '탈퇴신청';
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 1.0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(
+      appBar: CustomAppBar(
+        leadingWidget: SvgButton(
+          imagePath: backarrow,
+          onPressed:() {
+            Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => profileMain()),
-              );
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            )),
-        title: Text(
-          '탈퇴신청',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+                MaterialPageRoute(builder: (context) => profileMain()));},
         ),
-        centerTitle: true,
-        actions: null,
+        title: appbarText,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 10.0,
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "사유",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: textfieldColor,
+                borderRadius: BorderRadius.circular(12.0),
               ),
-              Text(
-                "사유",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFF5F6FA),
-                  border: Border.all(
-                    width: 1,
-                    color: Color(0xFFF5F6FA),
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                alignment: Alignment.center,
-                padding: EdgeInsets.only(left: 16),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: textarea,
-                      maxLines: 10,
-                      decoration: InputDecoration(
-                        hintText: "200자 이하 텍스트 입력 가능",
-                        hintStyle: TextStyle(color: Color(0xFFC8C8CB)),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ],
+              child: TextField(
+                controller: textarea,
+                maxLines: 10,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.0,horizontal: 16.0),
+                  hintText: "200자 이하 텍스트 입력 가능",
+                  hintStyle: TextStyle(color: hintTextColor,fontSize: 13.0),
+                  border: InputBorder.none,
                 ),
               ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                '*200자 내로 입력 가능합니다.',
-                style: TextStyle(color: Colors.red),
-              ),
-              SizedBox(
-                height: 21.0,
-              ),
-              Container(
+            ),
+
+            SizedBox(
+              height: 8.0,
+            ),//텍스트필드-입력가능 사이 여백
+            Text(
+              '*200자 내로 입력 가능합니다.',
+              style: TextStyle(color: messageRed),
+            ),//200자 이내로 입력 가능합니다.
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(0),
+              child: Container(
                 width: MediaQuery.of(context).size.width,
-                height: 56,
-                child: CupertinoButton(
-                  onPressed: () {
-                    if (textarea.text.length > 200) {
-                      _textover200(context);
-                    } else {
-                      _secession(context);
-                    }
-                  },
-                  minSize: 0,
-                  color: CupertinoDynamicColor.resolve(
-                    CupertinoColors.systemBlue,
-                    context,
-                  ).withAlpha(0xFF4874EA),
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  child: Text(
-                    '탈퇴',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
+                height: 46,
+                child: ElevatedButton(style: ElevatedButton.styleFrom(
+                  backgroundColor: buttonBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0)
+                  )
+                ),onPressed: (){
+                  twobutton.secessionDialog(context);
+                }, child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 16.0),
+                  child: Text('탈퇴',style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.white),),
+                ))
               ),
-              SizedBox(
-                height: 21.0,
-              ),
-            ],
-          ),
+            ),//탈퇴버튼
+
+          ],
         ),
       ),
     );
   }
 }
 
-void _secession(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: Column(
-        children: [
-          Text(
-            '탈퇴신청',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          Text('탈퇴 후 서비스 이용이 불가능 합니다.'),
-          Text('탈퇴 하시겠습니까?'),
-        ],
-      ),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MainPage()),
-            );
-          },
-          child: const Text('확인'),
-        ),
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('취소'),
-        ),
-      ],
-    ),
-  );
-}
+
 
 void _textover200(BuildContext context) {
   showCupertinoModalPopup<void>(
@@ -187,4 +126,8 @@ void _textover200(BuildContext context) {
       ],
     ),
   );
-}
+}//200자 이내로 입력해주세요 다이얼로그
+
+
+
+

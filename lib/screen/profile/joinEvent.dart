@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:front/model/TextPrint.dart';
 
+import '../../model/profile/CustomAppBar.dart';
+import '../../model/svgbutton/svgbutton.dart';
 import 'profileMain.dart';
 // import 'mainListView.dart';
 
@@ -14,29 +16,20 @@ class joinEvent extends StatefulWidget {
 }
 
 class _joinEventState extends State<joinEvent> {
+  String appbarText = '참가한 건수';
+  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => profileMain()),
-          );
-        }, icon: Icon(Icons.arrow_back_ios,color: Colors.black,)),
-        title: Text(
-          '참가한 건수',
-          style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600
-          ),
+      appBar: CustomAppBar(
+        leadingWidget: SvgButton(
+          imagePath: backarrow,
+          onPressed:() {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => profileMain()));},
         ),
-        actions: null,
-        centerTitle: true,
+        title: appbarText,
       ),
       // body: Padding(
       //   padding: const EdgeInsets.all(24), //컨테이너 외부 공백 조절

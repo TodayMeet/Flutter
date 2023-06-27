@@ -1,23 +1,28 @@
 // 건수 상세 정보 출력 페이지
 
-// 최종 수정: 2023.6.8
-// 작업자: 정해수
+// 최종 수정: 2023.6.27
+// 작업자: 정해수 -> 김혁
 
+// 추가 작업해야 할 사항
+// 채팅방 입장 연결
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:front/model/mainList/CategoryContainer.dart';
-import 'package:front/model/TextPrint.dart';
-import 'package:front/model/mainList/Invitation.dart';
-import 'package:front/data/dummy_meetList.dart';
+import 'package:kakaomap_webview/kakaomap_webview.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'dart:convert';
+
+import '../../model/mainList/CategoryContainer.dart';
+import '../../model/TextPrint.dart';
+import '../../model/mainList/Invitation.dart';
+import '../../data/dummy_meetList.dart';
 import '../../data/meet.dart';
 import '../../model/mainList/CommentContainer.dart';
-import 'package:kakaomap_webview/kakaomap_webview.dart';
 import '../../data/apiKey.dart';
+import '../alarm/alarm.dart';
 import 'Comments.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 //state provider
 final invitationColorProvider = StateProvider((ref) => 0xffFFFFFF);
@@ -191,10 +196,10 @@ class ListDetailState extends ConsumerState<ListDetail> {
           height: 20,
           decoration: BoxDecoration(
             color: const Color(0xffD0D1D8),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
-            child: StringText('완료', 9, 'PretendardBold', Colors.white),
+            child: StringText_letterspacing('완료', 9, FontWeight.w700, Colors.white, -0.5),
           ),
         );
       }else {
@@ -253,14 +258,17 @@ class ListDetailState extends ConsumerState<ListDetail> {
     final IconData particitationButtonIcon = ref.watch(participationButtonIconProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
         elevation: 1,
         title: const Text("오늘의 건수",
           style: TextStyle(
-              fontFamily: 'PretendardBold',
-              color: Colors.black),
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+              fontSize: 16
+          ),
         ),
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -268,38 +276,58 @@ class ListDetailState extends ConsumerState<ListDetail> {
               Navigator.pop(context);
             },
             color: Colors.black,
-            icon: const Icon(Icons.arrow_back_ios_new)),
+            icon: SvgPicture.asset(
+                "assets/icons/back_icon.svg"
+            )
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const alarm()));
+              },
+              icon: SvgPicture.asset(
+                "assets/icons/detail/alarm.svg"
+              )
+          ),
+          IconButton(
+            onPressed: (){
+            },
+            icon: SvgPicture.asset(
+              "assets/icons/detail/search.svg",
+            ),
+          ),
+        ],
       ),
       body: ListView( // 메인 리스트 스크롤 뷰
         children: <Widget>[
 
           Container(
             width: double.maxFinite,
-            height: 300,
+            height: 252,
             color: const Color(0xffF0F1F5),
             child: const Center(child: Text('(모임 사진)'),),
           ), //건수 사진
 
           Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         categoryContainer(Meet.categoryName,),
-                        const SizedBox(width: 6,),
+                        const SizedBox(width: 6),
                         completeContainer
                       ],
                     ),
                     Row(
                       children: [
-                        StringText('모집 마감 시간: ', 12, 'PretendardRegular', Colors.black),
-                        IntText(DateFormat('HH').format(Meet.time), 12, 'PretendardRegular', Colors.black),
-                        StringText(':', 12, 'PretendardRegular', Colors.black),
-                        IntText(DateFormat('mm').format(Meet.time), 12, 'PretendardRegular', Colors.black),
+                        StringText('마감 시간 : ', 12, FontWeight.w400, Colors.black),
+                        StringText_letterspacing(DateFormat('HH:mm').format(Meet.time), 12, FontWeight.w400, Colors.black, -0.5),
                       ],
                     )
                   ],
@@ -308,28 +336,29 @@ class ListDetailState extends ConsumerState<ListDetail> {
                 const SizedBox(height: 12,),
                 Row(
                   children: [
-                    StringText(Meet.title, 24, 'PretendardBold', const Color(0xff2F3036))
+                    StringText(Meet.title, 24, FontWeight.w700, const Color(0xff2F3036))
                   ],
                 ), //모임 제목
 
                 const SizedBox(height: 10,),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset('assets/images/User_Picture/User_pic_null.png',
-                        width: 26, height: 26),  //사용자 사진
+                    ClipOval(
+                      child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+                          width: 26, height: 26),
+                    ),  //사용자 사진
                     const SizedBox(width: 10,),
-                    StringText(Meet.username, 12, 'PretendardRegular', Colors.black),
+                    StringText_letterspacing(Meet.username, 12, FontWeight.w400, Colors.black, -0.5),
                   ],
                 ), //호스트 사진, 이름
 
-                const SizedBox(height: 10,),
+                const SizedBox(height: 12),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2 - 30,
-                        height: 46,
-                        child: ButtonTheme(
+                      Expanded(
+                        child: SizedBox(
+                          height: 46,
                           child: OutlinedButton.icon(
                             icon: Icon(
                               particitationButtonIcon,
@@ -353,19 +382,22 @@ class ListDetailState extends ConsumerState<ListDetail> {
                             },
                             style: OutlinedButton.styleFrom(
                               backgroundColor: Color(particitationButtonColor),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              side: const BorderSide(color: Color(0xFFE1E2E7)),
                             ),
-                            label: StringText(particitationButtonText, 14, 'PretendardBold', const Color(0xff5E5F68)),
+                            label: StringText_letterspacing(
+                                particitationButtonText, 14, FontWeight.w700, const Color(0xff5E5F68), -0.5)
                             ),
-                          ),
+                        ),
                       ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2 - 30,
-                        height: 46,
-                        child: ButtonTheme(
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: SizedBox(
+                          height: 46,
                           child: OutlinedButton.icon(
-                            icon: const Icon(
-                                Icons.mail,
-                                color: Color(0xff5E5F68)
+                            icon: SvgPicture.asset(
+                              "assets/icons/detail/invite.svg"
                             ),
                             onPressed: () {
                               if(Meet.isInsert) { //리스트 안에 있음
@@ -374,7 +406,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                                       context: context,
                                       shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(12)
+                                            top: Radius.circular(24)
                                         ),
                                       ),
                                       builder: (BuildContext context) {
@@ -397,8 +429,12 @@ class ListDetailState extends ConsumerState<ListDetail> {
                             },
                             style: OutlinedButton.styleFrom(
                               backgroundColor: Color(inviationButtonColor),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              side: const BorderSide(color: Color(0xFFE1E2E7)),
                             ),
-                            label: StringText('초대하기', 14, 'PretendardBold', const Color(0xff5E5F68)),
+                            label: StringText_letterspacing(
+                                '초대', 14, FontWeight.w700, const Color(0xff5E5F68), -0.5)
                           ),
                         ),
                       ),
@@ -407,145 +443,157 @@ class ListDetailState extends ConsumerState<ListDetail> {
 
                 const SizedBox(height: 10,),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width - 50,
                   height: 46,
-                  child: ButtonTheme(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        print(Meet.userList.toString());
-                        print(Meet.peopleNum.toString());
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: const Color(0xff4874EA),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('assets/images/List_Icon/List_icon_comments2.png',
-                              width: 20, height: 20),
-                          const SizedBox(width: 7.75,),
-                          StringText('채팅방 입장', 14, 'PretendardBold', Colors.white),
-
-                        ],
-                      ),
+                  child: OutlinedButton(
+                    onPressed: () {             // 채팅방 입장
+                      print(Meet.userList.toString());
+                      print(Meet.peopleNum.toString());
+                    },
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: const Color(0xff4874EA),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)
+                      )
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                            "assets/icons/detail/chatting.svg"
+                        ),
+                        const SizedBox(width: 8),
+                        StringText_letterspacing('채팅방 입장', 14, FontWeight.w700, Colors.white, -0.5),
+                      ],
                     ),
                   ),
                 ), //채팅방 입장 버튼
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 line(),
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StringText('내용', 12, 'PretendardBold', Colors.black),
-                    const SizedBox(width: 50,),
-                    Container(
-                      width: MediaQuery.of(context).size.width - 120 ,
-                      child: StringText(Meet.content, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    SizedBox(
+                        width: 50,
+                        child: StringText_letterspacing(
+                            '내용', 12, FontWeight.w700, Colors.black, -0.5
+                        )
+                    ),
+                    const SizedBox(width: 16),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: StringText_letterspacing(Meet.content, 14, FontWeight.w400, const Color(0xff5E5F68), -0.5),
                     ),
                   ],
                 ), //모임 내용
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 line(),
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StringText('시간', 12, 'PretendardBold', Colors.black),
-                    const SizedBox(width: 50,),
-                    IntText(DateFormat('yyyy').format(Meet.time), 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    StringText('년 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    IntText(DateFormat('MM').format(Meet.time), 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    StringText('월 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    IntText(DateFormat('dd').format(Meet.time), 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    StringText('일 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    IntText(DateFormat('hh').format(Meet.time), 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    StringText(':', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    IntText(DateFormat('mm').format(Meet.time), 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    SizedBox(
+                        width: 50,
+                        child: StringText('시간', 12, FontWeight.w700, Colors.black)
+                    ),
+                    const SizedBox(width: 16),
+                    StringText_letterspacing(
+                        DateFormat('yyyy 년 MM 월 dd 일 hh:mm').format(Meet.time), 14, FontWeight.w400, const Color(0xff5E5F68), -0.5
+                    ),
                   ],
                 ), //모임 날짜 및 시각
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 line(),
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StringText('장소', 12, 'PretendardBold', Colors.black),
-                    const SizedBox(width: 50,),
-                    StringText(Meet.address, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    SizedBox(
+                        width: 50,
+                        child: StringText_letterspacing('장소', 12, FontWeight.w700, Colors.black, -0.5)
+                    ),
+                    const SizedBox(width: 16),
+                    StringText_letterspacing(
+                        Meet.address, 14, FontWeight.w400, const Color(0xff5E5F68), -0.5
+                    ),
                   ],
                 ), //모임 장소
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 Center(
-                  child: Container(
-                    height: 300,
-                    color: const Color(0xffF0F1F5),
-                    child: KakaoMapView(
-                      height: 300,
-                      width: double.infinity,
-                      lat: double.parse(Meet.lat),
-                      lng: double.parse(Meet.lon),
-                      kakaoMapKey: kakaoMapKey,
-                    ),
+                  child: KakaoMapView(
+                    height: 200,
+                    width: double.infinity,
+                    lat: double.parse(Meet.lat),
+                    lng: double.parse(Meet.lon),
+                    kakaoMapKey: kakaoMapKey,
                   ),
                 ), //지도 출력
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 line(),
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StringText('참여 연령', 12, 'PretendardBold', Colors.black),
-                    const SizedBox(width: 35,),
-                    StringText(Meet.age, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    SizedBox(
+                        width: 50,
+                        child: StringText_letterspacing('참여연령', 12, FontWeight.w700, Colors.black, -0.5)
+                    ),
+                    const SizedBox(width: 16),
+                    StringText_letterspacing(Meet.age, 14, FontWeight.w400, const Color(0xff5E5F68), -0.5),
                     //age(Meet.age, Meet.hostage),
                   ],
                 ), //참여 연령 제한
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 line(),
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StringText('참가비', 12, 'PretendardBold', Colors.black),
-                    const SizedBox(width: 50,),
-                    IntText(Meet.fee, 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    StringText('원', 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    SizedBox(
+                        width: 50,
+                        child: StringText_letterspacing('참가비', 12, FontWeight.w700, Colors.black, -0.5)
+                    ),
+                    const SizedBox(width: 16),
+                    StringText_letterspacing(
+                        '${Meet.fee}원', 14, FontWeight.w400, const Color(0xff5E5F68), -0.5
+                    ),
                   ],
                 ), //참가비
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 line(),
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StringText('참가 인원', 12, 'PretendardBold', Colors.black),
-                    const SizedBox(width: 35,),
-                    IntText(curUserNum, 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    StringText('명 참여중 / 최대 ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    IntText(Meet.peopleLimit, 14, 'PretendardRegular', const Color(0xff5E5F68)),
-                    StringText(' 명까지', 14, 'PretendardRegular', const Color(0xff5E5F68)),
+                    SizedBox(
+                        width: 50,
+                        child: StringText_letterspacing('참가 인원', 12, FontWeight.w700, Colors.black, -0.5)
+                    ),
+                    const SizedBox(width: 16),
+                    StringText_letterspacing(
+                        '$curUserNum명 참여중 / 최대 ${Meet.peopleLimit} 명까지', 14, FontWeight.w400, const Color(0xff5E5F68), -0.5),
                   ],
                 ), //참가 인원
 
-                const SizedBox(height: 25,),
+                const SizedBox(height: 28),
                 Column(
                   children: Meet.userList.map((user) {
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -553,7 +601,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                             children: [
                               const Icon(Icons.account_circle), //유저 아이콘
                               const SizedBox(width: 10,),
-                              StringText(user['username'], 12, 'PretendardBold', Colors.black),
+                              StringText_letterspacing(user['username'], 12, FontWeight.w700, Colors.black, -0.5),
                             ],
                           ),
                           userList(user, Meet.userNo)
@@ -564,19 +612,19 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   }).toList(),
                 ),
 
-                const SizedBox(height: 16,),
+                const SizedBox(height: 18),
                 line(),
 
-                const SizedBox(height: 16,),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 24,),
-                    StringText('댓글', 12, 'PretendardBold', const Color(0xffAEAFB3)),
-                  ],
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                      width: 50,
+                      child: StringText_letterspacing('댓글', 12, FontWeight.w700, const Color(0xffAEAFB3), -0.5)
+                  ),
                 ), //댓글
 
-                const SizedBox(height: 16,),
+                //const SizedBox(height: 16,),
                 Column(
                   children: Meet.comments.asMap().entries.map((c) {
                     return Column(
@@ -587,27 +635,25 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   }).toList(),
                 ),
 
-                const SizedBox(height: 28,),
+                const SizedBox(height: 16,),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width - 50,
                   height: 50,
-                  child: ButtonTheme(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(
-                                builder: (context) => Comments(Data: commentData, meetNo: Meet.meetNo,)));
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: const Color(0xffF0F1F5),
-                        elevation: 0,
-                      ),
-                      child: Center(child: StringText('전체 댓글 보기', 14, 'PretendardBold', const Color(0xffA8A8B2))),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) => Comments(Data: commentData, meetNo: Meet.meetNo,)));
+                    },
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: const Color(0xffF0F1F5),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 0,
                     ),
+                    child: Center(child: StringText_letterspacing('전체 댓글 보기', 14, FontWeight.w700, const Color(0xffA8A8B2), -0.5)),
                   ),
                 ), //전체 댓글 보기 버튼
 
-                const SizedBox(height: 28,),
+                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -622,26 +668,23 @@ Widget age(String ageSet, int age) {
   {
     return Row(
       children: [
-        IntText(age - 5, 14, 'PretendardRegular', const Color(0xff5E5F68)),
-        StringText(' ~ ', 14, 'PretendardRegular', const Color(0xff5E5F68)),
-        IntText(age + 5, 14, 'PretendardRegular', const Color(0xff5E5F68)),
+        IntText(age - 5, 14, FontWeight.w400, const Color(0xff5E5F68)),
+        StringText(' ~ ', 14, FontWeight.w400, const Color(0xff5E5F68)),
+        IntText(age + 5, 14, FontWeight.w400, const Color(0xff5E5F68)),
       ],
     );
   }
   else
   {
-    return StringText('연령 제한 없음', 14, 'PretendardRegular', const Color(0xff5E5F68));
+    return StringText('연령 제한 없음', 14, FontWeight.w400, const Color(0xff5E5F68));
   }
 }//연령 제한 여부
 
 Widget line() {
-  return const Center(
-    child: SizedBox(
-      child: Divider(
-        color: Color(0xffF0F1F5),
-        thickness: 1.0,
-      ),
-    ),
+  return const Divider(
+    height: 1,
+    color: Color(0xffF0F1F5),
+    thickness: 1.0,
   );
 }
 
@@ -649,18 +692,21 @@ Widget userList(Map user, int hostNo) {
   if(hostNo == user['userNo']){
     return Row(
       children: [
-        Image.asset('assets/images/List_Icon/List_icon_host.png',
-            width: 24, height: 24),
+        SvgPicture.asset(
+            "assets/icons/detail/host.svg"
+        ),
         const SizedBox(width: 4,),
-        StringText('호스트', 12, 'PretendardBold', const Color(0xffB78C00)),
+        StringText_letterspacing('호스트', 12, FontWeight.w400, const Color(0xffB78C00), -0.5),
       ],
     );
   } else {
     return Row(
       children: [
-        const Icon(Icons.account_circle, color: Color(0xffDCDCDC),),
+        SvgPicture.asset(
+            "assets/icons/detail/participant.svg"
+        ),
         const SizedBox(width: 4,),
-        StringText('참여자', 12, 'PretendardBold', const Color(0xff999999)),
+        StringText_letterspacing('참여자', 12, FontWeight.w400, const Color(0xff999999), -0.5),
       ],
     );
   }

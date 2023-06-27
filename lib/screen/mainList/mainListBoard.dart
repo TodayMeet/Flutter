@@ -1,25 +1,27 @@
-//메인 리스트 게시판
+//메인 리스트
 
-// 최종 수정: 2023.6.8
-// 작업자: 정해수
+// 최종 수정: 2023.6.27
+// 작업자: 정해수 -> 김혁
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:front/model/TextPrint.dart';
-import '../../data/meetList_Provider.dart';
-import '../../model/mainList/meetListView.dart';
-import '../mainMap/mainPageMap.dart';
-import 'package:front/screen/alarm/alarm.dart';
-import '../setting/setFilter.dart';
-import '../setting/setlocation.dart';
-import 'package:front/data/meetList.dart';
-import 'package:front/model/bottomBar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:front/model/TextPrint.dart';
+import '../../data/meetList_Provider.dart';
+import '../../model/mainList/meetListView.dart';
+import '../mainMap/mainPageMap.dart';
+import '../setting/setFilter.dart';
+import '../setting/setlocation.dart';
+import 'package:front/data/meetList.dart';
+import 'package:front/model/bottomBar.dart';
 
 RefreshController _refreshController = RefreshController(initialRefresh: false);
+late StateNotifierProvider<meetListNotifier, List<meetList>> meetListProvider;
 
 class MainListBoard extends ConsumerStatefulWidget {
   const MainListBoard({Key? key,
@@ -33,7 +35,6 @@ class MainListBoard extends ConsumerStatefulWidget {
 }
 
 class MainListBoardState extends ConsumerState<MainListBoard> {
-  late var meetListProvider;
   List<meetList> tempList = [];
   int postNo = 0;
 
@@ -80,38 +81,44 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
     List<meetList> viewList = ref.watch(meetListProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        leadingWidth: 150,
-        leading: TextButton.icon(
-            onPressed: (){
-              Navigator.push(context,
-                  MaterialPageRoute(
-                      builder: (context) => LocationPage()));
-            },
-            icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-            label: Text(ref.read(dongProvider.notifier).state,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'PretendardBold'),
-            )),
+        leadingWidth: 110,
+        leading: TextButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => LocationPage()));
+          },
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 12, top: 13, bottom: 13),
+                child: Text(
+                  ref.watch(dongProvider),
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700
+                  ),
+                ),
+              ),
+              SvgPicture.asset(
+                "assets/icons/drop_down.svg",
+                height: 24,
+                width: 24,
+              ),
+            ],
+          ),
+        ),
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: const Text("오늘의 건수",
           style: TextStyle(
-              fontFamily: 'PretendardBold',
-              color: Colors.black),
+              fontWeight : FontWeight.w700,
+              color: Colors.black,
+              fontSize: 16
+          ),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const alarm()));
-              },
-              icon: const Icon(
-                Icons.notifications_none,
-                color: Colors.black,
-              ))
-        ],
         backgroundColor: Colors.white,
         elevation: 1,
       ),
@@ -142,13 +149,13 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
           builder: (BuildContext context, RefreshStatus? mode) {
             Widget body;
             if (mode == RefreshStatus.idle) {
-              body = StringText('건수 목록 새로고침', 20, 'PretendardBold', Colors.black);
+              body = StringText('건수 목록 새로고침', 20, FontWeight.w700, Colors.black);
             } else if (mode == RefreshStatus.refreshing) {
-              body = StringText('건수 불러오는 중...', 20, 'PretendardBold', Colors.black);
+              body = StringText('건수 불러오는 중...', 20, FontWeight.w700, Colors.black);
             } else if (mode == RefreshStatus.failed) {
-              body = StringText('불러오는 과정에서 오류가 발생했습니다', 20, 'PretendardBold', Colors.black);
+              body = StringText('불러오는 과정에서 오류가 발생했습니다', 20, FontWeight.w700, Colors.black);
             } else {
-              body = StringText('건수 목록 새로고침', 20, 'PretendardBold', Colors.black);
+              body = StringText('건수 목록 새로고침', 20, FontWeight.w700, Colors.black);
             }
             return SizedBox(
               height: 55.0,
@@ -162,16 +169,16 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
             if(ref.read(meetListProvider).length > 31) {
               body = const Text("");
             } else if(mode==LoadStatus.idle){
-              body =  StringText('건수 더 보기', 20, 'PretendardBold', Colors.black);
+              body =  StringText('건수 더 보기', 20, FontWeight.w700, Colors.black);
             }
             else if(mode==LoadStatus.loading){
-              body =  StringText('건수 불러오는 중...', 20, 'PretendardBold', Colors.black);
+              body =  StringText('건수 불러오는 중...', 20, FontWeight.w700, Colors.black);
             }
             else if(mode == LoadStatus.failed){
-              body = StringText('불러오는 과정에서 오류가 발생했습니다', 20, 'PretendardBold', Colors.black);
+              body = StringText('불러오는 과정에서 오류가 발생했습니다', 20, FontWeight.w700, Colors.black);
             }
             else if(mode == LoadStatus.canLoading){
-              body = StringText('건수 불러오는 중...', 20, 'PretendardBold', Colors.black);
+              body = StringText('건수 불러오는 중...', 20, FontWeight.w700, Colors.black);
             }
             else{
               body = const Text("");
@@ -208,7 +215,9 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
                     MaterialPageRoute(
                         builder: (context) => const Filter()));
               },
-              child: const Icon(Icons.tune, color: Color(0xFFFFFFFF)),
+              child: SvgPicture.asset(
+                "assets/icons/filter.svg",
+              ),
             ),
           ), //필터 화면 이동 아이콘
           Container(
@@ -229,7 +238,9 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
               onPressed: (){
                 Navigator.pop(context);
               },
-              child: const Icon(Icons.map, color: Color(0xFF4874EA)),
+              child: SvgPicture.asset(
+                  "assets/icons/map.svg"
+              ),
             ),
           ), //지도 화면 이동 아이콘
         ],
@@ -245,5 +256,6 @@ void showToast(String message) {
       backgroundColor: Colors.black54,
       textColor: Colors.white,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM);
+      gravity: ToastGravity.BOTTOM
+  );
 }

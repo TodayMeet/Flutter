@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:front/data/Comment.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/model/mainList/CommentContainer.dart';
@@ -117,13 +118,15 @@ class _CommentsState extends ConsumerState<Comments> {
     sortedComments = sortComments(comments);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        elevation: 1,
+        elevation: 0,
         title: const Text("댓글",
           style: TextStyle(
               fontWeight: FontWeight.w700,
+              fontSize: 16,
               color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -132,10 +135,13 @@ class _CommentsState extends ConsumerState<Comments> {
               Navigator.pop(context);
             },
             color: Colors.black,
-            icon: const Icon(Icons.arrow_back_ios)),
+            icon: SvgPicture.asset(
+              "assets/icons/back_icon.svg"
+            )
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
         child: Column(
           children: comments.asMap().entries.map((c) {
               return Column(
@@ -146,53 +152,72 @@ class _CommentsState extends ConsumerState<Comments> {
             }).toList(),
         ),
       ),
-      bottomSheet: Material(
-          elevation: 30,
-          child: SizedBox(
-            width: double.maxFinite,
-            height: 70,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      onChanged: (text) {
-                        setState(() {
-                          Content = text;
-                          print(Content);
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xffF5F6FA),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                          borderSide: BorderSide(
-                            color: Color(0xffF5F6FA),
-                          ),
-                        ),
-                        hintText: '댓글을 작성해주세요',
+      bottomSheet: Container(
+        decoration: const BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x1A000000),
+              blurRadius: 8,
+              offset: Offset(0, -4),
+              blurStyle: BlurStyle.outer
+            )
+          ],
+          color: Colors.white,
+        ),
+        padding: const EdgeInsets.all(12),
+        width: double.infinity,
+        child: Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 46,
+                child: TextField(
+                  onChanged: (text) {
+                    setState(() {
+                      Content = text;
+                      print(Content);
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                    filled: true,
+                    fillColor: Color(0xffF5F6FA),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderSide: BorderSide(
+                        color: Color(0xffF5F6FA),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4,),
-                  ButtonTheme(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                      color: Color(0xFFC8C8CB),
+                      letterSpacing: -0.5,
                     ),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            addComment();
-                          },
-                          child: StringText('전송', 13, 'PretendardBold', Colors.white)
-                      ),
+                    hintText: '댓글을 작성해주세요.',
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-    )
+            const SizedBox(width: 4,),
+            SizedBox(
+              width: 56,
+              height: 46,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                    )
+                  ),
+                  onPressed: () {
+                    addComment();
+                  },
+                  child: StringText_letterspacing('전송', 13, FontWeight.w700, Colors.white, -0.5)
+              ),
+            ),
+          ],
+        ),
+      )
     );
   }
 }

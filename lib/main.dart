@@ -45,6 +45,9 @@ class MainPage extends ConsumerWidget {
     return MaterialApp(
 
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          fontFamily: "Pretendard",
+      ),
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Main Page'),

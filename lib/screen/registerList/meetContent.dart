@@ -1,6 +1,6 @@
 // 내용 입력 위젯
 
-// 최종 수정일 : 2023.5.28
+// 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
@@ -33,9 +33,8 @@ class _MeetingContentState extends State<MeetingContent> {
             children: [
               meet.Title(content:"내용을 입력해주세요."),
               Container(
-                padding: const EdgeInsets.only(left: 16, right: 16),
                 height: 140,
-                margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+                margin: const EdgeInsets.symmetric(horizontal: 24),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF5F6FA),
                   borderRadius: BorderRadius.circular(12.0),
@@ -44,13 +43,15 @@ class _MeetingContentState extends State<MeetingContent> {
                   maxLength: 500,
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.all(16),
                     counterText: '',
                     border: InputBorder.none,
                     hintText: '500자 내 텍스트 입력 가능',
                     hintStyle: TextStyle(
-                      fontFamily: "PretendardRegular",
+                      fontWeight: FontWeight.w400,
                       fontSize: 14,
                       color: Color(0xFFC8C8CB),
+                      letterSpacing: -0.5,
                     ),
                   ),
                   controller: controller,
@@ -59,15 +60,16 @@ class _MeetingContentState extends State<MeetingContent> {
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12)),
                 height: 46,
                 width: size.width,
-                margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+                margin: const EdgeInsets.fromLTRB(24, 12, 24, 12),
                 child: TextButton(
-                  style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
+                  style: ButtonStyle(
+                    backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFF0F1F5)),
                     alignment: Alignment.center,
+                    shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                    )
                   ),
                   onPressed: (){
                     setState(() {
@@ -82,27 +84,37 @@ class _MeetingContentState extends State<MeetingContent> {
                     style: TextStyle(
                         color: Color(0xFF2F3036),
                         fontSize: 14,
-                        fontFamily: 'PretendardBold'
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.5,
                     ),
                   ),
                 ),
               )
             ]
         ): Container(
-          margin: const EdgeInsets.fromLTRB(24, 5, 24, 5),
+          margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
-            border: Border.all(color: Colors.black, width: 1),
+            border: Border.all(
+                color: const Color(0xFFC5C6CC),
+                width: 1),
           ),
           child: TextButton(
+            style: const ButtonStyle(
+              padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+                EdgeInsets.all(16),
+              )
+            ),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(content,
                   style: const TextStyle(
-                      fontFamily: "PretendardBold",
-                      fontSize:16,
-                      color: Color(0xFF2F3036))
+                      fontWeight: FontWeight.w700,
+                      fontSize:14,
+                      color: Color(0xFF2F3036),
+                      letterSpacing: -0.5,
+                  ),
               ),
             ),
             onPressed: () {

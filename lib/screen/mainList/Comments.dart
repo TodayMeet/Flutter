@@ -123,7 +123,7 @@ class _CommentsState extends ConsumerState<Comments> {
         elevation: 1,
         title: const Text("댓글",
           style: TextStyle(
-              fontFamily: 'PretendardBold',
+              fontWeight: FontWeight.w700,
               color: Colors.black),
         ),
         backgroundColor: Colors.white,

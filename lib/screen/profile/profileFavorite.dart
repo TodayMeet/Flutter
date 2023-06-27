@@ -8,18 +8,22 @@ import 'package:flutter/material.dart';
 import 'package:front/model/bottomBar.dart';
 import 'package:front/screen/profile/profileMain.dart';
 
+import '../../model/profile/CustomAppBar.dart';
+import '../../model/svgbutton/svgbutton.dart';
 
 
-class proflieFavorite extends StatefulWidget {
-  const proflieFavorite({Key? key}) : super(key: key);
+
+class profileFavorite extends StatefulWidget {
+  const profileFavorite({Key? key}) : super(key: key);
 
   @override
-  State<proflieFavorite> createState() => _proflieFavoriteState();
+  State<profileFavorite> createState() => _profileFavoriteState();
 }
 
-class _proflieFavoriteState extends State<proflieFavorite> {
+class _profileFavoriteState extends State<profileFavorite> {
   final ScrollController _scrollController = ScrollController();
-
+  final String appbarText = '관심사';
+  String selectFavorite = '관심사를 최대 5개까지 골라 주세요';
   List<Map> categories = [
     {
       "name": "맛집",
@@ -94,43 +98,25 @@ class _proflieFavoriteState extends State<proflieFavorite> {
       "category_image": "assets/images/Category/CategorySports.png"
     },
   ];
+  Color textColor = Color(0xff2f3036);
+  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
   @override
   Widget build(BuildContext context) {
-    String appbarText = '관심사';
+
     int checkedCount =
         categories.where((category) => category["isChecked"]).length;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
-      appBar: AppBar(
-        toolbarHeight: 50,
-        backgroundColor: Color(0xFFFFFFFF),
-        elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0),
-          child: Container(
-            color : Color(0xFFE3E3E3), // 테두리 선의 색상
-            height: 1.0, // 테두리 선의 높이
-          ),
+      appBar: CustomAppBar(
+        leadingWidget: SvgButton(
+          imagePath: backarrow,
+          onPressed:() {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => profileMain()));},
         ),
-        leading: IconButton(
-            iconSize: 14.93,
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => profileMain()));
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Color(0xFF2F2F2F),
-            )),
-        //leading아이콘 혹시나 필요하면
-
-        title: Text(appbarText,
-          style: TextStyle(fontSize: 16.0,color: Colors.black,fontWeight: FontWeight.w700),
-        ),
-
-        centerTitle: true,
+        title: appbarText,
       ),
       body: Scrollbar(
         controller: _scrollController,
@@ -139,11 +125,11 @@ class _proflieFavoriteState extends State<proflieFavorite> {
             margin: const EdgeInsets.fromLTRB(20.0, 20.0, 8.0, 5.0),
             height: 20,
             alignment: Alignment.centerLeft,
-            child: const Text("관심사를 최대 5개까지 골라 주세요",
+            child: Text(selectFavorite,
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
-                    color: Color(0xff2f3036))),
+                    color: textColor)),
           ),
           Column(
             // 카테고리
@@ -169,8 +155,8 @@ class _proflieFavoriteState extends State<proflieFavorite> {
                           fontWeight: FontWeight.w700, fontSize: 15)),
                   secondary: Container(
                     alignment: Alignment.center,
-                    width: 30,
-                    height: 30,
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color(int.parse(category["image_color"])),
@@ -190,15 +176,16 @@ class _proflieFavoriteState extends State<proflieFavorite> {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: 56,
+              height: 52,
               child: CupertinoButton(
                 onPressed: () {
                   if (checkedCount > 5) {
                     _overFive(context);
                   } else {
+
                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            login()), (route) => false);
+                            profileMain()), (route) => false);
                   }
                 },
                 minSize: 0,
@@ -212,7 +199,7 @@ class _proflieFavoriteState extends State<proflieFavorite> {
                   '저장하기',
                   style: TextStyle(
                       fontSize: 16,
-                      fontFamily: 'PretendardBold',
+                      fontWeight: FontWeight.w700,
                       color: Colors.white),
                 ),
               ),

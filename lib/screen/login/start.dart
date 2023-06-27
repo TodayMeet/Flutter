@@ -11,6 +11,7 @@ import 'login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Start extends StatefulWidget {
   @override
@@ -19,6 +20,10 @@ class Start extends StatefulWidget {
 
 class _Start extends State<Start> {
   List<dynamic> data = [];
+  String imageLocation = 'assets/images/LoginImage/logoimage.svg';
+  String companyName = "ⓒbandeuthan";
+  Color companyNameColor = Color(0xFF626262);
+  double companyNameFontSize = 12.0;
   @override
   void initState() {
     super.initState();
@@ -47,28 +52,31 @@ class _Start extends State<Start> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Spacer(),
-        Image.asset(
-          'assets/images/LoginImage/logoimage.png',
-          // width: 100,
-          // height: 56,
-          fit: BoxFit.cover,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 127.0),
-          child: Image.asset(
-            'assets/images/LoginImage/titleimage.png',
-            fit: BoxFit.contain,
-          ),
-        ),
-        Spacer(),
-        Text("ⓒbandeuthan"),
-        SizedBox(
+      body: SafeArea(
+        child: Center(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+            Spacer(),
+                Container(
+                  width: 121,
+                  height: 84,
+                  child: Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: SvgPicture.asset(
+                      "assets/images/LoginImage/logoimage.svg",
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+            Spacer(),
+            Text(companyName,style: TextStyle(color: companyNameColor,fontSize: companyNameFontSize,fontFamily: 'xeicon'),),
+            SizedBox(
           height: 52,
+            ),
+          ]),
         ),
-      ])),
+      ),
     );
   }
 }

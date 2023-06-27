@@ -1,103 +1,41 @@
-void _backtoLogin(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      Color __myBlue = Color(0xff4874EA);
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
-        contentPadding: EdgeInsets.only(top: 10.0),
-        content: Container(
-          width: MediaQuery.of(context).size.width - 55,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 75.0,vertical: 36.0),
-                child: Column(
+Container(
+                width: MediaQuery.of(context).size.width,
+                height: 24,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Center(child: Text('탈퇴 신청',style: TextStyle(fontWeight: FontWeight.w700),),),
-                    SizedBox(height: 12.0,),
-                    Center(
-                        child: Text(
-                          '탈퇴 후 서비스 이용이 불가능 합니다.',
-                          style: TextStyle(fontSize: 14),
-                        )),
-                    Center(
-                        child: Text(
-                          '탈퇴 하시겠습니까?',
-                          style: TextStyle(fontSize: 14.0,),
-                        )),
+                    Checkbox(
+                      value: isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          isChecked = value!;
+                        });
+                      },
+                      activeColor: Colors.black,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, // 크기를 컨테이너에 맞추기 위해 추가
+                      visualDensity: VisualDensity.compact, // 밀도를 조정하여 크기를 조절할 수도 있음
+                      // size: 20.0,
+                    ),//체크박스
+                    Text(
+                      '[필수] 이용약관 동의',
+                      style: TextStyle(
+                          fontSize: 14.0,
+                          color: checkboxColor),
+                    ),//필수이용약관동의 텍스트
+                    Spacer(),// 동의 - 화살표 사이 공간
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward_ios,
+                        color: checkboxColor,
+                        size: 12,
+                      ),//화살표 아이콘
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => privatePolicy()));
+                      },
+                    ),//화살표 버튼
                   ],
                 ),
               ),
-              Divider(thickness: 0.5,height: 0,color: Colors.grey,),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 18.5),
-                        decoration: BoxDecoration(
-                          color: __myBlue,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(15.8),
-                          ),
-                        ),
-                        child: Text(
-                          "취소",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => login()),
-                                (route) => false);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 18.5),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(15.8),
-                          ),
-                        ),
-                        child: Text(
-                          "확인",
-                          style: TextStyle(
-                              color: __myBlue,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}

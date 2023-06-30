@@ -8,17 +8,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:front/model/bottomBar.dart';
+import '../mainList/mainListBoard.dart';
 
-class Filter extends StatefulWidget {
+class Filter extends ConsumerStatefulWidget {
   const Filter({Key? key}) : super(key: key);
 
   @override
-  State<Filter> createState() => _FilterState();
+  FilterState createState() => FilterState();
 }
 
-class _FilterState extends State<Filter> {
+class FilterState extends ConsumerState<Filter> {
   final ScrollController _scrollController = ScrollController();
 
   List<Map> categories = [
@@ -284,18 +286,30 @@ class _FilterState extends State<Filter> {
                           ),
                           child: TextButton(
                             onPressed: (){
+                              List<String> category = [];
                               for(var i = 0; i < categories.length; i++) {
                                   if (categories[i]["isChecked"] == true) {
                                     print(categories[i]["name"]);
+                                    category.add(categories[i]["name"]);
                                   }
                               }
                               if(isSelected1 == true){
-                                print('정렬 순 : 최신 순');
+                                //print('정렬 순 : 최신 순');
+                                ref.read(sortProvider.notifier).state = "최신순";
                               }else if(isSelected2 == true){
-                                print('정렬 순 : 마감 임박 순');
+                                //print('정렬 순 : 마감 임박 순');
+                                ref.read(sortProvider.notifier).state = "마감임박순";
                               }else{
-                                print('정렬 순 : 참여 높은 순');
+                                //print('정렬 순 : 참여 높은 순');
+                                ref.read(sortProvider.notifier).state = "참여높은 순";
                               }
+                              if(category.isEmpty){
+                                ref.read(categoryNameProvider.notifier).state = "전체보기";
+                              }else{
+                                ref.read(categoryNameProvider.notifier).state = category[0];
+                              }
+                              refreshController.requestRefresh();
+
                               Navigator.pop(context);
                             },
                             child: const Text("적용",

@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:front/screen/mainList/mainListBoard.dart';
 import '../../model/TextPrint.dart';
+import '../../model/showtoast.dart';
 
 class Loading_to_mainListBoard extends StatefulWidget {
   const Loading_to_mainListBoard({Key? key}) : super(key: key);
@@ -28,11 +28,12 @@ class _Loading_to_mainListBoardState extends State<Loading_to_mainListBoard> {
 
   void getData() async {
     try {
-      final url = Uri.parse('http://todaymeet.shop:8080/meet/list/대');
+      final url = Uri.parse('http://todaymeet.shop:8080/meet/list/정');
       var postBody =
       {
         "sort":'최신순',
-        "page":0
+        "page":0,
+        "categoryName":"전체보기"
       };
 
       http.Response response = await http.post(
@@ -44,11 +45,11 @@ class _Loading_to_mainListBoardState extends State<Loading_to_mainListBoard> {
       if (response.statusCode == 200) {
         meetListData = jsonDecode(utf8.decode(response.bodyBytes));
 
-        Navigator.pop(context);
+        /*Navigator.pop(context);
         Navigator.push(context,
             MaterialPageRoute(
                 builder: (context) => MainListBoard(meetListData: meetListData,))
-        );
+        );*/
       } else {
         print('Data download failed! : ${response.statusCode}');
         showToast('Data download failed!');

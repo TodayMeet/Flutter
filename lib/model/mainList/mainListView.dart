@@ -10,6 +10,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 import 'package:front/data/meetList.dart';
@@ -60,8 +61,6 @@ Widget mainListView(meetList list, WidgetRef ref) {
                   children: [
                     StringText_letterspacing('모집 마감 시간: ', 12, FontWeight.w400, Colors.black, -0.5),
                     StringText_letterspacing(DateFormat('HH:mm').format(list.time), 12, FontWeight.w400, Colors.black, -0.5),
-                    /*StringText_letterspacing(':', 12, FontWeight.w400, Colors.black, -0.5),
-                    StringText_letterspacing(DateFormat('mm').format(list.time), 12, FontWeight.w400, Colors.black, -0.5),*/
                   ],
                 )
               ],
@@ -99,13 +98,6 @@ Widget mainListView(meetList list, WidgetRef ref) {
                 StringText(list.address, 13, FontWeight.w700, const Color(0xff949596)), //동네 이름
                 StringText(' ', 13, FontWeight.w700, const Color(0xff949596)),
                 StringText(DateFormat('MM-dd | hh:mm').format(list.time), 13, FontWeight.w700, const Color(0xff949596)),
-                /*StringText('-', 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(DateFormat('dd').format(list.time), 13, FontWeight.w700, const Color(0xff949596)), // 모임 날짜
-                StringText(' ', 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(' | ', 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(DateFormat('hh').format(list.time), 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(':', 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(DateFormat('mm').format(list.time), 13, FontWeight.w700, const Color(0xff949596)), //모임 시각*/
               ],
             ), //동네, 날짜, 시간
             const SizedBox(height: 18),
@@ -142,7 +134,7 @@ Widget mainListView(meetList list, WidgetRef ref) {
                 InkWell(
                     onTap: () {}, //댓글창 페이지로 이동
                     child: Container(
-                      width: 65,
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
                       height: 30,
                       decoration: BoxDecoration( //컨테이너 테두리 조절
                         color: const Color(0xffEBECF0),
@@ -150,9 +142,9 @@ Widget mainListView(meetList list, WidgetRef ref) {
                       ),
                       child: Row(
                         children: [
-                          const SizedBox(width: 14,),
-                          Image.asset('assets/images/List_Icon/List_icon_comments.png',
-                              width: 16, height: 16), //댓글 아이콘
+                          SvgPicture.asset(
+                              "assets/icons/mainList/chatting.svg"
+                          ), //댓글 아이콘
                           const SizedBox(width: 6,),
                           IntText_letterspacing(list.commentNum, 12, FontWeight.w700, const Color(0xffA4A4A7), -0.5),
                         ],
@@ -160,7 +152,7 @@ Widget mainListView(meetList list, WidgetRef ref) {
                     )
                 ), //댓글창
                 Container(
-                  width: 76,
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0),
                   height: 30,
                   decoration: BoxDecoration( //컨테이너 테두리 조절
                     color: const Color(0xffEBECF0),
@@ -168,14 +160,12 @@ Widget mainListView(meetList list, WidgetRef ref) {
                   ),
                   child: Row(
                     children: [
-                      const SizedBox(width: 14,),
-                      Image.asset('assets/images/List_Icon/List_icon_user.png',
-                          width: 16, height: 16), //댓글 아이콘
+                      SvgPicture.asset(
+                          "assets/icons/mainList/people.svg"
+                      ), //사람 아이콘
                       const SizedBox(width: 6,),
-                      //IntText(list.peopleNum, 12, FontWeight.w700, const Color(0xffA4A4A7)),//현재 인원수
                       StringText_letterspacing(
                           '${list.peopleNum} / ${list.peopleLimit}', 12, FontWeight.w700, const Color(0xffA4A4A7), -0.5), // 현재 인원수 / 최대 인원수
-                      //IntText(list.peopleLimit, 12, FontWeight.w700, const Color(0xffA4A4A7)),//최대 인원수
                     ],
                   ),
                 )

@@ -47,7 +47,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   dotted_border: ^2.0.0+3
   chat_bubbles: ^1.4.1
-  shared_preferences: ^2.1.1
+  shared_preferences: ^2.1.2
   flutter_svg: ^2.0.5
 
 dev_dependencies:
@@ -89,6 +89,7 @@ flutter:
     - assets/images/ProfileImage/
     - assets/icons/
     - assets/icons/detail/
+    - assets/icons/mainList/
 
 
   fonts:

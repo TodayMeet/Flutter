@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:front/model/svgbutton/svgbutton.dart';
 import 'package:front/screen/profile/profileMain.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../model/profile/CustomAppBar.dart';
+import '../../data/designconst/constants.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+
 
 
 
@@ -20,9 +19,8 @@ class _followListState extends State<followList> {
    String username = 'username';
    String followerTitle = '팔로워';
    String followingTitle = '팔로잉';
-   int followerCount = 100;
-   int followingCount = 100;
-   String backarrow = 'assets/images/ProfileImage/backarrow.svg';
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +45,14 @@ class _followListState extends State<followList> {
             tabs: [
               Tab(child: Column(
                 children: [
-                  Text(followerTitle,style: TextStyle(fontSize: 14.0,color: Colors.black),),
-                  Text(followerCount.toString(),style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
+                  Text('팔로워',style: TextStyle(fontSize: 14.0,color: Colors.black),),
+                  Text(followers.length.toString(),style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
                 ],
               ),),
               Tab(child: Column(
                 children: [
-                  Text(followingTitle,style: TextStyle(fontSize: 14.0,color: Colors.black),),
-                  Text(followingCount.toString(),style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
+                  Text('팔로잉',style: TextStyle(fontSize: 14.0,color: Colors.black),),
+                  Text(following.length.toString(),style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
                 ],
               ),),
             ],

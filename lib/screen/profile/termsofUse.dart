@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:front/screen/profile/profileMain.dart';
 
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/svgbutton/svgbutton.dart';
+import '../../data/designconst/constants.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+
 
 class termsofUse extends StatefulWidget {
   const termsofUse({Key? key}) : super(key: key);
@@ -13,9 +15,9 @@ class termsofUse extends StatefulWidget {
 }
 
 class _termsofUseState extends State<termsofUse> {
-  String text = 'asdfffffffff';
+  String text = '';
   String appbarText = '이용약관';
-  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
+
 
   @override
   void initState() {
@@ -28,7 +30,7 @@ class _termsofUseState extends State<termsofUse> {
     setState(() {
       text = loadedText;
     });
-  }//이용약관txt불러오는 함수
+  }//이용약관txt 불러오기
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,9 @@ class _termsofUseState extends State<termsofUse> {
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => profileMain()));},
+          width: 10.0,
+          height: 12.0,
+
         ),
         title: appbarText,
       ),

@@ -19,11 +19,9 @@ class Start extends StatefulWidget {
 }
 
 class _Start extends State<Start> {
-  List<dynamic> data = [];
+  // List<dynamic> data = [];
   String imageLocation = 'assets/images/LoginImage/logoimage.svg';
-  String companyName = "ⓒbandeuthan";
-  Color companyNameColor = Color(0xFF626262);
-  double companyNameFontSize = 12.0;
+
   @override
   void initState() {
     super.initState();
@@ -37,49 +35,75 @@ class _Start extends State<Start> {
     });
     // fetchData();
   }
-  // Future<void> fetchData() async {
-  //   final response = await http.get(Uri.parse('http://todaymeet.shop:8080/loginB'));
-  //   if (response.statusCode == 200) {
-  //     final jsonResponse = json.decode(response.body);
-  //     setState(() {
-  //       data = jsonResponse;
-  //     });
-  //   } else {
-  //     print('데이터 가져오기 실패. 상태 코드: ${response.statusCode}');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-            Spacer(),
-                Container(
-                  width: 121,
-                  height: 84,
-                  child: Padding(
-                    padding: const EdgeInsets.all(0),
-                    child: SvgPicture.asset(
-                      "assets/images/LoginImage/logoimage.svg",
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-            Spacer(),
-            Text(companyName,style: TextStyle(color: companyNameColor,fontSize: companyNameFontSize,fontFamily: 'xeicon'),),
-            SizedBox(
-          height: 52,
-            ),
-          ]),
+      body: startContent(),
+    );
+  }
+}
+//startContent - 내부 내용 수록 
+class startContent extends StatelessWidget {
+  const startContent({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+          Spacer(),
+          startImage(),
+          Spacer(),
+          startCompanyName(),
+          SizedBox(
+        height: 52,
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+  //startImage : 로고 이미지 출력하는 부분
+  class startImage extends StatelessWidget {
+  const startImage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 121,
+      height: 84,
+      child: Padding(
+        padding: const EdgeInsets.all(0),
+        child: SvgPicture.asset(
+          "assets/images/LoginImage/logoimage.svg",
+          fit: BoxFit.contain,
         ),
       ),
     );
   }
 }
+
+  //startCompanyName : 반듯한 컴퍼니 출력한느 부분
+  class startCompanyName extends StatelessWidget {
+  const startCompanyName({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('ⓒbandeuthan',style: TextStyle(color: Color(0xFF626262),fontSize: 12.0,fontFamily: 'xeicon'),);
+  }
+}
+
+
 
 void saveLoginCredentials(String username, String password) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

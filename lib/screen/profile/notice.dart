@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/screen/profile/noticeList.dart';
 
-import '../../model/profile/CustomAppBar.dart';
+import '../../model/UI/widget/customAppBar.dart';
+
 
 
 
@@ -55,7 +57,7 @@ class _noticeState extends State<notice> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -68,10 +70,7 @@ class _noticeState extends State<notice> {
                 width: MediaQuery.of(context).size.width,
                 height: 240,
                 color: Color(0xFFF5F6FA),
-                child: Image.asset(
-                  'assets/images/LoginImage/googlelogin.png',
-                  fit: BoxFit.cover,
-                ),
+                child: Center(child: SvgPicture.asset('assets/icons/Image.svg',width: 71,height: 70,))
               ),
               SizedBox(height: 16,),
               Text(noticetext,style: TextStyle(fontSize: 14,color: Colors.black),),

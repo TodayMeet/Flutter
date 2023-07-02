@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:front/data/designconst/constants.dart';
+import 'package:front/model/UI/widget/button/svgButton.dart';
+import 'package:front/model/UI/widget/customAppBar.dart';
 import 'package:front/screen/alarm/alarm.dart';
 import 'package:front/screen/chat/chatpage.dart';
 
@@ -29,50 +32,46 @@ class _chatlistState extends State<chatlist> {
   ];
   @override
   Widget build(BuildContext context) {
-    String appbarText = '참여한 대화방';
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar: CustomAppBar(
+        title: '참여한 대화방',
+        leadingWidget: SvgButton(imagePath: backarrow, onPressed: (){
+        Navigator.pop(context);
+        Navigator.push(context,
+        MaterialPageRoute(builder: (context) => profileMain()));
+      }),
 
-        toolbarHeight: 50,
-        backgroundColor: Color(0xFFFFFFFF),
-        elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0),
-          child: Container(
-            color : Color(0xFFE3E3E3), // 테두리 선의 색상
-            height: 1.0, // 테두리 선의 높이
-          ),
-        ),
-        leading: IconButton(
-            iconSize: 14.93,
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => profileMain()));
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Color(0xFF2F2F2F),
-            )),
-
-
-        title: Text(appbarText,
-          style: TextStyle(fontSize: 16.0,color: Colors.black,fontWeight: FontWeight.w700,fontFamily: 'Pretendard'),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => alarm()));
-              },
-              icon: Icon(
-                Icons.notifications_none,
-                color: Colors.black,
-              ))
-        ],
       ),
+
+      // actionWidget: actions[
+      // IconButton(
+      //     onPressed: () {
+      //       Navigator.push(
+      //           context, MaterialPageRoute(builder: (context) => alarm()));
+      //     },
+      //     icon: Icon(
+      //       Icons.notifications_none,
+      //       color: Colors.black,
+      //     ))
+      // ],
+
+
+
+
+
+      // actions: [
+      //   IconButton(
+      //       onPressed: () {
+      //         Navigator.push(
+      //             context, MaterialPageRoute(builder: (context) => alarm()));
+      //       },
+      //       icon: Icon(
+      //         Icons.notifications_none,
+      //         color: Colors.black,
+      //       ))
+      // ],
       body: ListView.builder(
         itemCount: chatList.length,
         itemBuilder: (context, index) {

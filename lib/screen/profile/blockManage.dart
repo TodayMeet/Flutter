@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:front/model/TextPrint.dart';
-import 'package:front/model/svgbutton/svgbutton.dart';
+
+
 import 'package:front/screen/profile/profileMain.dart';
 
-import '../../model/profile/CustomAppBar.dart';
+import '../../data/designconst/constants.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+
+
 // import 'mainListView.dart';
 
 class blockManage extends StatefulWidget {
@@ -14,7 +18,7 @@ class blockManage extends StatefulWidget {
 }
 
 class _blockManageState extends State<blockManage> {
-  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
+
   Color _mygrey = Color(0xFFD6D6DD);
   Color _blue = Color(0xFF4874EA);
 
@@ -49,7 +53,7 @@ class _blockManageState extends State<blockManage> {
   ];
   String initext = '차단해제';
 
-  String appbarText = '차단 관리';
+
 
   void changeButtonState(int index) {
     setState(() {
@@ -77,57 +81,64 @@ class _blockManageState extends State<blockManage> {
               context,
               MaterialPageRoute(builder: (context) => profileMain()));},
       ),
-        title: appbarText,
+        title: '차단 관리',
       ),
       body: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
+          padding: const EdgeInsets.all(24.0),
           itemCount: entries.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 18,
-                    backgroundImage: AssetImage(
-                        "assets/images/LoginImage/${entries1[index]}.png"),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    '${entries[index]}',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  Spacer(),
-                  ElevatedButton(
-                    onPressed: ()=> changeButtonState(index),
-                    child: Text(
-                      buttonTexts[index],
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(buttonColors[index]),
-                      elevation: MaterialStateProperty.all<double>(0),
-                      side: MaterialStateProperty.all<BorderSide>(
-                        BorderSide(color: Colors.transparent,),
+            return Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 48,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundImage: AssetImage(
+                            "assets/images/User_Picture/User_pic_block.png"),
                       ),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        '${entries[index]}',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      Spacer(),
+                      ElevatedButton(
+                        onPressed: ()=> changeButtonState(index),
+                        child: Text(
+                          buttonTexts[index],
+                          style: TextStyle(color: Colors.white, fontSize: 14,fontWeight: FontWeight.w700),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(buttonColors[index]),
+                          elevation: MaterialStateProperty.all<double>(0),
+                          side: MaterialStateProperty.all<BorderSide>(
+                            BorderSide(color: Colors.transparent,),
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 10,)
+              ],
             );
           }),
     );
   }
 }
+
+

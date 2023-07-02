@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:front/model/TextPrint.dart';
+
 import 'package:front/screen/profile/profileMain.dart';
 
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/svgbutton/svgbutton.dart';
-// import 'mainListView.dart';
+import '../../data/designconst/constants.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+
+
+
 
 
 
@@ -16,8 +19,8 @@ class hostEvent extends StatefulWidget {
 }
 
 class _hostEventState extends State<hostEvent> {
-  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
-  String appbarText = '개최한 건수';
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,8 +31,10 @@ class _hostEventState extends State<hostEvent> {
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => profileMain()));},
+          width: 24.0,
+          height: 24.0,
         ),
-        title: appbarText,
+        title: '개최한 건수',
       ),
 
 

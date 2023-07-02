@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:front/model/TextPrint.dart';
 import 'package:front/screen/profile/profileMain.dart';
+import '../../data/designconst/constants.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
 
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/svgbutton/svgbutton.dart';
 // import 'mainListView.dart';
 
 class oftenQuestion extends StatefulWidget {
@@ -23,28 +23,29 @@ class _oftenQuestionState extends State<oftenQuestion> {
   ];
   List<String> entries1 = <String>[
     '네비게이션바 가운데 버튼을 누르면 건수를 등록 할 수 있습니다 . 등록 절차에 따라 건수를 입력하시면 새로운 건수 등록이 완료됩니다.',
-    '건수 등록은 어떻게 하나요?',
-    '건수 등록은 어떻게 하나요?',
-    '건수 등록은 어떻게 하나요?'
+    '네비게이션바 가운데 버튼을 누르면 건수를 등록 할 수 있습니다 . 등록 절차에 따라 건수를 입력하시면 새로운 건수 등록이 완료됩니다.',
+    '네비게이션바 가운데 버튼을 누르면 건수를 등록 할 수 있습니다 . 등록 절차에 따라 건수를 입력하시면 새로운 건수 등록이 완료됩니다.',
+    '네비게이션바 가운데 버튼을 누르면 건수를 등록 할 수 있습니다 . 등록 절차에 따라 건수를 입력하시면 새로운 건수 등록이 완료됩니다.',
   ];
   List<int> qindex = <int>[1, 2, 3, 4];
   List<bool> isExpandedList = List<bool>.generate(4, (index) => false);
-  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
           imagePath: backarrow,
-          onPressed:() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => profileMain()));},
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => profileMain()));
+          },
         ),
         title: appbarText,
       ),
       body: ListView.builder(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8.0),
           itemCount: entries.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
@@ -61,33 +62,39 @@ class _oftenQuestionState extends State<oftenQuestion> {
                         Text(
                           "Q",
                           style: TextStyle(
-                            color: Color(0xFF3182F5),
-                            fontSize: 20,
-                              fontWeight: FontWeight.w700
-                          ),
+                              color: Color(0xFF3182F5),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700),
                         ),
                         SizedBox(width: 10),
                         Text(
                           '${entries[index]}',
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700
-                          ),
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700),
                         ),
                         Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isExpandedList[index] = !isExpandedList[index];
-                            });
-                          },
-                          icon: Icon(
-                            isExpandedList[index]
-                                ? Icons.expand_less
-                                : Icons.expand_more,
+                        TextButton(
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateProperty.resolveWith<Color>((states) => Colors.transparent),
                           ),
-                        ),
+                            onPressed: () {
+                              setState(() {
+                                isExpandedList[index] = !isExpandedList[index];
+                              });
+                            },
+                            child: Text(
+                              isExpandedList[index]
+                                  ? ''
+                                  : '',
+                              style: TextStyle(
+                                fontFamily: 'xeicon',
+                                color: Colors.black,
+                                fontSize: 22.0,
+                              ),
+                            )),
+
                       ],
                     ),
                   ),
@@ -112,23 +119,17 @@ class _oftenQuestionState extends State<oftenQuestion> {
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
-
                                 ),
                                 softWrap: true,
                               ),
                             ),
-
-
                           ],
                         ),
-
-
                       ),
                     )
-
                 ],
               ),
-            );;
+            );
           }),
     );
   }

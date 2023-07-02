@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/main.dart';
+import '../../model/UI/widget/button/blueButton.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+import '../../screen/dialog/dialoglist.dart';
 
-import 'package:front/model/dialogEx/dialoglist.dart';
 import 'package:front/screen/profile/profileMain.dart';
 import 'package:front/data/designconst/constants.dart';
 
-
-import '../../model/dialogEx/CustomDialog.dart';
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/svgbutton/svgbutton.dart';
 import '../login/login.dart';
 
 class secession extends StatefulWidget {
@@ -21,11 +20,9 @@ class secession extends StatefulWidget {
 
 class _secessionState extends State<secession> {
   TextEditingController textarea = TextEditingController();
-  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
 
 
-  Color hintTextColor = Color(0xFFC8C8CB);
-  Color textfieldColor = Color(0xFFF5F6FA);
+
   @override
   Widget build(BuildContext context) {
     String appbarText = '탈퇴신청';
@@ -68,7 +65,7 @@ class _secessionState extends State<secession> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 12.0,horizontal: 16.0),
                   hintText: "200자 이하 텍스트 입력 가능",
-                  hintStyle: TextStyle(color: hintTextColor,fontSize: 13.0),
+                  hintStyle: TextStyle(color: hinttextColor,fontSize: 13.0),
                   border: InputBorder.none,
                 ),
               ),
@@ -82,52 +79,14 @@ class _secessionState extends State<secession> {
               style: TextStyle(color: messageRed),
             ),//200자 이내로 입력 가능합니다.
             Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(0),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 46,
-                child: ElevatedButton(style: ElevatedButton.styleFrom(
-                  backgroundColor: buttonBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0)
-                  )
-                ),onPressed: (){
-                  twobutton.secessionDialog(context);
-                }, child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 16.0),
-                  child: Text('탈퇴',style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.white),),
-                ))
-              ),
-            ),//탈퇴버튼
-
+            //탈퇴버튼
+            //200자가 넘으면 over200Dialog
+            blueButton(buttonText: '탈퇴', onPressed: ()=> twobutton.secessionDialog(context))
           ],
         ),
       ),
     );
   }
 }
-
-
-
-void _textover200(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('200자 이하로 입력해주세요'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('확인'),
-        ),
-      ],
-    ),
-  );
-}//200자 이내로 입력해주세요 다이얼로그
-
-
 
 

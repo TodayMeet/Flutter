@@ -5,7 +5,7 @@ import 'screen/mainMap/mainPageMap.dart';
 import 'package:front/screen/login/start.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front/data/designconst/constants.dart';
-Color myBlue = Color(0xFF4874EA);
+
 void main() {
 
   runApp(const ProviderScope(child: MyApp()));
@@ -19,18 +19,20 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-
-
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Pretendard'
       ),
       builder: (context, child) {
-        return MediaQuery(      // 폰트 사이즈 일정하게 하기
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
-          child: child!,
+        return ScrollConfiguration(
+          behavior: NoGlowScrollBehavior(),
+          child: MediaQuery(      // 폰트 사이즈 일정하게 하기
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+            child: child!,
+          ),
         );
       },
+
       home: MainPage(),
     );
   } 
@@ -95,6 +97,23 @@ class MainPage extends ConsumerWidget {
         ),
 
       ),
+    );
+  }
+}
+
+class NoGlowScrollBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context,
+      Widget child,
+      AxisDirection axisDirection,
+      ) {
+    return GlowingOverscrollIndicator(
+      child: child,
+      axisDirection: axisDirection,
+      color: Colors.transparent,
+      showLeading: false,
+      showTrailing: false,
     );
   }
 }

@@ -6,21 +6,22 @@
 // 화면 전체 수정
 
 import 'dart:convert';
-import 'package:front/model/profile/bluebutton.dart';
+
 
 import '../../data/designconst/constants.dart';
-import '../../model/dialogEx/dialoglist.dart';
+import '../../model/UI/widget/button/blueButton.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+import '../../screen/dialog/dialoglist.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/svgbutton/svgbutton.dart';
+
 import '../profile/profileMain.dart';
 import 'login.dart';
 import 'accountsetting.dart';
 import 'dart:async';
 
-import 'signup.dart';
 
 class Phone_ij extends StatefulWidget {
   @override
@@ -28,8 +29,8 @@ class Phone_ij extends StatefulWidget {
 }
 
 class _Phone_ijState extends State<Phone_ij> {
-  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
-  String appbarText = '휴대전화 번호 인증';
+
+
   final TextEditingController _textEditingController = TextEditingController();
   String _text2 = '';
   String _text3 = '';
@@ -38,7 +39,7 @@ class _Phone_ijState extends State<Phone_ij> {
   bool _ijSuccess = false;
   String phoneNumber = '';
   String apvNum = '';
-  String buttonText = '다음';
+  
 
 
 
@@ -107,7 +108,7 @@ class _Phone_ijState extends State<Phone_ij> {
             onPressed:() {
               twobutton.backtoLoginDialog(context);
             }),
-          title: appbarText,
+          title: '휴대전화 번호 인증',
         ),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -184,11 +185,7 @@ class _Phone_ijState extends State<Phone_ij> {
                 ],
               ),
             ),
-
-
-
             SizedBox(height: 10.0),
-
             Container(
               padding: EdgeInsets.only(left: 16.0),
               width: MediaQuery.of(context).size.width,
@@ -252,7 +249,7 @@ class _Phone_ijState extends State<Phone_ij> {
               ),
             ),
             Spacer(),
-            blueButton(buttonText: buttonText, onPressed: (){
+            blueButton(buttonText: '다음', onPressed: (){
               Navigator.push(
                 context,
                 MaterialPageRoute(

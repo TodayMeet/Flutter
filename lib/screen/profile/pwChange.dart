@@ -1,9 +1,14 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:front/screen/profile/profileMain.dart';
 
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/svgbutton/svgbutton.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import '../../model/UI/widget/button/blueButton.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+import '../../model/UI/widget/text/textfieldTitle.dart';
+import '../../screen/profile/profileMain.dart';
+import '../../data/designconst/constants.dart';
+
+
 
 class pwChange extends StatefulWidget {
   const pwChange({Key? key}) : super(key: key);
@@ -17,16 +22,15 @@ class _pwChangeState extends State<pwChange> {
   final _currentpwController = TextEditingController();
   final _changepwController = TextEditingController();
   final _confirmpwController = TextEditingController();
-  Color _starcolor = Color(0xffFF4910);
-  Color _messagecolor = Color(0xffFF3D00);
+
   Color _hinttextcolor = Color(0xFFC8C8CB);
   Color _textfieldcolor = Color(0xFFF5F6FA);
   bool obscureText1 = true;
   bool obscureText2 = true;
   bool obscureText3 = true;
   Color _iconcolor = Color(0xffD0D0D0);
-  String appbarText = '비밀번호 변경';
-  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
+  
+  
 
   @override
   void dispose() {
@@ -41,6 +45,7 @@ class _pwChangeState extends State<pwChange> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
           imagePath: backarrow,
@@ -49,32 +54,17 @@ class _pwChangeState extends State<pwChange> {
                 context,
                 MaterialPageRoute(builder: (context) => profileMain()));},
         ),
-        title: appbarText,
+        title: '비밀번호 변경',
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 12.0),
-            child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 8.0),
-                Row(
-                  children: [
-                    Text(
-                      '현재 비밀번호 ',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    Text(
-                      '* ',
-                      style: TextStyle(
-                          color: _starcolor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
-                  ],
-                ), //현재 비밀번호 *
+                textfieldTitle(title: '현재 비밀번호',star: true,),
                 SizedBox(height: 8.0),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -86,7 +76,7 @@ class _pwChangeState extends State<pwChange> {
                     obscureText: obscureText1,
                     controller: _currentpwController,
                     decoration: InputDecoration(
-                      hintText: '2자 이상 12자 이하 영문,숫자,특수기호만 입력가능',
+                      hintText: pwTitle,
                       hintStyle: TextStyle(
                           fontSize: 13.0, color: _hinttextcolor),
                       border: OutlineInputBorder(
@@ -110,35 +100,15 @@ class _pwChangeState extends State<pwChange> {
                 ),
                 //텍스트필드
                 SizedBox(height: 8.0),
-                Text(
-                  '* 2자 이상 12자 이하 영문, 숫자 특수기호만 입력 가능',
-                  style: TextStyle(color: _messagecolor),
-                ),
+                textfieldTitle(title: pwTitle, star: true,reverse: true,)
               ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 12.0),
-            child: Column(
+            ),//현재 비밀번호
+            SizedBox(height: 24,),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 8.0),
-                Row(
-                  children: [
-                    Text(
-                      '새 비밀번호 ',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    Text(
-                      '* ',
-                      style: TextStyle(
-                          color: _starcolor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
-                  ],
-                ), //현재 비밀번호 *
+                textfieldTitle(title: '새 비밀번호', star: true), //현재 비밀번호 *
                 SizedBox(height: 8.0),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -150,7 +120,7 @@ class _pwChangeState extends State<pwChange> {
                     obscureText: obscureText1,
                     controller: _changepwController,
                     decoration: InputDecoration(
-                      hintText: '2자 이상 12자 이하 영문,숫자,특수기호만 입력가능',
+                      hintText: pwTitle,
                       hintStyle: TextStyle(
                           fontSize: 13.0, color: _hinttextcolor),
                       border: OutlineInputBorder(
@@ -171,38 +141,17 @@ class _pwChangeState extends State<pwChange> {
                       ),
                     ),
                   ),
-                ),
-                //텍스트필드
+                ),//텍스트필드
                 SizedBox(height: 8.0),
-                Text(
-                  '* 2자 이상 12자 이하 영문, 숫자 특수기호만 입력 가능',
-                  style: TextStyle(color: _messagecolor),
-                ),
+                textfieldTitle(title: pwTitle, star: true,reverse: true,)
               ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 24.0),
-            child: Column(
+            ),//새 비밀번호
+            SizedBox(height: 24,),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 8.0),
-                Row(
-                  children: [
-                    Text(
-                      '새 비밀번호 확인 ',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    Text(
-                      '* ',
-                      style: TextStyle(
-                          color: _starcolor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
-                  ],
-                ), //현재 비밀번호 *
+                textfieldTitle(title: '새 비밀번호 확인',star: true,),
                 SizedBox(height: 8.0),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -214,75 +163,49 @@ class _pwChangeState extends State<pwChange> {
                     obscureText: obscureText3,
                     controller: _confirmpwController,
                     decoration: InputDecoration(
-                      hintText: '2자 이상 12자 이하 영문,숫자,특수기호만 입력가능',
-                      hintStyle: TextStyle(
-                          fontSize: 13.0, color: _hinttextcolor),
+                      hintText: pwTitle,
+                      hintStyle: TextStyle(fontSize: 13.0, color: _hinttextcolor),
                       border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(12.0)),
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
                       filled: true,
                       fillColor: Color(0xFFF5F6FA),
                       suffixIcon: IconButton(
                         onPressed: () {
-                          obscureText3 = !obscureText3;
+                          setState(() {
+                            obscureText3 = !obscureText3;
+                          });
                         },
-                        icon: Icon(
-                          obscureText3
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: _iconcolor,
+                        icon: SvgPicture.asset(
+                          obscureText3 ? visible : Camera,
+                          width: 16,
+                          height: 16,
+                          color: Colors.red,
                         ),
                       ),
                     ),
                   ),
                 ),
-                //텍스트필드
+//텍스트필드
                 SizedBox(height: 8.0),
-                Text(
-                  '* 2자 이상 12자 이하 영문, 숫자 특수기호만 입력 가능',
-                  style: TextStyle(color: _messagecolor),
-                ),
+                textfieldTitle(title: pwTitle, star: true, reverse: true,),
+
               ],
-            ),
-          ),
-          Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 52,
-                child: CupertinoButton(
-                  onPressed: () {
-                    // 입력시간 초과 -> _login_fail_timeover
-                    // 성공했으면 -> _login_success_phoneij
-                    //인증번호 틀리면 -> _login_fail_incorrectij
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => profileMain()),
-                    );
-                  },
-                  minSize: 0,
-                  padding: EdgeInsets.symmetric(),
-                  color: CupertinoDynamicColor.resolve(
-                    CupertinoColors.systemBlue,
-                    context,
-                  ).withAlpha(0xFF4874EA),
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                  child: Text(
-                    '저장',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ), //변경 버튼
-        ],
+            ),//새 비밀번호 확인
+
+            Spacer(),
+
+            blueButton(buttonText: '저장', onPressed: (){
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => profileMain()),
+              );
+            })//변경 버튼
+          ],
+        ),
       ),
     );
   }

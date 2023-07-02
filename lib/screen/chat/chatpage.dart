@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:front/screen/chat/chatlist.dart';
-import 'package:intl/intl.dart';
+import 'package:front/data/designconst/constants.dart';
+import 'package:front/model/UI/widget/button/svgButton.dart';
+import 'package:front/model/UI/widget/button/xeiconButton.dart';
+import 'package:front/model/UI/widget/customAppBar.dart';
 
-import '../profile/profileMain.dart';
+import 'package:intl/intl.dart';
+import 'package:badges/badges.dart' as badges;
+
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -31,7 +35,7 @@ class ChatMessage extends StatelessWidget {
           children: [
             Text(
               formatTime(),
-              style: TextStyle(fontSize: 10,fontFamily: 'PretendardRegular'),
+              style: TextStyle(fontSize: 10,),
             ),
           ],
         ),
@@ -66,9 +70,21 @@ class ChatMessage extends StatelessWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final String appbarText = '오늘 같이 놀 사람~!';
+
   final List<ChatMessage> messages = <ChatMessage>[];
   TextEditingController textEditingController = TextEditingController();
   ScrollController scrollController = ScrollController();
+  List<Map>users=[
+    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '개굴개굴'},
+    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '꺄르르'},
+    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '보라돌이'},
+    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '오늘만산다'},
+    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '심심해'},
+    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '건수없나'},
+    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '요기어때'},
+    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '곰돌이푸'},
+  ];
+  bool isFollow = false;
   void _sendMessage() {
     if (textEditingController.text.isNotEmpty) {
       setState(() {
@@ -82,7 +98,7 @@ class _ChatPageState extends State<ChatPage> {
         WidgetsBinding.instance!.addPostFrameCallback((_) {
           scrollController.animateTo(
             scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 100),
+            duration: Duration(milliseconds: 1),
             curve: Curves.easeInOut,
           );
         });
@@ -102,169 +118,159 @@ class _ChatPageState extends State<ChatPage> {
       String lastMessagesTime = lastMessages.time;
     } else {}
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        toolbarHeight: 50,
-        backgroundColor: Color(0xFFFFFFFF),
-        elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0),
-          child: Container(
-            color : Color(0xFFE3E3E3),
-            height: 1.0,
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: CustomAppBar(
+            title: appbarText,
+        leadingWidget: SvgButton(imagePath: backarrow, onPressed: (){}),
+        actionWidget: badges.Badge(
+          badgeStyle: badges.BadgeStyle(
+            badgeColor: Color(0xFFB3261E),
+          ),
+          position: badges.BadgePosition.topEnd(top: 5, end: 7.7),
+          badgeContent: Center(child: Text(users.length.toString(),style: TextStyle(color: Colors.white,fontSize: 14,fontFamily: 'Roboto'),)),
+          child: Center(child: xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();})),
+        )
+
+
+        // xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();}),
+        ),
+        endDrawer: Drawer(
+          child: ListView(
+
+            children: [
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                height: 50,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('참여자',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700),),
+                    Spacer(),
+                    SizedBox(width: 8,),
+                    Text(users.length.toString()+ '명',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w700,color: Color(0xFF757575)),),
+
+                  ],
+                ),
+              ),
+              Column(
+                children: users.map((users){
+                  return ListTile(
+                      leading: Container(
+                          child: Image.asset(users['image']),
+
+                      ),
+                      title: Text(users['name']),
+                      // onTap: () {},
+
+
+                  );
+                }).toList(),
+              ),
+
+            ],
           ),
         ),
-        leading: IconButton(
-            iconSize: 14.93,
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => profileMain()));
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Color(0xFF2F2F2F),
-            )),
-        //leading아이콘 혹시나 필요하면
-
-        title: Text(appbarText,
-          style: TextStyle(fontSize: 16.0,color: Colors.black,fontFamily: 'PretendardBold'),
-        ),
-        centerTitle: true,
-
-        actions: [
-          Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: Icon(
-                  Icons.person,
-                  color: Colors.black,
+        body: Container(
+          color: Color(0xFFD3DDE7),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.separated(
+                  controller: scrollController,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return messages[index];
+                  },
+                  separatorBuilder: (context, index) => SizedBox(height: 5),
                 ),
-                onPressed: () {
-                  Scaffold.of(context).openEndDrawer();
-                },
-              );
-            },
-          ),
-        ],
-
-      ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            SizedBox(
-              height: 50,
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '참여자',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  Text(
-                    '8명',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ],
               ),
-            ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('개굴개굴'),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
-      body: Container(
-        color: Color(0xFFD3DDE7),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                controller: scrollController,
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  return messages[index];
-                },
-                separatorBuilder: (context, index) => SizedBox(height: 5),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(0),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 70,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.transparent),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.transparent),
-                            color: Color(0xFFF5F6FA),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: TextField(
-                              controller: textEditingController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: '메시지를 입력해주세요.',
+              Padding(
+                padding: const EdgeInsets.all(0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.transparent),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.transparent),
+                              color: Color(0xFFF5F6FA),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: TextField(
+                                controller: textEditingController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: '메시지를 입력해주세요.',
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Container(
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _sendMessage();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Container(
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _sendMessage();
+                              },
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    // 버튼 눌려있을때는 높이 0으로 해놓고
+                                    return 0;
+                                  }
+                                  return 0.5; // 이건 디폴트
+                                }),
+                                backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    // 버튼이 눌려 있을 때의 배경색
+                                    //color: rgb(72,116,234);
+                                    return Color(0xFF345FB2); //
+                                  }
+                                  return buttonBlue; // 기본 배경색
+                                }),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                                overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
                               ),
-                              primary: Color(0xFF4874EA),
-                            ),
-                            child: Text(
-                              '전송',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 13),
+                              child: Text(
+                                '전송',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 13),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+
+
+

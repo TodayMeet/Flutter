@@ -7,12 +7,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:front/model/profile/bluebutton.dart';
+
 import 'package:front/screen/login/pwFind.dart';
+
+import '../../model/UI/widget/button/blueButton.dart';
 import 'login.dart';
-import 'accountsetting.dart';
 import 'dart:async';
-import 'signup.dart';
+
 
 class idFindResult extends StatefulWidget {
   @override
@@ -21,8 +22,7 @@ class idFindResult extends StatefulWidget {
 
 class _idFindResultState extends State<idFindResult> {
   String result = 'abcd@gmail.com';
-  final String findPasswordButtonText = '비밀번호 찾기';
-  final String buttonText = '로그인하기';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,19 +49,31 @@ class _idFindResultState extends State<idFindResult> {
                 fontSize: 24,
                 color: Colors.black,
               ),
+            ),//가입하신 계정은
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              result,
+              style: TextStyle(
+                fontSize: 38.4,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
-            idResult(result: result),
+          ),
             Text(
               '입니다.',
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.black,
               ),
-            ),
+            ),//입니다.
             Spacer(),
-            findPasswordButton(findPasswordButtonText: findPasswordButtonText),
+            findPasswordButton(findPasswordButtonText: '비밀번호 찾기'),
+
             SizedBox(height: 10,),
-            gotoLoginButton(buttonText: buttonText),
+
+            gotoLoginButton(buttonText: '로그인 하기'),
           ]),
         ));
   }

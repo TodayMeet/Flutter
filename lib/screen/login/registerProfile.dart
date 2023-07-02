@@ -6,7 +6,7 @@
 // 화면 전체 수정
 import 'dart:convert';
 
-import 'package:front/model/profile/bluebutton.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +18,12 @@ import 'package:image_picker/image_picker.dart';
 // import 'login.dart';
 import 'dart:io';
 
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/svgbutton/svgbutton.dart';
+import '../../data/designconst/constants.dart';
+
+
+import '../../model/UI/widget/button/blueButton.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
 import 'login.dart';
 
 class registerProfile extends StatefulWidget {
@@ -32,7 +36,6 @@ class registerProfile extends StatefulWidget {
 }
 
 class _registerProfileState extends State<registerProfile> {
-
   final _idController1 = TextEditingController();
   File? _imageFile;
   int _selectedSegment = 0;
@@ -42,16 +45,12 @@ class _registerProfileState extends State<registerProfile> {
   String username = '';
   bool isDuplicateUsername = false;
   bool isJoinSuccess = false;
-  String backarrow = 'assets/images/ProfileImage/backarrow.svg';
-  String appbarText = '프로필 등록';
-  String buttonText = '회원가입';
-  Color messageColor = Color(0xFFFF3D00);
-  Color textfieldBorderColor = Color(0xFF333333);
-  Color textfieldColor = Color(0xFFF5F6FA);
-  Color datetextColor = Color(0xFFEDEDED);
-  Color calendarColor = Color(0xFF49454F);
-  Color checkboxColor = Color(0xFF8F9098);
 
+
+
+
+
+  
 
   String convertIsDuplicateToString(bool isDuplicateUsername) {
     return isDuplicateUsername
@@ -171,68 +170,58 @@ class _registerProfileState extends State<registerProfile> {
             imagePath: backarrow,
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => login()));
+                  context, MaterialPageRoute(builder: (context) => login()));
             },
           ),
-          title: appbarText,
+          title: '프로필 등록',
         ),
         body: Padding(
           padding: EdgeInsets.fromLTRB(24.0, 0, 24.0, 24),
           child: Column(
-
             children: [
-
               Center(
                 child: CircleAvatar(
                   backgroundColor: Colors.grey,
                   radius: 45,
                   backgroundImage:
-                  _imageFile != null ? FileImage(_imageFile!) : null,
+                      _imageFile != null ? FileImage(_imageFile!) : null,
                   child: _imageFile == null
                       ? IconButton(
-                    icon: Icon(
-                      Icons.camera_alt,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      _pickImage(ImageSource.gallery);
-                    },
-                  )
+                          icon: Icon(
+                            Icons.camera_alt,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            _pickImage(ImageSource.gallery);
+                          },
+                        )
                       : null,
                 ),
               ), //imagepicker
               SizedBox(height: 32,),
 
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                      children: [
-                        Text(
-                          "닉네임",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Text(
-                          " *",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: messageColor,
-                            fontSize: 14.0,
-                          ),
-                        )
-                      ]), //닉네임*
+                  Row(children: [
+                    Text(
+                      "닉네임",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      " *",
+                      style: messageStyle
+                    )
+                  ]), //닉네임*
                   SizedBox(height: 8.0),
                   Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
-                      border: Border.all(color: textfieldBorderColor),
+                      border: Border.all(color: Color(0xFF333333)),
                     ),
                     child: TextField(
                       controller: _idController1,
@@ -260,29 +249,28 @@ class _registerProfileState extends State<registerProfile> {
                   SizedBox(height: 8.0),
                   Text(
                     '* 2자 이상 10 자 이하 한글, 영문, 숫자만 입력 가능합니다.',
-                    style: TextStyle(color: messageColor, fontSize: 12.0),
+                    style: messageStyle,
                   ),
                   SizedBox(height: 8.0),
                   Text(
                     convertIsDuplicateToString(isDuplicateUsername),
-                    style: TextStyle(color: messageColor, fontSize: 12.0),
+                    style: messageStyle,
                   ),
                 ],
               ), //닉네임 입력
               SizedBox(height: 32,),
-
 
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     '성별(선택)',
-                    style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w700
-                    ),
+                    style:
+                        TextStyle(fontSize: 14.0, fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(height: 8.0,),
+                  SizedBox(
+                    height: 8.0,
+                  ),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     child: ToggleButtons(
@@ -313,7 +301,6 @@ class _registerProfileState extends State<registerProfile> {
               ), //togglebutton
               SizedBox(height: 32,),
 
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -327,7 +314,7 @@ class _registerProfileState extends State<registerProfile> {
                   SizedBox(height: 8.0),
                   Container(
                     decoration: BoxDecoration(
-                      color: datetextColor,
+                      color: Color(0xFFEDEDED),
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: Row(
@@ -336,8 +323,8 @@ class _registerProfileState extends State<registerProfile> {
                           _selectedDate != null
                               ? ' ${_selectedDate!.toString().substring(0, 10)}'
                               : '   0000-00-00',
-                          style: TextStyle(
-                              fontSize: 13, color: Color(0xFF1F2024)),
+                          style:
+                              TextStyle(fontSize: 13, color: Color(0xFF1F2024)),
                         ),
                         Spacer(),
                         IconButton(
@@ -345,10 +332,10 @@ class _registerProfileState extends State<registerProfile> {
                             _selectDate(context);
                           },
                           icon: Icon(
-
                             Icons.today,
-                            color: calendarColor,
-                          ),),
+                            color: Color(0xFF49454F),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -372,20 +359,18 @@ class _registerProfileState extends State<registerProfile> {
                       activeColor: Colors.black,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       // 크기를 컨테이너에 맞추기 위해 추가
-                      visualDensity: VisualDensity.compact, // 밀도를 조정하여 크기를 조절할 수도 있음
-
+                      visualDensity:
+                          VisualDensity.compact, // 밀도를 조정하여 크기를 조절할 수도 있음
                     ), //체크박스
                     Text(
                       '[필수] 이용약관 동의',
-                      style: TextStyle(
-                          fontSize: 14.0,
-                          color: checkboxColor),
+                      style: TextStyle(fontSize: 14.0, color: Color(0xFF8F9098)),
                     ), //필수이용약관동의 텍스트
                     Spacer(), // 동의 - 화살표 사이 공간
                     IconButton(
                       icon: Icon(
                         Icons.arrow_forward_ios,
-                        color: checkboxColor,
+                        color: Color(0xFF8F9098),
                         size: 12,
                       ), //화살표 아이콘
                       onPressed: () {
@@ -399,15 +384,13 @@ class _registerProfileState extends State<registerProfile> {
                 ),
               ), //[필수]이용약관 동의 Row
               SizedBox(height: 12.0,),
+
+
               Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                width: MediaQuery.of(context).size.width,
                 height: 24,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-
                   children: [
                     Checkbox(
                       value: isChecked1,
@@ -425,14 +408,14 @@ class _registerProfileState extends State<registerProfile> {
                       '[필수] 개인정보처리방침 동의',
                       style: TextStyle(
                         fontSize: 14.0,
-                        color: checkboxColor,
+                        color: Color(0xFF8F9098),
                       ),
                     ), //[필수] 개인정보처리방침 동의 텍스트
                     Spacer(),
                     IconButton(
                       icon: Icon(
                         Icons.arrow_forward_ios,
-                        color: checkboxColor, // Set the desired color here
+                        color: Color(0xFF8F9098), // Set the desired color here
                         size: 12,
                       ),
                       onPressed: () {
@@ -447,15 +430,7 @@ class _registerProfileState extends State<registerProfile> {
               ), // 개인정보처리방침 row담은 container
 
               SizedBox(height: 24.0,),
-
-              blueButton(buttonText: buttonText, onPressed:(){
-    Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) =>
-    favorite()));}), // 임시로 다음 페이지로 넘어가게} )
-
-
-
+              signupButton(), // 임시로 다음 페이지로 넘어가게} )
             ],
           ),
         ),
@@ -464,3 +439,18 @@ class _registerProfileState extends State<registerProfile> {
   }
 }
 
+class signupButton extends StatelessWidget {
+  const signupButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return blueButton(
+        buttonText: '회원가입',
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => favorite()));
+        });
+  }
+}

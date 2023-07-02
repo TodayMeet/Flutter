@@ -8,15 +8,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/data/designconst/constants.dart';
-import 'package:front/model/dialogEx/dialoglist.dart';
-import 'package:front/model/profile/bluebutton.dart';
+import '../../model/UI/widget/button/blueButton.dart';
+import '../../screen/dialog/dialoglist.dart';
+
 import 'package:front/screen/login/pwFindResult.dart';
+
 
 import 'login.dart';
 import 'accountsetting.dart';
 import 'dart:async';
 
-import 'signup.dart';
+
 
 class pwFind extends StatefulWidget {
   @override

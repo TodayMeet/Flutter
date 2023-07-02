@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Widget leadingWidget;
+class CustomAppBar extends StatelessWidget  implements PreferredSizeWidget{
+  final Widget? leadingWidget;
   final String title;
+  final bool? automaticallyImplyLeading;
+  final Widget? actionWidget;
 
   const CustomAppBar({
-    required this.leadingWidget,
+    this.leadingWidget = null,
+    this.automaticallyImplyLeading = false,
     required this.title,
+    this.actionWidget,
   });
 
   @override
@@ -15,14 +19,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 50,
       backgroundColor: Color(0xFFFFFFFF),
       elevation: 0,
+      centerTitle: true,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(1.0),
         child: Container(
-          color: Color(0xFFE3E3E3), // 테두리 선의 색상
-          height: 1.0, // 테두리 선의 높이
+          color: Color(0xFFE3E3E3),
+          height: 1.0,
         ),
       ),
       leading: leadingWidget,
+      // leading: leadingWidget !=null  ? :,
       title: Text(
         title,
         style: TextStyle(
@@ -31,7 +37,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.w700,
         ),
       ),
-      centerTitle: true,
+      actions: actionWidget != null ? [actionWidget!] : [],
     );
   }
 

@@ -8,18 +8,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/data/designconst/constants.dart';
-import 'package:front/screen/login/Phone_ij.dart';
+
 import 'package:front/screen/login/registerProfile.dart';
 import 'package:http/http.dart' as http;
-import '../../model/dialogEx/dialoglist.dart';
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/profile/bluebutton.dart';
-import '../../model/svgbutton/svgbutton.dart';
+import '../../model/UI/widget/button/blueButton.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+import '../../screen/dialog/dialoglist.dart';
+
+
 import 'login.dart';
 
 class accountsetting extends StatefulWidget {
   void navigateToDestination() {
-    String data = "Hello, World!";
+    // String data = "Hello, World!";
     // registerProfile registerprofile = registerProfile(email);
   }
 
@@ -32,11 +34,11 @@ class _accountsettingState extends State<accountsetting> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   String email = '';
-  String appbarText = '계정설정';
-  String buttonText = '다음';
   bool isDuplicate = false;
   bool isDuplicatepw = false;
   bool obscureText = true;
+  final _emailController = TextEditingController();
+  final _pwordController = TextEditingController();
 
   @override
   void initState() {
@@ -92,8 +94,7 @@ class _accountsettingState extends State<accountsetting> {
     return password == confirmPassword;
   }
 
-  final _emailController = TextEditingController();
-  final _pwordController = TextEditingController();
+
 
   // void _toregisterProfile() {
   //   final String email = _idController.text;
@@ -119,8 +120,9 @@ class _accountsettingState extends State<accountsetting> {
             onPressed: () {
               twobutton.backtoLoginDialog(context);
             },
+
           ),
-          title: appbarText,
+          title: '계정설정',
         ),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -218,7 +220,7 @@ class _accountsettingState extends State<accountsetting> {
                             obscureText
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: suffixiconColor,
+                            color: Colors.red,
                           ),
                         ),
                       ),
@@ -272,7 +274,7 @@ class _accountsettingState extends State<accountsetting> {
                             obscureText
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: suffixiconColor,
+                            color: Colors.black,
                           ),
                         ),
                         border: InputBorder.none,
@@ -296,14 +298,7 @@ class _accountsettingState extends State<accountsetting> {
                 ],
               ), //비밀번호 확인
               Spacer(),
-              blueButton(buttonText: buttonText, onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => registerProfile(),
-                    ),
-                  );
-                },),
+              nextButton(),
 
 
 
@@ -312,5 +307,23 @@ class _accountsettingState extends State<accountsetting> {
         ),
       ),
     );
+  }
+}
+
+class nextButton extends StatelessWidget {
+  const nextButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return blueButton(buttonText: '다음', onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => registerProfile(),
+          ),
+        );
+      },);
   }
 }

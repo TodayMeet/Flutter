@@ -8,16 +8,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/data/designconst/constants.dart';
-import 'package:front/model/dialogEx/dialoglist.dart';
-import 'package:front/model/profile/bluebutton.dart';
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/svgbutton/svgbutton.dart';
+import '../../model/UI/widget/button/blueButton.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+import '../../screen/dialog/dialoglist.dart';
+
+
 import 'idFindResult.dart';
-import 'login.dart';
-import 'accountsetting.dart';
+
 import 'dart:async';
 
-import 'signup.dart';
+
 
 class idFind extends StatefulWidget {
   @override
@@ -31,8 +32,8 @@ class _idFindState extends State<idFind> {
   int _countdown = 180;
   bool _isCountdownStarted = false;
   bool _ijSuccess = false;
-  String appbarText = '아이디 찾기';
-  String buttonText = '아이디 찾기';
+
+
 
   void startCountdown() {
     if (!_isCountdownStarted) {
@@ -70,27 +71,12 @@ class _idFindState extends State<idFind> {
               onPressed: () {
                 twobutton.backtoLoginDialog(context);
               }),
-          title: appbarText,
+          title: '아이디 찾기',
         ),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(children: [
-            Row(children: [
-              Text(
-                "휴대전화번호",
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Text(
-                "*",
-                style: TextStyle(
-                  color: messageRed,
-                  fontSize: 14.0,
-                ),
-              )
-            ]), //휴대전화번호 텍스트
+            phoneNumberText(), //휴대전화번호 텍스트
             SizedBox(height: 8.0),
             Container(
               padding: EdgeInsets.only(left: 16.0),
@@ -212,20 +198,57 @@ class _idFindState extends State<idFind> {
               ),
             ),
             Spacer(),
-            blueButton(
-                buttonText: buttonText,
-                // 입력시간 초과 -> _login_fail_timeover
-                // 성공했으면 -> _login_success_phoneij
-                //인증번호 틀리면 -> _login_fail_incorrectij
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => idFindResult(),
-                    ),
-                  );
-                })
+            idfindButton()
           ]),
         ));
+  }
+}
+
+class phoneNumberText extends StatelessWidget {
+  const phoneNumberText({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Text(
+        "휴대전화번호",
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      Text(
+        "*",
+        style: TextStyle(
+          color: messageRed,
+          fontSize: 14.0,
+        ),
+      )
+    ]);
+  }
+}
+
+class idfindButton extends StatelessWidget {
+  const idfindButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return blueButton(
+        buttonText: '아이디찾기',
+        // 입력시간 초과 -> _login_fail_timeover
+        // 성공했으면 -> _login_success_phoneij
+        //인증번호 틀리면 -> _login_fail_incorrectij
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => idFindResult(),
+            ),
+          );
+        });
   }
 }

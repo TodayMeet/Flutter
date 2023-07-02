@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:front/model/dialogEx/dialoglist.dart';
-import 'package:front/model/profile/bluebutton.dart';
+import '../../model/UI/widget/button/blueButton.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+import '../../screen/dialog/dialoglist.dart';
+
 import 'package:front/screen/login/login.dart';
-import 'package:front/screen/mainMap/mainPageMap.dart';
-import 'package:flutter/material.dart';
-import 'package:front/model/bottomBar.dart';
+
+
+
 import '../../data/designconst/constants.dart';
-import '../../model/profile/CustomAppBar.dart';
-import '../../model/svgbutton/svgbutton.dart';
+
+
 
 
 class favorite extends StatefulWidget {
@@ -95,8 +98,9 @@ class _favoriteState extends State<favorite> {
       "category_image": "assets/images/Category/CategorySports.png"
     },
   ];
-  String buttonText = '시작하기';
-  String appbarText = '관심사';
+  login startbuttonroute = login();
+
+
   @override
   Widget build(BuildContext context) {
     int checkedCount =
@@ -113,7 +117,7 @@ class _favoriteState extends State<favorite> {
                 MaterialPageRoute(builder: (context) => login()));
           },
         ),
-        title: appbarText,
+        title: '관심사',
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -170,20 +174,36 @@ class _favoriteState extends State<favorite> {
               }).toList(),
             ),
             Spacer(),
-            blueButton(buttonText: buttonText, onPressed: (){
-             if (checkedCount > 5) {
-               onebutton.overFive(context);
-             } else {
-               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                   builder: (BuildContext context) =>
-                       login()), (route) => false);
-             }
-           }),
+            startButtonRoute(checkedCount: checkedCount, startbuttonroute: startbuttonroute),
 
           ]),
         ),
       ),
     );
+  }
+}
+
+class startButtonRoute extends StatelessWidget {
+  const startButtonRoute({
+    super.key,
+    required this.checkedCount,
+    required this.startbuttonroute,
+  });
+
+  final int checkedCount;
+  final login startbuttonroute;
+
+  @override
+  Widget build(BuildContext context) {
+    return blueButton(buttonText: '시작하기', onPressed: (){
+     if (checkedCount > 5) {
+       onebutton.overFiveDialog(context);
+     } else {
+       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+           builder: (BuildContext context) =>
+               startbuttonroute), (route) => false);
+     }
+           });
   }
 }
 

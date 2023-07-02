@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
-import '../../screen/login/accountsetting.dart';
+import '../../model/UI/widget/dialog/customDialogOneButton.dart';
+import '../../model/UI/widget/dialog/customDialogTwoButton.dart';
 import '../../screen/login/login.dart';
-import 'CustomDialog.dart';
+import 'package:flutter/widgets.dart';
+
 
 
 
@@ -196,13 +197,53 @@ class onebutton{
       ),
     );
   }
-  static void overFive(BuildContext context){
+  static void overFiveDialog(BuildContext context){
     showDialog(
       context: context,
       builder: (BuildContext context) => CustomDialogOneButton(
         message: '5개 이하로 선택해주세요',
         buttonText: '확인',
         onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  }
+  static void over200Dialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '200자 내로 입력해주세요',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  }
+  static void over500Dialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '500자 내로 입력해주세요',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  }
+  static void questionConfirmDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '문의 접수되었습니다.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
           Navigator.pop(context);
         },
 

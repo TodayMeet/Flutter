@@ -47,7 +47,7 @@ Widget ListViewer(BuildContext context, WidgetRef ref, meetList List) {
   return Column(
     children: [
       InkWell(
-        child: mainListView(List, ref),
+        child: mainListView(List, ref, context),
         onTap: (){
           Navigator.push(context,
               MaterialPageRoute(

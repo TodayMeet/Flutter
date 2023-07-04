@@ -5,10 +5,9 @@
 
 // 추가 작업 예정 사항
 
-import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 import '../setting/registerMeeting.dart' as meet;
 
@@ -25,11 +24,21 @@ class _MeetingApprovalState extends State<MeetingApproval> {
   late String _valueApproval;
 
   void _registerMeet() async {
-    final url = Uri.parse("http://todaymeet.shop:8080/meet/add");
-    final Map<String, dynamic> jsonData = {
-      'category':{
-        'categoryNo': meet.meetInfo.categoryNo
-      },
+    // 이미지 파일 경로로 변환
+    List<MultipartFile> imagefiles;
+    if(meet.meetInfo.imagefiles.isNotEmpty){
+      imagefiles = meet.meetInfo.imagefiles.map((image) => MultipartFile.fromFileSync(image.path,
+        contentType: MediaType('image', 'jpg'))).toList();
+    }else{
+      imagefiles = [];
+    }
+
+    Dio dio = Dio();
+
+    // 디오로 보낼 데이터 생성
+    dio.options.contentType = 'multipart/form-data';
+    FormData formData = FormData.fromMap({
+      'categoryname': meet.meetInfo.categoryName,
       'address' : meet.meetInfo.address,
       'lat' : meet.meetInfo.lat,
       'lon' : meet.meetInfo.lon,
@@ -39,21 +48,22 @@ class _MeetingApprovalState extends State<MeetingApproval> {
       'fee' : meet.meetInfo.fee,
       'title' : meet.meetInfo.title,
       'content' : meet.meetInfo.content,
+      'Files' : imagefiles,
       'approval' : meet.meetInfo.approval,
-      'user': {
-        'userNo' : 1
-      },
-    };
+      'userNo' : 1,
+    });
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type' : 'application/json'},
-      body: json.encode(jsonData),
+    // 서버로 받은 응답
+    final response = await dio.post(
+        "http://todaymeet.shop:8080/meet/addwithImage",
+        data: formData
     );
 
-    if (response.statusCode == 200) {
-      print(response.body);
+    if (response.statusCode == 201) {
+      // 성공
+      print(response.data.toString());
     } else {
+      // 오류
       throw Exception('Failed to post data');
     }
   }
@@ -184,7 +194,7 @@ class _MeetingApprovalState extends State<MeetingApproval> {
               )
             ),
             onPressed: (){
-              print('category : ' + meet.meetInfo.categoryNo.toString());
+              print('category : ' + meet.meetInfo.categoryName);
               print('address : ' + meet.meetInfo.address);
               print('lat : ' + meet.meetInfo.lat.toString());
               print('lon : ' + meet.meetInfo.lon.toString());
@@ -195,7 +205,7 @@ class _MeetingApprovalState extends State<MeetingApproval> {
               print('title : '+meet.meetInfo.title);
               print('content : '+meet.meetInfo.content);
               print('approval : '+meet.meetInfo.approval.toString());
-              //_registerMeet();
+              _registerMeet();
               Navigator.pop(context);
             },
             child: const Text('등록 완료',

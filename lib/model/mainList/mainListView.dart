@@ -16,8 +16,9 @@ import 'package:intl/intl.dart';
 import 'package:front/data/meetList.dart';
 import 'package:front/model/mainList/CategoryContainer.dart';
 import 'package:front/model/TextPrint.dart';
+import '../../screen/mainList/Comments.dart';
 
-Widget mainListView(meetList list, WidgetRef ref) {
+Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
   // 카테고리 표시 옆에 완료 텍스트
   final completeContainerProvider = Provider((ref) {
     if(list.peopleClosed /*|| list.timeClosed*/) { // 인원수 마감 or 시간 마감
@@ -37,6 +38,7 @@ Widget mainListView(meetList list, WidgetRef ref) {
     }
   });
   final Widget completeContainer = ref.watch(completeContainerProvider);
+  List<String> meetingImage = list.meetImage;
 
   return Container(
     decoration: BoxDecoration( //컨테이너 테두리 조절
@@ -81,7 +83,7 @@ Widget mainListView(meetList list, WidgetRef ref) {
                   child: Row(
                     children: [
                       ClipOval(
-                        child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+                        child: Image.network(list.userProfileImage,
                             width: 26, height: 26),
                       ),  //사용자 사진
                       const SizedBox(width: 10,),
@@ -100,26 +102,30 @@ Widget mainListView(meetList list, WidgetRef ref) {
                 StringText(DateFormat('MM-dd | hh:mm').format(list.time), 13, FontWeight.w700, const Color(0xff949596)),
               ],
             ), //동네, 날짜, 시간
-            const SizedBox(height: 18),
-            Row(
-              children: [
-                Container(
-                  width: 86,
-                  height: 86,
-                  color: const Color(0xffF0F1F5),
-                  child: const Center(child: Text('(모임 사진 1)'),),
-                ),
-                const SizedBox(width: 4),
-                Container(
-                  width: 86,
-                  height: 86,
-                  color: const Color(0xffF0F1F5),
-                  child: const Center(child: Text('(모임 사진 2)'),),
-                ),
-              ],
-            ), //건수 등록 이미지
 
-            const SizedBox(height: 18),
+            const SizedBox(height: 5),
+            (meetingImage.isEmpty)
+                ? const SizedBox.shrink()
+                : SizedBox(   //건수 등록 이미지
+                  height: 112,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: meetingImage.length,
+                    itemBuilder: (BuildContext context, int index){
+                      return Container(
+                        margin: const EdgeInsets.fromLTRB(0, 13, 4, 13),
+                        width: 86,
+                        height: 86,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(meetingImage[index], fit: BoxFit.cover)
+                        ),
+                      );
+                    }
+                  ),
+                ),
+
+            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -132,7 +138,14 @@ Widget mainListView(meetList list, WidgetRef ref) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                    onTap: () {}, //댓글창 페이지로 이동
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Comments(
+                                meetNo: list.meetNo,
+                              )));
+                    }, //댓글창 페이지로 이동
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14),
                       height: 30,

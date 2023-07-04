@@ -16,12 +16,12 @@ class meet with _$meet{
     required dynamic userProfileImage, //유저 아이콘
     required String username, //유저 이름
     required String address, //주소
-    required dynamic meetImage, //모임 이미지
+    required List<String> meetImage, //모임 이미지
     required int commentNum, //댓글 수
     required int peopleLimit, //모집 인원 수
     required int peopleNum, //현재 인원 수
-    required dynamic lat, //위도
-    required dynamic lon, //경도
+    required String lat, //위도
+    required String lon, //경도
     required bool personClosed, //모집 완료 여부
     required int fee, //참가비
     required String content, //모임 내용

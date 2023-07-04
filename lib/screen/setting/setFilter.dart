@@ -93,6 +93,7 @@ class FilterState extends ConsumerState<Filter> {
                       fontSize: 14,
                       color: Color(0xff2f3036))),
                 ),
+
                 // 카테고리 리스트 타일
                 Column(
                   children: categories.map((category){
@@ -140,6 +141,7 @@ class FilterState extends ConsumerState<Filter> {
                     );
                   }).toList(),
                 ),
+
                 const SizedBox(height: 48),
                 Container(
                   margin: const EdgeInsets.fromLTRB(24, 0, 24, 10),
@@ -148,11 +150,13 @@ class FilterState extends ConsumerState<Filter> {
                       fontSize: 14,
                       color: Color(0xFF2F3036))),
                 ),
+
                 // 정렬 버튼
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Row(
                     children: [
+                      // 최신순 버튼
                       Expanded(
                         child: SizedBox(
                           height: 46,
@@ -191,6 +195,8 @@ class FilterState extends ConsumerState<Filter> {
                         ),
                       ),
                       const SizedBox(width: 10),
+
+                      // 마감 임박순 버튼
                       Expanded(
                         child: SizedBox(
                           height: 46,
@@ -229,6 +235,8 @@ class FilterState extends ConsumerState<Filter> {
                         ),
                       ),
                       const SizedBox(width: 10),
+
+                      // 참여 높은 순 버튼
                       Expanded(
                         child: SizedBox(
                           height: 46,

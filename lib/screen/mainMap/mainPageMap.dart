@@ -206,6 +206,8 @@ class MainPageMap extends ConsumerWidget {
                     marker.setMap(map);
                   }
                   
+                  marker.setMap(null);
+                  
                   function acceptList(jsonString){
                     const data = JSON.parse(jsonString);
                     const items = data.items;

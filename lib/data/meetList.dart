@@ -16,7 +16,7 @@ class meetList with _$meetList{
     required String username, //유저 이름
     required dynamic lat, //위도
     required dynamic lon, //경도
-    required dynamic meetImage, //모임 이미지
+    required List<String> meetImage, //모임 이미지
     required int commentNum, //댓글 수
     required int peopleLimit, //모집 인원 수
     required int peopleNum, //현재 인원 수

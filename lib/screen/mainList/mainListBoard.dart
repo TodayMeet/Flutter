@@ -44,11 +44,11 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
   //서버에서 listdata 받아오기
   Future<int> postListData(String sort, int pageNo, String categoryName) async {
     try {
-      final url = Uri.parse("http://todaymeet.shop:8080/meet/list/정");
+      final url = Uri.parse("http://todaymeet.shop:8080/meet/list/달서");
       var postBody = {
         "sort": sort,
         "page": pageNo,
-        "categoryName": categoryName
+        "categoryName": [categoryName]
       };
 
       http.Response response = await http.post(
@@ -63,12 +63,10 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
         meetListData
             .forEach((element) => tempList.add(meetList.fromJson(element)));
         return 1;
-        //return 1;
       } else {
         showToast('Data download failed! : ${response.statusCode}');
         print('Failed to post data : ${response.statusCode}');
         return 0;
-        //return 0;
       }
     } catch (e) {
       showToast('Data download failed!!');

@@ -86,7 +86,7 @@ class _MeetingCategoryState extends State<MeetingCategory> {
             onChanged: (newValue){
               setState(() {
                 category["isChecked"] = newValue;
-                meetInfo.categoryNo = category["categoryNo"];
+                meetInfo.categoryName = category["name"];
               });
               categoryText = category["name"];
               categoryChange();

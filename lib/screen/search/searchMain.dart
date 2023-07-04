@@ -40,11 +40,11 @@ class SearchMainState extends ConsumerState<SearchMain> {
   //서버에서 listdata 받아오기
   Future<int> postListData(String sort, int pageNo, String categoryName) async {
     try {
-      final url = Uri.parse("http://todaymeet.shop:8080/meet/list/정");
+      final url = Uri.parse("http://todaymeet.shop:8080/meet/list/달서");
       var postBody = {
         "sort": sort,
         "page": pageNo,
-        "categoryName": categoryName
+        "categoryName": [categoryName]
       };
 
       http.Response response = await http.post(

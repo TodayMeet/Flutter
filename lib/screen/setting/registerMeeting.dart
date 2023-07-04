@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:front/model/bottomBar.dart';
 import '../registerList/meetCategory.dart';
@@ -16,7 +17,7 @@ import '../registerList/meetLocation.dart';
 class MeetingInfo{
   MeetingInfo();
 
-  late int categoryNo;
+  late String categoryName;
   late String address;
   late String lat;
   late String lon;
@@ -26,6 +27,7 @@ class MeetingInfo{
   late int fee;
   late String title;
   late String content;
+  late List<XFile> imagefiles;
   late bool approval;
   late int userNo;
 }

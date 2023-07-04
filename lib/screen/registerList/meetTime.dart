@@ -302,7 +302,7 @@ class _MeetingTimeState extends State<MeetingTime> {
                         _selectedTime.hour,
                         _selectedTime.minute,
                       );
-                      var formattedDate = DateFormat('yyyy-MM-ddTHH:mm:ss').format(dateTime);
+                      var formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
                       meet.meetInfo.time = formattedDate;
 
                       setState(() {

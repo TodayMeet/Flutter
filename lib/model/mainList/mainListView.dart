@@ -10,13 +10,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 import 'package:front/data/meetList.dart';
 import 'package:front/model/mainList/CategoryContainer.dart';
 import 'package:front/model/TextPrint.dart';
+import '../../screen/mainList/Comments.dart';
 
-Widget mainListView(meetList list, WidgetRef ref) {
+Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
   // 카테고리 표시 옆에 완료 텍스트
   final completeContainerProvider = Provider((ref) {
     if(list.peopleClosed /*|| list.timeClosed*/) { // 인원수 마감 or 시간 마감
@@ -36,6 +38,7 @@ Widget mainListView(meetList list, WidgetRef ref) {
     }
   });
   final Widget completeContainer = ref.watch(completeContainerProvider);
+  List<String> meetingImage = list.meetImage;
 
   return Container(
     decoration: BoxDecoration( //컨테이너 테두리 조절
@@ -60,8 +63,6 @@ Widget mainListView(meetList list, WidgetRef ref) {
                   children: [
                     StringText_letterspacing('모집 마감 시간: ', 12, FontWeight.w400, Colors.black, -0.5),
                     StringText_letterspacing(DateFormat('HH:mm').format(list.time), 12, FontWeight.w400, Colors.black, -0.5),
-                    /*StringText_letterspacing(':', 12, FontWeight.w400, Colors.black, -0.5),
-                    StringText_letterspacing(DateFormat('mm').format(list.time), 12, FontWeight.w400, Colors.black, -0.5),*/
                   ],
                 )
               ],
@@ -82,7 +83,7 @@ Widget mainListView(meetList list, WidgetRef ref) {
                   child: Row(
                     children: [
                       ClipOval(
-                        child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+                        child: Image.network(list.userProfileImage,
                             width: 26, height: 26),
                       ),  //사용자 사진
                       const SizedBox(width: 10,),
@@ -99,35 +100,32 @@ Widget mainListView(meetList list, WidgetRef ref) {
                 StringText(list.address, 13, FontWeight.w700, const Color(0xff949596)), //동네 이름
                 StringText(' ', 13, FontWeight.w700, const Color(0xff949596)),
                 StringText(DateFormat('MM-dd | hh:mm').format(list.time), 13, FontWeight.w700, const Color(0xff949596)),
-                /*StringText('-', 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(DateFormat('dd').format(list.time), 13, FontWeight.w700, const Color(0xff949596)), // 모임 날짜
-                StringText(' ', 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(' | ', 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(DateFormat('hh').format(list.time), 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(':', 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(DateFormat('mm').format(list.time), 13, FontWeight.w700, const Color(0xff949596)), //모임 시각*/
               ],
             ), //동네, 날짜, 시간
-            const SizedBox(height: 18),
-            Row(
-              children: [
-                Container(
-                  width: 86,
-                  height: 86,
-                  color: const Color(0xffF0F1F5),
-                  child: const Center(child: Text('(모임 사진 1)'),),
-                ),
-                const SizedBox(width: 4),
-                Container(
-                  width: 86,
-                  height: 86,
-                  color: const Color(0xffF0F1F5),
-                  child: const Center(child: Text('(모임 사진 2)'),),
-                ),
-              ],
-            ), //건수 등록 이미지
 
-            const SizedBox(height: 18),
+            const SizedBox(height: 5),
+            (meetingImage.isEmpty)
+                ? const SizedBox.shrink()
+                : SizedBox(   //건수 등록 이미지
+                  height: 112,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: meetingImage.length,
+                    itemBuilder: (BuildContext context, int index){
+                      return Container(
+                        margin: const EdgeInsets.fromLTRB(0, 13, 4, 13),
+                        width: 86,
+                        height: 86,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(meetingImage[index], fit: BoxFit.cover)
+                        ),
+                      );
+                    }
+                  ),
+                ),
+
+            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -140,9 +138,16 @@ Widget mainListView(meetList list, WidgetRef ref) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                    onTap: () {}, //댓글창 페이지로 이동
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Comments(
+                                meetNo: list.meetNo,
+                              )));
+                    }, //댓글창 페이지로 이동
                     child: Container(
-                      width: 65,
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
                       height: 30,
                       decoration: BoxDecoration( //컨테이너 테두리 조절
                         color: const Color(0xffEBECF0),
@@ -150,9 +155,9 @@ Widget mainListView(meetList list, WidgetRef ref) {
                       ),
                       child: Row(
                         children: [
-                          const SizedBox(width: 14,),
-                          Image.asset('assets/images/List_Icon/List_icon_comments.png',
-                              width: 16, height: 16), //댓글 아이콘
+                          SvgPicture.asset(
+                              "assets/icons/mainList/chatting.svg"
+                          ), //댓글 아이콘
                           const SizedBox(width: 6,),
                           IntText_letterspacing(list.commentNum, 12, FontWeight.w700, const Color(0xffA4A4A7), -0.5),
                         ],
@@ -160,7 +165,7 @@ Widget mainListView(meetList list, WidgetRef ref) {
                     )
                 ), //댓글창
                 Container(
-                  width: 76,
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0),
                   height: 30,
                   decoration: BoxDecoration( //컨테이너 테두리 조절
                     color: const Color(0xffEBECF0),
@@ -168,14 +173,12 @@ Widget mainListView(meetList list, WidgetRef ref) {
                   ),
                   child: Row(
                     children: [
-                      const SizedBox(width: 14,),
-                      Image.asset('assets/images/List_Icon/List_icon_user.png',
-                          width: 16, height: 16), //댓글 아이콘
+                      SvgPicture.asset(
+                          "assets/icons/mainList/people.svg"
+                      ), //사람 아이콘
                       const SizedBox(width: 6,),
-                      //IntText(list.peopleNum, 12, FontWeight.w700, const Color(0xffA4A4A7)),//현재 인원수
                       StringText_letterspacing(
                           '${list.peopleNum} / ${list.peopleLimit}', 12, FontWeight.w700, const Color(0xffA4A4A7), -0.5), // 현재 인원수 / 최대 인원수
-                      //IntText(list.peopleLimit, 12, FontWeight.w700, const Color(0xffA4A4A7)),//최대 인원수
                     ],
                   ),
                 )

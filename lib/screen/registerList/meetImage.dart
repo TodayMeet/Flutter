@@ -28,7 +28,8 @@ class _MeetingImageState extends State<MeetingImage> {
   bool isChecked = false;
   int imageCount = 0;
 
-  final List<File?> _imageFiles = List.filled(5,null);
+  final List<XFile> _imageFiles = [];
+  final List<File> _showFiles = [];
   final _imagePicker = ImagePicker();
 
   Future<void> _pickImages() async{
@@ -38,7 +39,9 @@ class _MeetingImageState extends State<MeetingImage> {
     setState(() {
       for (int i = 0; i < 5; i++) {
         if (imageCount < 5 && i < images.length) {
-          _imageFiles[imageCount++] = File(images[i].path);
+          _imageFiles.add(images[i]);
+          _showFiles.add(File(images[i].path));
+          imageCount++;
         }
       }
     });
@@ -119,14 +122,14 @@ class _MeetingImageState extends State<MeetingImage> {
                         scrollDirection: Axis.horizontal,
                         itemCount: 5,
                         itemBuilder: (BuildContext context, int index){
-                          return _imageFiles[index] != null
+                          return imageCount > index
                               ? Container(
                                 width: imageSize,
                                 height: imageSize,
                                 margin: const EdgeInsets.only(right: 8),
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
-                                    child: Image.file(_imageFiles[index]!,
+                                    child: Image.file(_showFiles[index],
                                         fit: BoxFit.fill
                                     )
                                 ),
@@ -149,7 +152,13 @@ class _MeetingImageState extends State<MeetingImage> {
                     )
                   ),
                   onPressed: (){
+                    meet.meetInfo.imagefiles = [];
                     setState(() {
+                      if (imageCount != 0){
+                        for(int i = 0; i < imageCount; i++){
+                          meet.meetInfo.imagefiles.add(_imageFiles[i]);
+                        }
+                      }
                       enabled = false;
                       isChecked = true;
                     });
@@ -173,14 +182,14 @@ class _MeetingImageState extends State<MeetingImage> {
               scrollDirection: Axis.horizontal,
               itemCount: 5,
               itemBuilder: (BuildContext context, int index){
-                return _imageFiles[index] != null
+                return imageCount > index
                     ? Container(
                         width: imageSize,
                         height: imageSize,
                         margin: const EdgeInsets.only(right: 6),
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: Image.file(_imageFiles[index]!,
+                            child: Image.file(_showFiles[index],
                                 fit: BoxFit.cover
                             )
                         ),

@@ -20,8 +20,8 @@ Widget CommentContainer(BuildContext context, Comment comment, int key) {
       child: Column(
         children: [
           line(key),
-          const SizedBox(height: 16),
-          commentBox(comment),
+          const SizedBox(height: 12),
+          commentBox(comment, context),
         ],
       ),
     );
@@ -37,7 +37,7 @@ Widget CommentContainer(BuildContext context, Comment comment, int key) {
             ),
             const SizedBox(width: 5,),
             Expanded(
-              child: commentBox(comment),
+              child: commentBox(comment, context),
             ),
           ],
         ),
@@ -46,7 +46,7 @@ Widget CommentContainer(BuildContext context, Comment comment, int key) {
   }
 }
 
-Widget commentBox(Comment comment) {
+Widget commentBox(Comment comment, BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -55,19 +55,30 @@ Widget commentBox(Comment comment) {
         children: [
           Row(
             children: [
-              const Icon(Icons.account_circle), //사용자 아이콘
+              //사용자 아이콘
+              ClipOval(
+                child: Image.network(
+                  comment.userProfileImage,
+                  fit: BoxFit.fill,
+                  width: 26,
+                  height: 26,
+                ),
+              ),
               const SizedBox(width: 10,),
+
               StringText(comment.username, 12, FontWeight.w400, Colors.black),
             ],
           ), //사용자 아이콘
           InkWell(
-              onTap: () {},
+              onTap: (){
+                reporting(context);
+              },
               child: SvgPicture.asset(
                 "assets/icons/detail/report.svg"
               )
-          ),
+          ),  //신고하기 아이콘
         ],
-      ),
+     ),
       const SizedBox(height: 10,),
       Container(child: StringText_letterspacing(comment.content, 12, FontWeight.w400, Colors.black, -0.5)),
 
@@ -84,6 +95,202 @@ Widget commentBox(Comment comment) {
       ),
       const SizedBox(height: 12),
     ],
+  );
+}
+
+void reporting(BuildContext context){
+  showModalBottomSheet(
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    context: context,
+    builder: (BuildContext context){
+      return SizedBox(
+        height: 250,
+        child: Column(
+          children: [
+            // 신고하기 제목 창
+            AppBar(
+              toolbarHeight: 50,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              backgroundColor: Colors.white,
+              elevation: 0.0,
+              centerTitle: true,
+              title: const Text('신고하기',
+                  style: TextStyle(
+                      color: Color(0xFF1F2024),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                      letterSpacing: 0.09
+                  )
+              ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: IconButton(
+                    icon: SvgPicture.asset(
+                      "assets/icons/close.svg",
+                      width: 20,
+                      height: 20,
+                    ),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+
+            // 폭력성 버튼
+            reportButton("폭력성", context),
+
+            // 선정성 버튼
+            reportButton("선정성", context),
+
+            // 광고성 버튼
+            reportButton("광고성", context),
+
+            // 사기성 버튼
+            reportButton("사기성", context),
+          ],
+        ),
+      );
+    }
+  );
+}
+
+Widget reportButton(String str, BuildContext context){
+  return SizedBox(
+    height: 50,
+    child: TextButton(
+      style: const ButtonStyle(
+        backgroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+        padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+          EdgeInsets.only(top: 15, bottom: 13),
+        ),
+      ),
+      onPressed: (){
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: ((context){
+            return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              backgroundColor: Colors.white,
+              shadowColor: const Color(0x1A000000),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              content: SizedBox(
+                width: 320,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 36),
+                      child: Text("신고하시겠습니까?",
+                        style: TextStyle(
+                          color: Color(0xFF1F2024),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          letterSpacing: 0.09,
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: Color(0xFFDADADA),
+                            width: 1
+                          )
+                        )
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 160,
+                            height: 56,
+                            child: TextButton(
+                                style: const ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll<Color>(
+                                      Color(0xFF4874EA)
+                                  ),
+                                  shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(16)
+                                      )
+                                    )
+                                  ),
+                                ),
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("네",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    )
+                                )
+                            ),
+                          ),
+
+                          // 아니오 버튼
+                          SizedBox(
+                            width: 160,
+                            height: 56,
+                            child: TextButton(
+                                style: const ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll<Color>(
+                                        Colors.white
+                                    ),
+                                  shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              bottomRight: Radius.circular(16)
+                                          )
+                                      )
+                                  ),
+                                ),
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("아니오",
+                                    style: TextStyle(
+                                      color: Color(0xFF4874EA),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    )
+                                )
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
+        );
+      },
+      child: Center(
+        child: Text(str,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w400,
+            fontSize: 16,
+            letterSpacing: -0.5,
+            ),
+          ),
+      ),
+    ),
   );
 }
 

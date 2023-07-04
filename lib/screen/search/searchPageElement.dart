@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'searchAppbarBody.dart';
+//import 'searchTabbarItem.dart';
+import 'searchMain.dart';
 
 class Banner extends StatefulWidget {
   const Banner({Key? key}) : super(key: key);
@@ -75,7 +76,7 @@ class _BannerState extends State<Banner> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 for (int i = 0; i < pageCount; i++)
-                  _buildPageIndicator((i == currentPage ?.round()))
+                  _buildPageIndicator((i == currentPage .round()))
               ],
             ),
           ),
@@ -106,7 +107,7 @@ class ButtonAll extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedButtonIndex = ref.watch(categoryProvider);
+    final selectedButtonIndex = ref.watch(categoryNumberProvider);
     return SizedBox(
       height: 36,
       child: ElevatedButton(
@@ -127,7 +128,9 @@ class ButtonAll extends ConsumerWidget {
           )),
         ),
         onPressed: () {
-          ref.read(categoryProvider.notifier).state = 0;
+          ref.read(categoryNumberProvider.notifier).state = 0;
+          ref.read(categoryNameProvider.notifier).state = "전체보기";
+          searchrefreshController.requestRefresh();
         },
         child: const Text('전체보기'),
       ),
@@ -140,6 +143,10 @@ class ButtonNotAll extends ConsumerWidget {
   ButtonNotAll({super.key, required this.index});
 
   final int index;
+  final List<String> categoryname = [
+    "맛집", "카페", "주류", "영화", "전시", "공연",
+    "게임", "봉사", "독서", "스터디", "반려동물", "운동"
+  ];
 
   final List<Map> categories = [
     {"name": "맛집", "image_color": "0xFFE91E63",
@@ -170,7 +177,7 @@ class ButtonNotAll extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedButtonIndex = ref.watch(categoryProvider);
+    final selectedButtonIndex = ref.watch(categoryNumberProvider);
     return SizedBox(
       height: 36,
       child: ElevatedButton(
@@ -192,7 +199,9 @@ class ButtonNotAll extends ConsumerWidget {
           )),
         ),
         onPressed: () {
-          ref.read(categoryProvider.notifier).state = index+1;
+          ref.read(categoryNumberProvider.notifier).state = index+1;
+          ref.read(categoryNameProvider.notifier).state = categoryname[index];
+          searchrefreshController.requestRefresh();
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

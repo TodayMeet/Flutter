@@ -16,7 +16,8 @@ _$_meetList _$$_meetListFromJson(Map<String, dynamic> json) => _$_meetList(
       username: json['username'] as String,
       lat: json['lat'],
       lon: json['lon'],
-      meetImage: json['meetImage'],
+      meetImage:
+          (json['meetImage'] as List<dynamic>).map((e) => e as String).toList(),
       commentNum: json['commentNum'] as int,
       peopleLimit: json['peopleLimit'] as int,
       peopleNum: json['peopleNum'] as int,

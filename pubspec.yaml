@@ -41,22 +41,24 @@ dependencies:
   calendar_date_picker2: ^0.5.2
   flutter_riverpod: ^2.1.1
   fluttertoast: ^8.2.1
-  freezed_annotation:
+  freezed_annotation: ^2.2.0
   riverpod_annotation: ^2.1.1
   image_picker: ^0.8.7+5
   pull_to_refresh: ^2.0.0
   dotted_border: ^2.0.0+3
   chat_bubbles: ^1.4.1
-  shared_preferences: ^2.1.1
+  shared_preferences: ^2.1.2
   flutter_svg: ^2.0.5
+  json_annotation: ^4.8.1
+  dio: ^5.2.1+1
   badges: ^3.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.3.3
-  json_serializable:
-  freezed:
+  json_serializable: ^6.6.2
+  freezed: ^2.3.5
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -90,6 +92,7 @@ flutter:
     - assets/images/ProfileImage/
     - assets/icons/
     - assets/icons/detail/
+    - assets/icons/mainList/
     - assets/texts/
 
 

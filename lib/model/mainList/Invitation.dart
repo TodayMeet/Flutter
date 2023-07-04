@@ -57,30 +57,46 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
             blurStyle: BlurStyle.outer,
             blurRadius: 30,
           )
-        ]
+        ],
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(24)
+        )
       ),
       child: Column(
         children: [
-          SizedBox(
-            height: 50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(width: 50,),
-                StringText_letterspacing('초대하기', 18, FontWeight.w700, Colors.black, 0.09),
-                Padding(
-                  padding: const EdgeInsets.only(right: 17),
-                  child: IconButton(
-                    onPressed: (){
-                      Navigator.pop(context);
-                    },
-                    icon: SvgPicture.asset(
-                        "assets/icons/close.svg"
-                    ),
-                  ),
-                ),
-              ],
+          AppBar(
+            elevation: 0,
+            toolbarHeight: 50,
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(24)
+                )
             ),
+            title: const Text(
+              "초대하기",
+              style: TextStyle(
+                color: Color(0xFF1F2024),
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                letterSpacing: 0.09,
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    "assets/icons/close.svg",
+                  ),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
           ), // 바텀 시트 제목, 나가기 버튼
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

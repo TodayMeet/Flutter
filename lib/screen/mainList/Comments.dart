@@ -14,7 +14,7 @@ import 'package:front/data/Comment.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/model/mainList/CommentContainer.dart';
 import '../../data/dummy_meetList.dart';
-import '../../model/mainList/Invitation.dart';
+import '../../model/showtoast.dart';
 
 StateProvider replyProvider = StateProvider<int>((ref)=>-1);
 

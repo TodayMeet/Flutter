@@ -4,7 +4,7 @@
 // 작업자: 정해수
 
 import 'package:flutter/material.dart';
-import 'package:front/model/mainList/Invitation.dart';
+import '../showtoast.dart';
 
 Widget Advertisement(String string) {
   return Column(

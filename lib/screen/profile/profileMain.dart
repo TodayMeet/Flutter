@@ -39,8 +39,8 @@ class _profileMainState extends State<profileMain> {
   int follower = 100;
   int following = 100;
   final List<Map<String, dynamic>> menu = [
-    {"name": '개최한 건수', 'goto': hostEvent()},
-    {"name": '참가한 건수', 'goto': joinEvent()},
+    {"name": '개최한 건수', 'goto': hostEvent(userNo:1)},
+    {"name": '참가한 건수', 'goto': joinEvent(userNo:1)},
     {"name": '비밀번호 변경', 'goto': pwChange()},
     {"name": '차단 관리', 'goto': blockManage()},
     {"name": '관심사', 'goto': profileFavorite()},

@@ -3,9 +3,6 @@
 // 최종 수정일 : 2023.6.30
 // 작업자 : 김혁
 
-// 추가 작업 예정 사항
-// 서버 연결
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

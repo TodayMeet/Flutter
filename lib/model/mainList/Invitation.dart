@@ -7,9 +7,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:front/model/TextPrint.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:front/model/TextPrint.dart';
+import '../showtoast.dart';
 
 int total = 0;
 
@@ -173,14 +174,4 @@ Widget line() {
     thickness: 1.0,
     height: 1,
   );
-}
-
-void showToast(String message) {
-   Fluttertoast.showToast(
-      msg: message,
-      fontSize: 15,
-      backgroundColor: Colors.black54,
-      textColor: Colors.white,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM);
 }

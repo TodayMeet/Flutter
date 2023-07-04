@@ -17,6 +17,8 @@ import '../../data/dummy_meetList.dart';
 import '../../model/showtoast.dart';
 
 StateProvider replyProvider = StateProvider<int>((ref)=>-1);
+GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+late FocusNode textFieldFocusNode;
 
 class Comments extends ConsumerStatefulWidget {
   const Comments({Key? key, required this.meetNo}) : super(key: key);
@@ -29,6 +31,7 @@ class Comments extends ConsumerStatefulWidget {
 
 class _CommentsState extends ConsumerState<Comments> {
   RefreshController refreshController = RefreshController(initialRefresh: true);
+  late TextEditingController textEditingController = TextEditingController();
 
   List<Comment> comments = []; //서버에서 받아온 리스트
   List<Comment> sortedComments = []; //정렬된 리스트
@@ -37,6 +40,13 @@ class _CommentsState extends ConsumerState<Comments> {
   @override
   void initState() {
     super.initState();
+    textFieldFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    textFieldFocusNode.dispose();
+    super.dispose();
   }
 
   //댓글 데이터 불러오기
@@ -75,6 +85,7 @@ class _CommentsState extends ConsumerState<Comments> {
         "parentNo": commentNo,
         "content": Content
       };
+      print(postBody);
 
       http.Response response = await http.post(
         url,
@@ -83,7 +94,7 @@ class _CommentsState extends ConsumerState<Comments> {
       );
       if (response.statusCode == 200) {
         print(response.body);
-        refreshController.requestRefresh();
+        await refreshController.requestRefresh();
       } else {
         print('Data update failed! : ${response.statusCode}');
         showToast('Data update failed!');
@@ -116,121 +127,140 @@ class _CommentsState extends ConsumerState<Comments> {
   Widget build(BuildContext context) {
     sortedComments = sortComments(comments);
 
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          elevation: 0,
-          title: const Text(
-            "댓글",
-            style: TextStyle(
-                fontWeight: FontWeight.w700, fontSize: 16, color: Colors.black),
-          ),
+    return ScaffoldMessenger(
+      key: scaffoldKey,
+      child: Scaffold(
           backgroundColor: Colors.white,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              color: Colors.black,
-              icon: SvgPicture.asset("assets/icons/back_icon.svg")),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 0),
-          child: SmartRefresher(
-            enablePullDown: true,
-            enablePullUp: false,
-            onRefresh: () async {
-              int complete = await getCommentData();
-              if (complete == 1) {
-                showToast("새로고침 완료");
-              } else {
-                showToast("새로고침 실패");
-              }
-              setState(() {});
-              refreshController.refreshCompleted();
-            },
-            controller: refreshController,
-            child: ListView(
-              children: comments.asMap().entries.map((c) {
-                return Column(
-                  children: [
-                    CommentContainer(context, c.value, c.key),
-                  ],
-                );
-              }).toList(),
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            elevation: 0,
+            title: const Text(
+              "댓글",
+              style: TextStyle(
+                  fontWeight: FontWeight.w700, fontSize: 16, color: Colors.black),
             ),
+            backgroundColor: Colors.white,
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                color: Colors.black,
+                icon: SvgPicture.asset("assets/icons/back_icon.svg")),
           ),
-        ),
-        bottomSheet: Container(
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color: Color(0x1A000000),
-                  blurRadius: 8,
-                  offset: Offset(0, -4),
-                  blurStyle: BlurStyle.outer)
-            ],
-            color: Colors.white,
+          body: Builder(
+            builder: (context) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0, vertical: 0),
+                child: SmartRefresher(
+                  enablePullDown: true,
+                  enablePullUp: false,
+                  onRefresh: () async {
+                    int complete = await getCommentData();
+                    if (complete == 1) {
+                      showToast("새로고침 완료");
+                    } else {
+                      showToast("새로고침 실패");
+                    }
+                    setState(() {});
+                    refreshController.refreshCompleted();
+                  },
+                  controller: refreshController,
+                  child: ListView(
+                    children: comments
+                        .asMap()
+                        .entries
+                        .map((c) {
+                      return Column(
+                        children: [
+                          CommentContainer(context, c.value, c.key, ref, false),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                ),
+              );
+            },
           ),
-          padding: const EdgeInsets.all(12),
-          width: double.infinity,
-          child: Row(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: 46,
-                  child: TextField(
-                    onChanged: (text) {
-                      setState(() {
-                        Content = text;
-                        print(Content);
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                      filled: true,
-                      fillColor: Color(0xffF5F6FA),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
-                          color: Color(0xffF5F6FA),
+          bottomSheet: Container(
+            decoration: const BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: Color(0x1A000000),
+                    blurRadius: 8,
+                    offset: Offset(0, -4),
+                    blurStyle: BlurStyle.outer)
+              ],
+              color: Colors.white,
+            ),
+            padding: const EdgeInsets.all(12),
+            width: double.infinity,
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 46,
+                    child: TextField(
+                      focusNode: textFieldFocusNode,
+                      controller: textEditingController,
+                      onChanged: (text) {
+                        setState(() {
+                          Content = text;
+                        });
+                      },
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                        filled: true,
+                        fillColor: Color(0xffF5F6FA),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(
+                            color: Color(0xffF5F6FA),
+                          ),
                         ),
+                        hintStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                          color: Color(0xFFC8C8CB),
+                          letterSpacing: -0.5,
+                        ),
+                        hintText: '댓글을 작성해주세요.',
                       ),
-                      hintStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                        color: Color(0xFFC8C8CB),
-                        letterSpacing: -0.5,
-                      ),
-                      hintText: '댓글을 작성해주세요.',
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                width: 4,
-              ),
-              SizedBox(
-                width: 56,
-                height: 46,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12))),
-                      backgroundColor: const MaterialStatePropertyAll<Color>(
-                        Color(0xFF4874EA)
-                      )
-                    ),
-                    onPressed: () {
-                      addComment(ref.watch(replyProvider.notifier).state);
-                    },
-                    child: StringText_letterspacing(
-                        '전송', 13, FontWeight.w700, Colors.white, -0.5)),
-              ),
-            ],
-          ),
-        ));
+                const SizedBox(
+                  width: 4,
+                ),
+                SizedBox(
+                  width: 56,
+                  height: 46,
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                          shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12))),
+                        backgroundColor: const MaterialStatePropertyAll<Color>(
+                          Color(0xFF4874EA)
+                        )
+                      ),
+                      onPressed: () {
+                        if(Content != "") {
+                          print(Content);
+                          addComment(ref.watch(replyProvider.notifier).state);
+                          setState(() {
+                            textEditingController.text = "";
+                            FocusScope.of(context).unfocus();
+                          });
+                        }
+                      },
+                      child: StringText_letterspacing(
+                          '전송', 13, FontWeight.w700, Colors.white, -0.5)),
+                ),
+              ],
+            ),
+          )),
+    );
   }
 }

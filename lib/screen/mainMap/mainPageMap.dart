@@ -19,7 +19,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front/screen/mainList/mainListBoard.dart';
 import '../setting/setlocation.dart';
 import '../../model/setting/location.dart';
-import '../../model/bottomBar.dart';
 import '../../model/setting/mapClass.dart';
 import '../../data/apiKey.dart';
 
@@ -236,7 +235,6 @@ class MainPageMap extends ConsumerWidget {
           }
         },
       )),
-      bottomNavigationBar: const BottomAppBar(child: BottomBar()),
       floatingActionButton: Wrap(
         direction: Axis.vertical,
         children: <Widget>[

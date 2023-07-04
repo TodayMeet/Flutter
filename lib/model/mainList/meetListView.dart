@@ -62,6 +62,7 @@ Widget ListViewer(BuildContext context, WidgetRef ref, meetList List) {
 Widget meetListViews(BuildContext context, WidgetRef ref, List<meetList> viewList) {
   return ListView(// 탐색 화면
     physics: const ClampingScrollPhysics(),
+    shrinkWrap: true,
     children: [
       const element.Banner(),
 
@@ -182,7 +183,7 @@ Widget meetListViews(BuildContext context, WidgetRef ref, List<meetList> viewLis
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: SizedBox(
-          height: 154,
+          height: 157,
           child: ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),

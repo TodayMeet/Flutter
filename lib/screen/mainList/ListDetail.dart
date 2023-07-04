@@ -767,7 +767,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   children: Meet.comments.asMap().entries.map((c) {
                     return Column(
                       children: [
-                        CommentContainer(context, c.value, c.key),
+                        CommentContainer(context, c.value, c.key, ref, true),
                       ],
                     );
                   }).toList(),

@@ -18,7 +18,6 @@ import '../mainMap/mainPageMap.dart';
 import '../setting/setFilter.dart';
 import '../setting/setlocation.dart';
 import 'package:front/data/meetList.dart';
-import 'package:front/model/bottomBar.dart';
 
 RefreshController refreshController = RefreshController(initialRefresh: true);
 late StateNotifierProvider<meetListNotifier, List<meetList>> meetListProvider;
@@ -132,7 +131,6 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
         backgroundColor: Colors.white,
         elevation: 1,
       ),
-      bottomNavigationBar: const BottomAppBar(child: BottomBar()),
       body: SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,

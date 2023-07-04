@@ -39,11 +39,11 @@ class _SearchTabbarViewItemState extends ConsumerState<SearchTabbarViewItem> {
   //서버에서 listdata 받아오기
   Future<int> postListData(String sort, int pageNo, String categoryName) async {
     try {
-      final url = Uri.parse("http://todaymeet.shop:8080/meet/list/달서");
+      final url = Uri.parse("http://todaymeet.shop:8080/meet/titlelist/${widget.searchword}");
       var postBody = {
         "sort": sort,
         "page": pageNo,
-        "categoryName": [categoryName]
+        "categoryName": categoryName
       };
 
       http.Response response = await http.post(
@@ -107,7 +107,7 @@ class _SearchTabbarViewItemState extends ConsumerState<SearchTabbarViewItem> {
       enablePullDown: true,
       onRefresh: () async {
         postNo = 0;
-        int complete = await postListData("최신순", postNo++, widget.categoryName);
+        int complete = await postListData("참여높은 순", postNo++, widget.categoryName);
         ref.read(meetListProvider.notifier).clearList();
         tempList.forEach(
                 (element) => ref.read(meetListProvider.notifier).addList(element));
@@ -119,7 +119,7 @@ class _SearchTabbarViewItemState extends ConsumerState<SearchTabbarViewItem> {
         searchrefreshController.refreshCompleted();
       },
       onLoading: () async {
-        int complete = await postListData("최신순", postNo++, widget.categoryName);
+        int complete = await postListData("참여높은 순", postNo++, widget.categoryName);
         tempList.forEach(
                 (element) => ref.read(meetListProvider.notifier).addList(element));
         if (complete == 1) {

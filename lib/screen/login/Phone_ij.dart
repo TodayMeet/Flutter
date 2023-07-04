@@ -8,6 +8,8 @@
 import 'dart:convert';
 
 
+import 'package:front/model/UI/widget/text/textfieldTitle.dart';
+
 import '../../data/designconst/constants.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
@@ -113,22 +115,8 @@ class _Phone_ijState extends State<Phone_ij> {
         body: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(children: [
-            Row(children: [
-              Text(
-                "휴대전화번호",
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                "*",
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14.0,
-                ),
-              )
-            ]),
+            textfieldTitle(title: '휴대전화번호', star: true),
+            SizedBox(height: 8,),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 40.0,
@@ -150,7 +138,6 @@ class _Phone_ijState extends State<Phone_ij> {
                       },
                       style: TextStyle(fontSize: 13.0),
                       decoration: InputDecoration(
-
                         hintText: '휴대전화번호를 입력해주세요',
                         hintStyle: TextStyle(color: hinttextColor, fontSize: 13.0),
                         border: InputBorder.none,
@@ -158,27 +145,55 @@ class _Phone_ijState extends State<Phone_ij> {
                     ),
                   ),
                   SizedBox(width: 16.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (!_isCountdownStarted) {
-                        startCountdown();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.horizontal(
-                          right: Radius.circular(8.0),
+                  Container(
+                    width: 110,
+                    height: 46,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (!_isCountdownStarted) {
+                          startCountdown();
+                        }
+                      },
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            // 버튼 눌려있을때는 높이 0으로 해놓고
+                            return 0;
+                          }
+                          return 0.5; // 이건 디폴트
+                        }),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.horizontal(right: Radius.circular(12.0)),
+                          ),
                         ),
+                        overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            // 버튼이 눌려 있을 때의 배경색
+                            //color: rgb(72,116,234);
+                            return Colors.black54; //
+                          }
+                          return Colors.black; // 기본 배경색
+                        }),
                       ),
-                      fixedSize: Size(107, 46),
-                      backgroundColor: Colors.black,
-                    ),
-                    child: Text(
-                      '인증번호 요청',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+
+                      // style: ElevatedButton.styleFrom(
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.horizontal(
+                      //       right: Radius.circular(8.0),
+                      //     ),
+                      //   ),
+                      //   fixedSize: Size(107, 46),
+                      //   backgroundColor: Colors.black,
+                      // ),
+                      child: Text(
+                        '인증번호 요청',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -217,32 +232,50 @@ class _Phone_ijState extends State<Phone_ij> {
                   Text(
                     '$minutes:${seconds.toString().padLeft(2, '0')}',
                     style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
                         color: Colors.black),
                   ),
                   SizedBox(width: 13.0),
-                  ElevatedButton(
 
-                    onPressed: () {
-                      onebutton.certificationSuccessDialog(context);
-                      //인증번호 틀리면 -> _login_fail_incorrectij
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.horizontal(
-                          right: Radius.circular(9),
+                  Container(
+                    width: 110,
+                    height: 46,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        onebutton.certificationSuccessDialog(context);
+                      },
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            // 버튼 눌려있을때는 높이 0으로 해놓고
+                            return 0;
+                          }
+                          return 0.5; // 이건 디폴트
+                        }),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.horizontal(right: Radius.circular(12.0)),
+                          ),
+                        ),
+                        overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            // 버튼이 눌려 있을 때의 배경색
+                            //color: rgb(72,116,234);
+                            return Colors.black54; //
+                          }
+                          return Colors.black; // 기본 배경색
+                        }),
+                      ),
+                      child: Text(
+                        '확인',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
                         ),
                       ),
-                      fixedSize: Size(107, 46),
-                      backgroundColor: Colors.black,
-                    ),
-                    child: Text(
-                      '확인',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
                     ),
                   ),
                 ],

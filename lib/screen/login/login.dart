@@ -1,3 +1,4 @@
+import '../../data/designconst/constants.dart';
 import '../../screen/dialog/dialoglist.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,14 +45,19 @@ class _loginState extends State<login> {
       // 성공적으로 서버로 전송됨
       print('로그인 성공');
       final responseData = jsonDecode(response.body);
-      Navigator.pop(context);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MainPageMap()));
-    } else {
-      print('로그인 실패. 상태 코드: ${response.statusCode}');
-
+    }else if(_text==null ){
+      onebutton.noInputIDDialog(context);
     }
-  }
+    else if(_text1 ==null){
+      onebutton.noInputPwDialog(context);
+    }
+    else {
+      print('로그인 실패. 상태 코드: ${response.statusCode}');
+      onebutton.incorrectInputDialog(context);
+    }
+  } //서버로 전송
 
   @override
   Widget build(BuildContext context) {
@@ -117,12 +123,17 @@ class _loginState extends State<login> {
                           fillColor: Color(0xFFF5F6FA),
                           suffixIcon: IconButton(
                             onPressed: () {
-                              obscureText = !obscureText;
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
                             },
-                            icon: Icon(
-                              obscureText ? Icons.visibility : Icons.visibility_off,
-                              color: Colors.grey,
-                            ),
+                            icon: SvgPicture.asset(
+                              obscureText
+                              ?   'assets/icons/detail/Visibility.svg'
+                              :   'assets/icons/detail/Visibility_off.svg',
+                              color: Color(0xFFD0D0D0),
+                            )
+
                           ),
                         ),
                       ),
@@ -132,7 +143,21 @@ class _loginState extends State<login> {
 
                     SizedBox(height: 24.0,),
 
-                    loginButton(),//로그인
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 56.0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      sendCredentialsToServer();
+                    },
+                    child: Text(
+                      '로그인',
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    ),
+                    style: CustomButtonStyle(Colors.black, Colors.black87, Colors.transparent),
+                  ),
+                ),//로그인
 
                     SizedBox(height: 24.0,),
 
@@ -174,52 +199,30 @@ class divideLine extends StatelessWidget {
   }
 }
 
-class loginButton extends StatelessWidget {
-  const loginButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: 56.0,
-      child: ElevatedButton(
-        onPressed: () {
-          // sendCredentialsToServer();
-        },
-        child: Text(
-          '로그인',
-          style:
-              TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        ),
-        style: ButtonStyle(
-          elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed)) {
-              // 버튼 눌려있을때는 높이 0으로 해놓고
-              return 0;
-            }
-            return 0.5; // 이건 디폴트
-          }),
-          backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed)) {
-              // 버튼이 눌려 있을 때의 배경색
-              //color: rgb(72,116,234);
-              return Colors.black45;//검정색 버튼 눌려졌을때 색깔 변경 //
-            }
-            return Colors.black; // 기본 배경색
-          }),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-          ),
-          overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-        ),
-      ),
-    );
-  }
-}
+// class loginButton extends StatelessWidget {
+//   const loginButton({
+//     super.key,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       width: MediaQuery.of(context).size.width,
+//       height: 56.0,
+//       child: ElevatedButton(
+//         onPressed: () {
+//           sendCredentialsToServer();
+//         },
+//         child: Text(
+//           '로그인',
+//           style:
+//               TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+//         ),
+//         style: CustomButtonStyle(Colors.black, Colors.black87, Colors.transparent),
+//       ),
+//     );
+//   }
+// }
 
 class googleloginbutton extends StatelessWidget {
   const googleloginbutton({
@@ -246,15 +249,7 @@ class googleloginbutton extends StatelessWidget {
             ],
           ),
         ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          primary: Color(0xFFFFF56),
-          shape: RoundedRectangleBorder(
-            side: BorderSide(color: Color(0xFFCBCBCB)),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-        ),
+        style: CustomButtonStyle(Colors.white,Color(0xFFF0F0F0),Color(0xFFCBCBCB)),
       ),
     );
   }
@@ -284,13 +279,15 @@ class naverloginbutton extends StatelessWidget {
             ),
           ],
         ),
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          primary: Color(0xFF02C63C),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-        ),
+        // style: ElevatedButton.styleFrom(
+        //   elevation: 0,
+        //   primary: Color(0xFF02C63C),
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(12.0),
+        //   ),
+        // ),
+        style: CustomButtonStyle(Color(0xFF02C63C), Color(0xFF01B237), Colors.transparent),
+
       ),
     );
   }
@@ -320,13 +317,7 @@ class kakaologinbutton extends StatelessWidget {
             ),
           ],
         ),
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          primary: Color(0xFFFFE711),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-        ),
+        style: CustomButtonStyle(Color(0xFFFFE711), Color(0xFFF7E500), Colors.transparent),
       ),
     );
   }
@@ -358,6 +349,21 @@ class signupbutton extends StatelessWidget {
               fontSize: 14,
               color: Color(0xFF71727A),
             ),
+          ),
+          style: ButtonStyle(
+            elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed)) {
+                return 0;
+              }
+              return 0;
+            }),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed)) {
+                return Colors.white;
+              }
+              return Colors.white;
+            }),
+            overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
           ),
         ),
       ),
@@ -430,11 +436,13 @@ class logoImage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(40.0),
       child: Container(
-        width: 121,
-        height: 84,
+        width: 375,
+        height: 334,
         child: Center(
           child: SvgPicture.asset(
             "assets/images/LoginImage/logoimage.svg",
+            width: 121,
+            height: 84,
             fit: BoxFit.cover,
           ),
         ),

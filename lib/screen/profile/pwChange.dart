@@ -86,13 +86,15 @@ class _pwChangeState extends State<pwChange> {
                       fillColor: _textfieldcolor,
                       suffixIcon: IconButton(
                         onPressed: () {
-                          obscureText1 = !obscureText1;
+                          setState(() {
+                            obscureText1 = !obscureText1;
+                          });
                         },
-                        icon: Icon(
-                          obscureText1
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: _iconcolor,
+                        icon: SvgPicture.asset(
+                          obscureText1 ? 'assets/icons/detail/Visibility.svg' : 'assets/icons/detail/Visibility.svg',
+                          width: 16,
+                          height: 16,
+                          color: Color(0xFFD0D0D0),
                         ),
                       ),
                     ),
@@ -130,14 +132,16 @@ class _pwChangeState extends State<pwChange> {
                       fillColor: Color(0xFFF5F6FA),
                       suffixIcon: IconButton(
                         onPressed: () {
-                          obscureText1 = !obscureText1;
+                          setState(() {
+                            obscureText2 = !obscureText2;
+                          });
                         },
-                        icon: Icon(
-                          obscureText1
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: _iconcolor,
-                        ),
+                          icon: SvgPicture.asset(
+                            obscureText2
+                                ?   'assets/icons/detail/Visibility.svg'
+                                :   'assets/icons/detail/Visibility_off.svg',
+                            color: Color(0xFFD0D0D0),
+                          )
                       ),
                     ),
                   ),
@@ -178,10 +182,8 @@ class _pwChangeState extends State<pwChange> {
                           });
                         },
                         icon: SvgPicture.asset(
-                          obscureText3 ? visible : Camera,
-                          width: 16,
-                          height: 16,
-                          color: Colors.red,
+                          obscureText3 ? 'assets/icons/detail/Visibility.svg' : 'assets/icons/detail/Visibility_off.svg',
+                          color: Color(0xFFD0D0D0),
                         ),
                       ),
                     ),

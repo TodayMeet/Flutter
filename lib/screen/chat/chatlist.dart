@@ -35,15 +35,20 @@ class _chatlistState extends State<chatlist> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(
+      appBar:CustomAppBar(
         title: '참여한 대화방',
-        leadingWidget: SvgButton(imagePath: backarrow, onPressed: (){
-        Navigator.pop(context);
-        Navigator.push(context,
-        MaterialPageRoute(builder: (context) => profileMain()));
-      }),
+        automaticallyImplyLeading: false,
+        actionWidget: SvgButton(imagePath: 'assets/icons/detail/alarm.svg',
+            onPressed: ()
+            {Navigator.push(context,
+                MaterialPageRoute(builder: (context) => alarm()));}
+
+        ),
+
 
       ),
+
+
 
       // actionWidget: actions[
       // IconButton(
@@ -71,7 +76,7 @@ class _chatlistState extends State<chatlist> {
       //         Icons.notifications_none,
       //         color: Colors.black,
       //       ))
-      // ],
+      // ],profileTestImage[index]
       body: ListView.builder(
         itemCount: chatList.length,
         itemBuilder: (context, index) {
@@ -79,11 +84,16 @@ class _chatlistState extends State<chatlist> {
           final message =
               widget.lastMessages != null ? widget.lastMessages!.content : '';
           return ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.white,
-                child: ClipOval(child: Image.asset(profileTestImage[index],fit: BoxFit.cover,))
-                // Image.asset('assets/images/avatar.png'),
-                ),
+            leading: Container(
+              padding: EdgeInsets.zero,
+              width: 90,
+              height: 90,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    image:AssetImage(profileTestImage[index]), fit: BoxFit.cover),
+              ),
+            ),
             title: Text(chatItem),
             subtitle: Text(lastMessages[index]), //이미지 넣어야함
             onTap: () {

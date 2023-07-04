@@ -28,7 +28,7 @@ class ChatMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment:
-          isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -63,7 +63,7 @@ class ChatMessage extends StatelessWidget {
     final formattedTime = DateFormat('aa hh:mm').format(now);
     final timeSuffix = now.hour >= 12 ? '오후' : '오전';
     final replacedTime =
-        formattedTime.replaceAll('AM', '오전').replaceAll('PM', '오후');
+    formattedTime.replaceAll('AM', '오전').replaceAll('PM', '오후');
     return replacedTime;
   }//시간 형식 지정
 }
@@ -123,25 +123,24 @@ class _ChatPageState extends State<ChatPage> {
         resizeToAvoidBottomInset: true,
         appBar: CustomAppBar(
             title: appbarText,
-        leadingWidget: SvgButton(imagePath: backarrow, onPressed: (){}),
-        actionWidget: badges.Badge(
-          badgeStyle: badges.BadgeStyle(
-            badgeColor: Color(0xFFB3261E),
-          ),
-          position: badges.BadgePosition.topEnd(top: 5, end: 7.7),
-          badgeContent: Center(child: Text(users.length.toString(),style: TextStyle(color: Colors.white,fontSize: 14,fontFamily: 'Roboto'),)),
-          child: Center(child: xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();})),
-        )
+            leadingWidget: SvgButton(imagePath: backarrow, onPressed: (){}),
+            actionWidget: badges.Badge(
+              badgeStyle: badges.BadgeStyle(
+                badgeColor: Color(0xFFB3261E),
+              ),
+              position: badges.BadgePosition.topEnd(top: 5, end: 7.7),
+              badgeContent: Center(child: Text(users.length.toString(),style: TextStyle(color: Colors.white,fontSize: 14,fontFamily: 'Roboto'),)),
+              child: Center(child: xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();})),
+            )
 
 
-        // xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();}),
+          // xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();}),
         ),
         endDrawer: Drawer(
           child: ListView(
-
             children: [
               Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
                 height: 50,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -150,19 +149,24 @@ class _ChatPageState extends State<ChatPage> {
                     Spacer(),
                     SizedBox(width: 8,),
                     Text(users.length.toString()+ '명',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w700,color: Color(0xFF757575)),),
-
                   ],
                 ),
               ),
               Column(
                 children: users.map((users){
                   return ListTile(
-                      leading: Container(
-                          child: Image.asset(users['image']),
-
-                      ),
-                      title: Text(users['name']),
-                      // onTap: () {},
+                    leading: Container(
+                      child: Image.asset(users['image'],
+                      width: 26,
+                      height: 26,),
+                    ),
+                    title: Text(users['name'],style: TextStyle(fontSize: 12.0),),
+                    // trailing: Container(
+                    //   // width: users['isFollow'] ? 56 : 76,
+                    //   // height: 30,
+                    //   child: ElevatedButton(
+                    //       onPressed: (){}, ),
+                    // ),
 
 
                   );
@@ -186,8 +190,7 @@ class _ChatPageState extends State<ChatPage> {
                   separatorBuilder: (context, index) => SizedBox(height: 5),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(0),
+              Container(
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: 70,
@@ -196,25 +199,29 @@ class _ChatPageState extends State<ChatPage> {
                     color: Colors.white,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.all(12.0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.transparent),
-                              color: Color(0xFFF5F6FA),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: TextField(
-                                controller: textEditingController,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: '메시지를 입력해주세요.',
-                                ),
+                        Container(
+                          width: MediaQuery.of(context).size.width-86,
+                          height: 46,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.transparent),
+                            color: Color(0xFFF5F6FA),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: TextField(
+                              textAlignVertical: TextAlignVertical.center,
+                              controller: textEditingController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: '메시지를 입력해주세요.',
+                                hintStyle: TextStyle(fontSize: 13,color: Color(0xFFC8C8CB)),
+
                               ),
                             ),
                           ),
@@ -222,7 +229,8 @@ class _ChatPageState extends State<ChatPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 4.0),
                           child: Container(
-                            height: 50,
+                            width: 56,
+                            height: 46,
                             child: ElevatedButton(
                               onPressed: () {
                                 _sendMessage();
@@ -270,7 +278,6 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
-
 
 
 

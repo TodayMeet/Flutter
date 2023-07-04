@@ -131,7 +131,33 @@ class onebutton{
 
       ),
     );
-  }
+  } //아이디 비밀번호 잘못입력
+  static void noInputIDDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '아이디를 입력해주세요',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  } //아이디 입력x
+  static void noInputPwDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '비밀번호를 입력해주세요',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  } //비밀번호 입력x
   static void alreadyphoneDialog(BuildContext context){
     showDialog(
       context: context,
@@ -250,4 +276,57 @@ class onebutton{
       ),
     );
   }
+  static void checkEssentialDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '필수동의항목에 체크해주세요.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  } //필수항목 동의 둘다 안함
+  static void oneWordNameDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '2자 이상 입력해주세요.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  }
+  static void tenWordNameDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '10자 이하로 입력해주세요.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  }
+  static void KoEnNumDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '한글 영문 숫자만 입력 가능합니다.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  }
+
 }

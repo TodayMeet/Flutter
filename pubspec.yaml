@@ -51,6 +51,7 @@ dependencies:
   flutter_svg: ^2.0.5
   json_annotation: ^4.8.1
   dio: ^5.2.1+1
+  badges: ^3.1.1
 
 dev_dependencies:
   flutter_test:
@@ -92,6 +93,7 @@ flutter:
     - assets/icons/
     - assets/icons/detail/
     - assets/icons/mainList/
+    - assets/texts/
 
 
   fonts:
@@ -101,7 +103,12 @@ flutter:
           weight: 700
         - asset: assets/fonts/Pretendard-Regular.otf
           weight: 400
-
+    - family: xeicon
+      fonts:
+        - asset: assets/fonts/xeicon.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

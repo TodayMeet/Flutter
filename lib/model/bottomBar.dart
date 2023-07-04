@@ -20,6 +20,8 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
+  // int _selectedIndex = 0;
+  // final List<Widget> _pageOrder =
   @override
   Widget build(BuildContext context) {
     return Row(

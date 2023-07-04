@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:front/data/designconst/constants.dart';
+import 'package:front/model/UI/widget/button/svgButton.dart';
+import 'package:front/model/UI/widget/customAppBar.dart';
 import 'package:front/screen/alarm/alarm.dart';
 import 'package:front/screen/chat/chatpage.dart';
 
+import '../../model/bottomBar.dart';
 import '../mainMap/mainPageMap.dart';
+import '../profile/profileMain.dart';
 
 class chatlist extends StatefulWidget {
   const chatlist({Key? key, this.lastMessages}) : super(key: key);
@@ -27,39 +32,46 @@ class _chatlistState extends State<chatlist> {
   ];
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPageMap()));
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            )),
-        elevation: 1,
-        backgroundColor: Colors.white,
-        title: Text(
-          '참여한 대화방',
-          style: TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => alarm()));
-              },
-              icon: Icon(
-                Icons.notifications_none,
-                color: Colors.black,
-              ))
-        ],
+      appBar: CustomAppBar(
+        title: '참여한 대화방',
+        leadingWidget: SvgButton(imagePath: backarrow, onPressed: (){
+        Navigator.pop(context);
+        Navigator.push(context,
+        MaterialPageRoute(builder: (context) => profileMain()));
+      }),
+
       ),
+
+      // actionWidget: actions[
+      // IconButton(
+      //     onPressed: () {
+      //       Navigator.push(
+      //           context, MaterialPageRoute(builder: (context) => alarm()));
+      //     },
+      //     icon: Icon(
+      //       Icons.notifications_none,
+      //       color: Colors.black,
+      //     ))
+      // ],
+
+
+
+
+
+      // actions: [
+      //   IconButton(
+      //       onPressed: () {
+      //         Navigator.push(
+      //             context, MaterialPageRoute(builder: (context) => alarm()));
+      //       },
+      //       icon: Icon(
+      //         Icons.notifications_none,
+      //         color: Colors.black,
+      //       ))
+      // ],
       body: ListView.builder(
         itemCount: chatList.length,
         itemBuilder: (context, index) {
@@ -81,6 +93,7 @@ class _chatlistState extends State<chatlist> {
           );
         },
       ),
+      bottomNavigationBar: const BottomAppBar(child: BottomBar()),
     );
     ;
   }

@@ -37,6 +37,7 @@ class _accountsettingState extends State<accountsetting> {
   bool isDuplicate = false;
   bool isDuplicatepw = false;
   bool obscureText = true;
+  bool obscureText1 = true;
   final _emailController = TextEditingController();
   final _pwordController = TextEditingController();
 
@@ -114,6 +115,7 @@ class _accountsettingState extends State<accountsetting> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
+
         appBar: CustomAppBar(
           leadingWidget: SvgButton(
             imagePath: backarrow,
@@ -200,7 +202,7 @@ class _accountsettingState extends State<accountsetting> {
                     ),
                     child: TextField(
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: obscureText,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                           vertical: 12.0,
@@ -214,13 +216,15 @@ class _accountsettingState extends State<accountsetting> {
                         border: InputBorder.none,
                         suffixIcon: IconButton(
                           onPressed: () {
-                            obscureText = !obscureText;
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
                           },
                           icon: Icon(
                             obscureText
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: Colors.red,
+                            color: Color(0xFFD0D0D0),
                           ),
                         ),
                       ),
@@ -255,7 +259,7 @@ class _accountsettingState extends State<accountsetting> {
                         color: textfieldColor),
                     child: TextField(
                       controller: _confirmPasswordController,
-                      obscureText: true,
+                      obscureText: obscureText1,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                           vertical: 12.0,
@@ -268,13 +272,15 @@ class _accountsettingState extends State<accountsetting> {
                         ),
                         suffixIcon: IconButton(
                           onPressed: () {
-                            obscureText = !obscureText;
+                            setState(() {
+                              obscureText1 = !obscureText1;
+                            });
                           },
                           icon: Icon(
-                            obscureText
+                            obscureText1
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: Colors.black,
+                            color: Color(0xFFD0D0D0),
                           ),
                         ),
                         border: InputBorder.none,

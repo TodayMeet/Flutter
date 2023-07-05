@@ -5,19 +5,26 @@
 //추후 작업예정사항
 // 화면 전체 수정
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:front/data/designconst/constants.dart';
-import '../../model/UI/widget/button/blueButton.dart';
-import '../../screen/dialog/dialoglist.dart';
+import 'dart:convert';
 
+
+import 'package:front/model/UI/widget/text/textfieldTitle.dart';
+import 'package:front/screen/login/idFindResult.dart';
 import 'package:front/screen/login/pwFindResult.dart';
 
+import '../../data/designconst/constants.dart';
+import '../../model/UI/widget/button/blueButton.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/customAppBar.dart';
+import '../../screen/dialog/dialoglist.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
+import '../profile/profileMain.dart';
 import 'login.dart';
 import 'accountsetting.dart';
 import 'dart:async';
-
 
 
 class pwFind extends StatefulWidget {
@@ -26,17 +33,75 @@ class pwFind extends StatefulWidget {
 }
 
 class _pwFindState extends State<pwFind> {
-  final _idController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+
+
   final TextEditingController _textEditingController = TextEditingController();
   String _text2 = '';
   String _text3 = '';
   int _countdown = 180;
   bool _isCountdownStarted = false;
   bool _ijSuccess = false;
-  String buttonText = '비밀번호 찾기';
-  String messageText = '* 2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.';
+  String phoneNumber = '';
+  String apvNum = '';
+  final _idController = TextEditingController();
+  bool isDuplicate = false;
+  bool isDuplicatepw = false;
+
+  Future<void> emailnumDuplicate() async {
+    final email = _idController.text;
+    final url = Uri.parse('http://todaymeet.shop:8080/email/${email}');
+    final response = await http.get(
+      url,
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+      print(email);
+      print(url);
+      print(response.body);
+      setState(() {
+        isDuplicate = false;
+      });
+    } else {
+      // print('전송 자체가 안됨. 상태 침드: ${response.statusCode}');
+      // print(email);
+      // print(url);
+      setState(() {
+        isDuplicate = true;
+      });
+      // print(isDuplicate);
+    }
+  }
+
+
+
+  Future<void> phonenumDuplicate() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/phone/${phoneNumber}');
+    // final requestData = {
+    //   'phoneNumber': phoneNumber,
+    // };
+    // final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      // headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+      print(phoneNumber);
+      print(url);
+      print(response.body);
+      // final responseData = jsonDecode(response.body);
+      if (response.body == 'phone number duplicate!!') {
+        print("asdf");
+        onebutton.alreadyphoneDialog(context);
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => accountsetting()));
+      }
+    } else {
+      print('전송 자체가 안됨. 상태 침드: ${response.statusCode}');
+      onebutton.alreadyphoneDialog(context);
+    }
+  }
 
   void startCountdown() {
     if (!_isCountdownStarted) {
@@ -61,12 +126,10 @@ class _pwFindState extends State<pwFind> {
     });
   }
 
-  @override
-  void dispose() {
-    _idController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
+  String convertIsDuplicateToString(bool isDuplicate) {
+    return isDuplicate
+        ? '* 이미 가입된 이메일 주소입니다.'
+        : '                             ';
   }
 
   @override
@@ -75,27 +138,14 @@ class _pwFindState extends State<pwFind> {
     int seconds = _countdown % 60;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 25,
-            ),
-            onPressed: () {
-              twobutton.backtoLoginDialog(context);
-            },
-          ),
-          centerTitle: true,
-          title: Text(
-            '비밀번호 찾기',
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
+        backgroundColor: Colors.white,
+        appBar: CustomAppBar(
+          leadingWidget: SvgButton(
+              imagePath: backarrow,
+              onPressed:() {
+                twobutton.backtoLoginDialog(context);
+              }),
+          title: '비밀번호 찾기',
         ),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -103,205 +153,227 @@ class _pwFindState extends State<pwFind> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(children: [
-                      Text(
-                        "아이디(이메일)",
+            Padding(
+              padding: EdgeInsets.zero,
+              child: Text(
+                '아이디(이메일)',
+                style: TextStyle(
+                    fontWeight: FontWeight.w700, fontSize: 14),
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+                border: Border.all(color: Color(0xFF1F2024)),
+              ),
+              child: TextField(
+                controller: _idController,
+                onChanged: (value) {
+                  emailnumDuplicate();
+                  // print(isDuplicate);
+                  // print(convertIsDuplicateToString);
+                },
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 16.0,
+                  ),
+                  hintText: '아이디를 입력하세요',
+                  hintStyle: TextStyle(
+                    color: hinttextColor,
+                    fontSize: 13,
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              '* 이메일 주소는 "@"와 "."을 최소 하나 이상 포함되어야합니다.',
+              style: TextStyle(color: messageRed, fontSize: 12.0),
+            ),
+            Text(
+              convertIsDuplicateToString(isDuplicate),
+              style: TextStyle(color: messageRed, fontSize: 12.0),
+            ),
+            textfieldTitle(title: '휴대전화번호', star: true),
+            SizedBox(height: 8,),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 40.0,
+              decoration: BoxDecoration(
+                color: textfieldColor,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(width: 16.0),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          _text2 = value;
+                        });
+                      },
+                      style: TextStyle(fontSize: 13.0),
+                      decoration: InputDecoration(
+                        hintText: '휴대전화번호를 입력해주세요',
+                        hintStyle: TextStyle(color: hinttextColor, fontSize: 13.0),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16.0),
+                  Container(
+                    width: 110,
+                    height: 46,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (!_isCountdownStarted) {
+                          startCountdown();
+                        }
+                      },
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            // 버튼 눌려있을때는 높이 0으로 해놓고
+                            return 0;
+                          }
+                          return 0.5; // 이건 디폴트
+                        }),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.horizontal(right: Radius.circular(12.0)),
+                          ),
+                        ),
+                        overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            // 버튼이 눌려 있을 때의 배경색
+                            //color: rgb(72,116,234);
+                            return Colors.black54; //
+                          }
+                          return Colors.black; // 기본 배경색
+                        }),
+                      ),
+
+                      // style: ElevatedButton.styleFrom(
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.horizontal(
+                      //       right: Radius.circular(8.0),
+                      //     ),
+                      //   ),
+                      //   fixedSize: Size(107, 46),
+                      //   backgroundColor: Colors.black,
+                      // ),
+                      child: Text(
+                        '인증번호 요청',
                         style: TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ]),
-                    SizedBox(height: 8.0),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(color: Colors.grey),
-                      ),
-                      child: TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 16.0,
-                            horizontal: 12.0,
-                          ),
-                          hintText: messageText,
-                          hintStyle: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 13,
-                          ),
-                          border: InputBorder.none,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      messageText,
-                      style: TextStyle(
-                        color: messageRed,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ],
-                ),//이메일 입력
-                SizedBox(height: 24.0),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Container(
+              padding: EdgeInsets.only(left: 16.0),
+              width: MediaQuery.of(context).size.width,
+              height: 40.0,
+              decoration: BoxDecoration(
+                color: textfieldColor,
+                borderRadius: BorderRadius.circular(10.0),
 
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "휴대전화번호",
-                      style: TextStyle(
-                        fontSize: 14.0,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          _text3 = value;
+                        });
+                      },
+                      style: TextStyle(fontSize: 13),
+                      decoration: InputDecoration(
+                        hintText: '인증번호',
+                        hintStyle: TextStyle(color: hinttextColor,fontSize: 13.0),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 13.0),
+                  Text(
+                    '$minutes:${seconds.toString().padLeft(2, '0')}',
+                    style: TextStyle(
+                        fontSize: 10,
                         fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 16.0),
-                      width: MediaQuery.of(context).size.width,
-                      height: 46.0,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF5F6FA),
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                          width: 1.0,
-                          color: Colors.transparent,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              onChanged: (value) {
-                                setState(() {
-                                  _text2 = value;
-                                });
-                              },
-                              style: TextStyle(fontSize: 13),
-                              decoration: InputDecoration(
-                                hintText: '휴대전화번호를 입력해주세요',
-                                hintStyle: TextStyle(fontSize: 13.0,color: hinttextColor,),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 16.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (!_isCountdownStarted) {
-                                startCountdown();
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.horizontal(
-                                  right: Radius.circular(10.0),
-                                ),
-                              ),
-                              fixedSize: Size(107, 46.55),
-                              backgroundColor: Colors.black,
-                            ),
-                            child: Text(
-                              '인증번호 요청',
-                              style: TextStyle(
-                                  fontSize: 13,
+                        color: Colors.black),
+                  ),
+                  SizedBox(width: 13.0),
 
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
+                  Container(
+                    width: 110,
+                    height: 46,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        onebutton.certificationSuccessDialog(context);
+                      },
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            // 버튼 눌려있을때는 높이 0으로 해놓고
+                            return 0;
+                          }
+                          return 0.5; // 이건 디폴트
+                        }),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.horizontal(right: Radius.circular(12.0)),
                           ),
-                        ],
+                        ),
+                        overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            // 버튼이 눌려 있을 때의 배경색
+                            //color: rgb(72,116,234);
+                            return Colors.black54; //
+                          }
+                          return Colors.black; // 기본 배경색
+                        }),
                       ),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 16.0),
-                      width: MediaQuery.of(context).size.width,
-                      height: 46.0,
-                      decoration: BoxDecoration(
-                        color: textfieldColor,
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                          width: 1.0,
-                          color: textfieldColor,
+                      child: Text(
+                        '확인',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
                         ),
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              onChanged: (value) {
-                                setState(() {
-                                  _text3 = value;
-                                });
-                              },
-                              style: TextStyle(fontSize: 13),
-                              decoration: InputDecoration(
-                                hintText: '인증번호',
-                                hintStyle: TextStyle(color: hinttextColor),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 13.0),
-                          Text(
-                            '$minutes:${seconds.toString().padLeft(2, '0')}',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                          SizedBox(width: 13.0),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.horizontal(
-                                  right: Radius.circular(10),
-                                ),
-                              ),
-                              fixedSize: Size(107.2, 46.55),
-                              backgroundColor: Colors.black,
-                            ),
-                            child: Text(
-                              '확인',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-                  ],
-                ),//휴대전화번호인증
-                Spacer(),
-                blueButton(buttonText: buttonText, onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => pwFindResult()),
-                    );
-                  },),
-              ]),
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            blueButton(buttonText: '비밀번호 찾기', onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => pwFindResult(),
+                ),
+              );
+            },)
+
+          ]),
         ));
   }
 }
-// onPressed: () {
-// Navigator.push(
-// context,
-// MaterialPageRoute(builder: (context) => pwFindResult()),
-// );
-// },

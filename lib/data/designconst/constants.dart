@@ -15,3 +15,26 @@ const String Camera = 'assets/icons/detail/Camera.svg';
 TextStyle messageStyle = TextStyle(color: messageRed, fontSize: 12.0);
 
 
+ButtonStyle CustomButtonStyle(Color backgroundColor, Color pressedColor, Color borderColor) {
+  return ButtonStyle(
+    elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.pressed)) {
+        return 0;
+      }
+      return 0.5;
+    }),
+    backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.pressed)) {
+        return pressedColor;
+      }
+      return backgroundColor;
+    }),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        side: BorderSide(color: borderColor),
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+    ),
+    overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+  );
+}

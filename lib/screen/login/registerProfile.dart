@@ -6,7 +6,9 @@
 // 화면 전체 수정
 import 'dart:convert';
 
-
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:front/screen/dialog/dialoglist.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +22,11 @@ import 'dart:io';
 
 import '../../data/designconst/constants.dart';
 
-
+import '../../model/UI/widget/button/CameraButton.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
+import '../../model/UI/widget/text/textfieldTitle.dart';
 import 'login.dart';
 
 class registerProfile extends StatefulWidget {
@@ -38,19 +41,15 @@ class registerProfile extends StatefulWidget {
 class _registerProfileState extends State<registerProfile> {
   final _idController1 = TextEditingController();
   File? _imageFile;
-  int _selectedSegment = 0;
+  DateTime now = DateTime.now();
   DateTime? _selectedDate;
   bool isChecked = false;
   bool isChecked1 = false;
   String username = '';
   bool isDuplicateUsername = false;
   bool isJoinSuccess = false;
-
-
-
-
-
-  
+  List<String> _labels = ['선택안함', '남자', '여자'];
+  List<bool> _selections = [false, false, false];
 
   String convertIsDuplicateToString(bool isDuplicateUsername) {
     return isDuplicateUsername
@@ -179,167 +178,168 @@ class _registerProfileState extends State<registerProfile> {
           padding: EdgeInsets.fromLTRB(24.0, 0, 24.0, 24),
           child: Column(
             children: [
-              Center(
-                child: CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  radius: 45,
-                  backgroundImage:
-                      _imageFile != null ? FileImage(_imageFile!) : null,
-                  child: _imageFile == null
-                      ? IconButton(
-                          icon: Icon(
-                            Icons.camera_alt,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            _pickImage(ImageSource.gallery);
-                          },
-                        )
-                      : null,
+              Container(
+                padding: EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: (MediaQuery.of(context).size.width - 138) / 2),
+                width: MediaQuery.of(context).size.width,
+                height: 122,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
                 ),
-              ), //imagepicker
-              SizedBox(height: 32,),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(children: [
-                    Text(
-                      "닉네임",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w700,
+                child: Stack(
+                  children: [
+                    // 동그라미
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        padding: EdgeInsets.zero,
+                        width: 90,
+                        height: 90,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/LoginImage/test.png'),
+                              fit: BoxFit.cover),
+                        ),
                       ),
                     ),
-                    Text(
-                      " *",
-                      style: messageStyle
-                    )
-                  ]), //닉네임*
-                  SizedBox(height: 8.0),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      border: Border.all(color: Color(0xFF333333)),
-                    ),
-                    child: TextField(
-                      controller: _idController1,
-                      onChanged: (value) {
-                        username = _idController1.text;
-                        usernameDuplicate();
-                        print(isDuplicateUsername);
-                        print(username);
-                        // usernameDuplicate();
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          horizontal: 16.0,
-                        ),
-                        hintText: '아이디를 입력하세요',
-                        hintStyle: TextStyle(
-                          color: textfieldColor,
-                          fontSize: 14,
-                        ),
-                        border: InputBorder.none,
+                    // ImagePicker
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: CameraButton(
+                        onPressed: () {
+                          _pickImage(ImageSource.gallery);
+                        },
                       ),
                     ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    '* 2자 이상 10 자 이하 한글, 영문, 숫자만 입력 가능합니다.',
-                    style: messageStyle,
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    convertIsDuplicateToString(isDuplicateUsername),
-                    style: messageStyle,
-                  ),
-                ],
-              ), //닉네임 입력
-              SizedBox(height: 32,),
+                  ],
+                ),
+              ),
+              // ImagePicker
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '성별(선택)',
-                    style:
-                        TextStyle(fontSize: 14.0, fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: ToggleButtons(
-                      children: [
-                        Text('선택안함'),
-                        Text('남자'),
-                        Text('여자'),
-                      ],
-                      onPressed: (int index) {
-                        setState(() {
-                          _selectedSegment = index;
-                        });
-                      },
-                      isSelected: [
-                        _selectedSegment == 0,
-                        _selectedSegment == 1,
-                        _selectedSegment == 2,
-                      ],
-                      color: Colors.black,
-                      selectedColor: Colors.white,
-                      fillColor: Colors.black,
-                      borderColor: Colors.black,
-                      selectedBorderColor: Colors.black,
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                  ),
-                ],
-              ), //togglebutton
-              SizedBox(height: 32,),
+              SizedBox(height: 32.0),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '생년월일(선택)',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ), //생년월일 선택 텍스트
-                  SizedBox(height: 8.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFFEDEDED),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          _selectedDate != null
-                              ? ' ${_selectedDate!.toString().substring(0, 10)}'
-                              : '   0000-00-00',
-                          style:
-                              TextStyle(fontSize: 13, color: Color(0xFF1F2024)),
-                        ),
-                        Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            _selectDate(context);
-                          },
-                          icon: Icon(
-                            Icons.today,
-                            color: Color(0xFF49454F),
-                          ),
-                        ),
-                      ],
+              textfieldTitle(title: '닉네임', star: true), //닉네임 *
+              SizedBox(height: 8.0),
+              Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(color: Color(0xFF333333)),
+                  ),
+                  child: TextField(
+                    // inputFormatters: [
+                    //   LengthLimitingTextInputFormatter(10), // 최대 길이 제한
+                    //   FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9가-힣]+$')), // 허용할 문자 패턴
+                    // ],
+                    controller: _idController1,
+                    onChanged: (value) {
+                      username = _idController1.text;
+                    },
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 16.0,
+                      ),
+                      hintText: '2자 이상 10자 이하 한글,영문,숫자만 입력 가능합니다.',
+                      hintStyle: TextStyle(
+                        color: hinttextColor,
+                        fontSize: 13,
+                      ),
+                      border: InputBorder.none,
                     ),
                   ),
-                ],
+                ),
+              ),
+              SizedBox(height: 8.0),
+              textfieldTitle(
+                title: '2자 이상 10 자 이하 한글, 영문, 숫자만 입력 가능합니다.',
+                star: true,
+                reverse: true,
+              ),
+              SizedBox(height: 8.0),
+              // Text(
+              //   convertIsDuplicateToString(isDuplicateUsername),
+              //   style: TextStyle(color: Colors.red),
+              // ),
+
+              SizedBox(height: 32.0),
+
+              textfieldTitle(title: '성별(선택)', star: false),
+              SizedBox(
+                height: 8.0,
+              ),
+              ToggleButtons(
+                borderRadius: BorderRadius.circular(12),
+                color: Color(0xFF4F4F4F),
+                fillColor: Color(0xFF4F4F4F),
+                selectedColor: Colors.white,
+                splashColor: Colors.transparent,
+                borderColor: Color(0xFF4F4F4F),
+                children: List<Widget>.generate(_labels.length, (int index) {
+                  return Container(
+                    width: (MediaQuery.of(context).size.width - 53) / 3,
+                    height: 46,
+                    child: Center(
+                      child: Text(
+                        _labels[index],
+                        style: TextStyle(
+                            fontSize: 13.0, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  );
+                }),
+                isSelected: _selections,
+                onPressed: (int index) {
+                  setState(() {
+                    for (int i = 0; i < _selections.length; i++) {
+                      _selections[i] = (i == index);
+                    }
+                  });
+                },
+              ),
+
+              SizedBox(
+                height: 32,
+              ),
+
+              textfieldTitle(title: '생년월일(선택)', star: false), //생년월일 선택 텍스트
+              SizedBox(
+                height: 8,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                ),
+                height: 46,
+                decoration: BoxDecoration(
+                  color: Color(0xFFEDEDED),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      _selectedDate != null
+                          ? ' ${_selectedDate!.toString().substring(0, 10)}'
+                          : '   0000-00-00',
+                      style:
+                          TextStyle(fontSize: 13.0, color: Color(0xFF1F2024)),
+                    ),
+                    Spacer(),
+                    IconButton(
+                        onPressed: () {
+                          _selectDate(context);
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/icons/calendar.svg',
+                          width: 24.0,
+                          height: 24.0,
+                        )),
+                  ],
+                ),
               ), //선택한 생년월일 표시 박스
               Spacer(), //생년월일 박스 - 이용약관 동의 사이 여백
 
@@ -364,7 +364,8 @@ class _registerProfileState extends State<registerProfile> {
                     ), //체크박스
                     Text(
                       '[필수] 이용약관 동의',
-                      style: TextStyle(fontSize: 14.0, color: Color(0xFF8F9098)),
+                      style:
+                          TextStyle(fontSize: 14.0, color: Color(0xFF8F9098)),
                     ), //필수이용약관동의 텍스트
                     Spacer(), // 동의 - 화살표 사이 공간
                     IconButton(
@@ -383,8 +384,9 @@ class _registerProfileState extends State<registerProfile> {
                   ],
                 ),
               ), //[필수]이용약관 동의 Row
-              SizedBox(height: 12.0,),
-
+              SizedBox(
+                height: 12.0,
+              ),
 
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -392,17 +394,19 @@ class _registerProfileState extends State<registerProfile> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Checkbox(
-                      value: isChecked1,
-                      onChanged: (value) {
-                        setState(() {
-                          isChecked1 = value!;
-                        });
-                      },
-                      activeColor: Colors.black,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      // 크기를 컨테이너에 맞추기 위해 추가
-                      visualDensity: VisualDensity.compact,
+                    Container(
+
+                      child: Checkbox(
+                        value: isChecked1,
+                        onChanged: (value) {
+                          setState(() {
+                            isChecked1 = value!;
+                          });
+                        },
+                        activeColor: Colors.black,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
+                      ),
                     ), //체크박스
                     Text(
                       '[필수] 개인정보처리방침 동의',
@@ -429,8 +433,28 @@ class _registerProfileState extends State<registerProfile> {
                 ), //row로 정렬
               ), // 개인정보처리방침 row담은 container
 
-              SizedBox(height: 24.0,),
-              signupButton(), // 임시로 다음 페이지로 넘어가게} )
+              SizedBox(
+                height: 24.0,
+              ),
+              blueButton(
+                buttonText: '회원가입',
+                onPressed: () {
+                  if (!isChecked || !isChecked1) {
+                    onebutton.checkEssentialDialog(context);
+                  } else if( username.length <2){
+                    onebutton.oneWordNameDialog(context);
+                  }else if( username.length >10){
+                    onebutton.tenWordNameDialog(context);
+                  }else if(!RegExp(r'^[a-zA-Z0-9가-힣]+$').hasMatch(username)){
+                    onebutton.KoEnNumDialog(context);
+                  }  else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => favorite()),
+                    );
+                  }
+                },
+              ), // 임시로 다음 페이지로 넘어가게} )
             ],
           ),
         ),
@@ -439,18 +463,54 @@ class _registerProfileState extends State<registerProfile> {
   }
 }
 
-class signupButton extends StatelessWidget {
-  const signupButton({
-    super.key,
-  });
+// class signupButton extends StatelessWidget {
+//   const signupButton({
+//     super.key,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return blueButton(
+//       buttonText: '회원가입',
+//       onPressed: () {
+//         if (!isChecked || !isChecked1) {
+//           showDialog(
+//             context: context,
+//             builder: (BuildContext context) {
+//               return AlertDialog(
+//                 title: Text('알림'),
+//                 content: Text('이용약관 및 개인정보처리방침에 동의해주세요.'),
+//                 actions: [
+//                   TextButton(
+//                     child: Text('확인'),
+//                     onPressed: () {
+//                       Navigator.of(context).pop();
+//                     },
+//                   ),
+//                 ],
+//               );
+//             },
+//           );
+//         } else {
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(builder: (context) => favorite()),
+//           );
+//         }
+//       },
+//     );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return blueButton(
-        buttonText: '회원가입',
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => favorite()));
-        });
-  }
-}
+// String? validateInput(String value) {
+//   if (username.length < 2) {
+//     return '2자 이상 입력해주세요.';
+//   }
+//   if (value.length > 10) {
+//     return '10자 이하로 입력해주세요.';
+//   }
+//   if (!RegExp(r'^[a-zA-Z0-9가-힣]+$').hasMatch(value)) {
+//     return '한글, 영문, 숫자만 입력 가능합니다.';
+//   }
+//   return null; // 유효한 입력값인 경우 null 반환
+// }

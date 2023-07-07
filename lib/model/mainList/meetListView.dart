@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../routes.dart';
 import '../../data/dummy_meetList.dart';
 import '../../data/meetList.dart';
 import '../../screen/mainList/Loading_to_ListDetail.dart';
 import '../../screen/search/searchPageElement.dart' as element;
-import '../../screen/search/searchingBox.dart';
 import '../TextPrint.dart';
 import 'mainListView.dart';
 import 'Advertisement.dart';
@@ -62,6 +62,7 @@ Widget ListViewer(BuildContext context, WidgetRef ref, meetList List) {
 Widget meetListViews(BuildContext context, WidgetRef ref, List<meetList> viewList) {
   return ListView(// 탐색 화면
     physics: const ClampingScrollPhysics(),
+    shrinkWrap: true,
     children: [
       const element.Banner(),
 
@@ -100,10 +101,7 @@ Widget meetListViews(BuildContext context, WidgetRef ref, List<meetList> viewLis
             ),
           ),
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const SearchBox()));
+            Navigator.pushNamed(context, Routes.searchBoxRoute);
           },
         ),
       ),
@@ -182,7 +180,7 @@ Widget meetListViews(BuildContext context, WidgetRef ref, List<meetList> viewLis
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: SizedBox(
-          height: 154,
+          height: 157,
           child: ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),

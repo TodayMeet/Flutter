@@ -142,6 +142,7 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
+                            fullscreenDialog: true,
                               builder: (context) => Comments(
                                 meetNo: list.meetNo,
                               )));

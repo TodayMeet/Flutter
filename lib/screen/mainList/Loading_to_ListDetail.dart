@@ -6,9 +6,9 @@
 import 'package:flutter/material.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/screen/mainList/ListDetail.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../model/showtoast.dart';
 
 class Loading_to_ListDetail extends StatefulWidget {
   const Loading_to_ListDetail({Key? key,
@@ -80,14 +80,4 @@ class _LoadingState extends State<Loading_to_ListDetail> {
       ),
     );
   }
-}
-
-void showToast(String message) {
-  Fluttertoast.showToast(
-      msg: message,
-      fontSize: 15,
-      backgroundColor: Colors.black54,
-      textColor: Colors.white,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM);
 }

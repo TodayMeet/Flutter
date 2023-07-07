@@ -89,7 +89,6 @@ flutter:
     - assets/images/List_Image/
     - assets/images/LoginImage/
     - assets/images/User_Picture/
-    - assets/images/ProfileImage/
     - assets/icons/
     - assets/icons/detail/
     - assets/icons/mainList/

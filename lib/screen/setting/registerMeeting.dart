@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:front/model/bottomBar.dart';
 import '../registerList/meetCategory.dart';
 import '../registerList/meetLocation.dart';
 
@@ -93,9 +92,6 @@ class _RegisterMeetingState extends State<RegisterMeeting> {
               const MeetingLocation(),
             ],
           ),
-        ),
-        bottomNavigationBar: const BottomAppBar(
-          child: BottomBar()
         ),
       ),
     );

@@ -27,7 +27,6 @@ class twobutton {
               MaterialPageRoute(
                   builder: (BuildContext context) => login()),
                   (route) => false);
-          Navigator.pop(context);
         },
       ),
     );
@@ -93,7 +92,7 @@ class twobutton {
         },
       ),
     );
-  }
+  } // db에 요청하는거라
   static void backtoLoginDialog(BuildContext context){
     showDialog(
       context: context,
@@ -328,5 +327,43 @@ class onebutton{
       ),
     );
   }
+  static void emailDuplicateCheckDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '이메일 중복여부를 확인해주세요.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
 
+      ),
+    );
+  }
+  static void noInputNameDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '닉네임은 필수 입력사항입니다.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  }
+  static void pwChangeDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '비밀번호가 변경되었습니다.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  }
 }

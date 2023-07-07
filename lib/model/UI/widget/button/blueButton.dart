@@ -25,6 +25,7 @@ class blueButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: ButtonStyle(
+            // padding: const EdgeInsets.zero,
             elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
               if (states.contains(MaterialState.pressed)) {
                 // 버튼 눌려있을때는 높이 0으로 해놓고

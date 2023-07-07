@@ -24,12 +24,6 @@ class _userProfileState extends State<userProfile> {
   int follower = 100;
   int following = 100;
 
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     double halfWidth = MediaQuery.of(context).size.width / 2;
@@ -39,8 +33,7 @@ class _userProfileState extends State<userProfile> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => profileMain()));
+            Navigator.pop(context);
           },
         ),
         title: name + '님의 프로필',
@@ -112,8 +105,7 @@ class _userProfileState extends State<userProfile> {
                         whiteButton(
                           buttonText: '차단',
                           onPressed: (){
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context)=>profileMain()));
+                            Navigator.pop(context);
                         },
                             width: (MediaQuery.of(context).size.width - 148) / 2 ,
                         )

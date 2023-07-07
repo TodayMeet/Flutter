@@ -43,11 +43,9 @@ class _termsofUseState extends State<termsofUse> {
           imagePath: backarrow,
           onPressed:() {
             Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => profileMain()));},
-          width: 10.0,
-          height: 12.0,
+            },
+          width: 24.0,
+          height: 24.0,
 
         ),
         title: appbarText,
@@ -94,7 +92,7 @@ class _privatePolicyState extends State<privatePolicy> {
         leadingWidget: IconButton(
           iconSize: 14.93,
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => profileMain()));
+            Navigator.pop(context);
           },
           icon: Icon(
             Icons.arrow_back_ios,

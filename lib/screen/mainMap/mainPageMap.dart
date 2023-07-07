@@ -10,6 +10,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:kakaomap_webview/kakaomap_webview.dart';
@@ -17,6 +18,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:front/screen/mainList/mainListBoard.dart';
+import '../login/login.dart';
 import '../setting/setlocation.dart';
 import '../../model/setting/location.dart';
 import '../../model/bottomBar.dart';
@@ -28,6 +30,8 @@ final markerProvider = StateProvider<List<Markers>?>((ref) => null);
 final mapControllerProvider = StateProvider<WebViewController?>((ref) => null);
 
 class MainPageMap extends ConsumerWidget {
+  // final int userNo;
+  // MainPageMap({required this.userNo});
   const MainPageMap({super.key});
 
   Future<List> getLocationData(WidgetRef ref) async {
@@ -103,6 +107,7 @@ class MainPageMap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final userno = Get.find<MyController>();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -257,6 +262,7 @@ class MainPageMap extends ConsumerWidget {
               heroTag: "현재 위치 불러오기",
               backgroundColor: const Color(0xFF4874EA),
               onPressed: () async {
+               // print(userNo);
                 List location = await getLocationData(ref);
                 final webViewController = ref.watch(mapControllerProvider);
                 webViewController?.runJavascript('''

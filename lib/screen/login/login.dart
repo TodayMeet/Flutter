@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 import '../../data/designconst/constants.dart';
 import '../../screen/dialog/dialoglist.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,16 +25,19 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   String _text = '';
   String _text1 = '';
-  String username = '';
+  String email = '';
   String password = '';
   bool obscureText = true;
   // String loginresult2 = '';
+  final regex = RegExp(r'^[a-zA-Z@,.]+$');
+  bool idformat = true;
+  bool pwformat = true;
 
 
-  Future<void> sendCredentialsToServer() async {
+  Future<int> sendCredentialsToServer() async {
     final url = Uri.parse('http://todaymeet.shop:8080/loginB');
     final requestData = {
-      'username': username,
+      'email': email,
       'password': password,
     };
     final jsonData = jsonEncode(requestData);
@@ -44,18 +49,29 @@ class _loginState extends State<login> {
     if (response.statusCode == 200) {
       // 성공적으로 서버로 전송됨
       print('로그인 성공');
-      final responseData = jsonDecode(response.body);
+
+      final userNo = jsonDecode(response.body);
+      print("userNo : ");
+      print(userNo);
+      // Get.to( MainPageMap(),arguments: userNo);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MainPageMap()));
+      return userNo;
     }else if(_text==null ){
+      print('assssssssss');
       onebutton.noInputIDDialog(context);
+      return 0;
     }
+
     else if(_text1 ==null){
+      print('qwerqwer');
       onebutton.noInputPwDialog(context);
+      return 0;
     }
     else {
       print('로그인 실패. 상태 코드: ${response.statusCode}');
       onebutton.incorrectInputDialog(context);
+      return 0;
     }
   } //서버로 전송
 
@@ -77,14 +93,18 @@ class _loginState extends State<login> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
+                      padding: EdgeInsets.zero,
                       height: 48.0,
                       child: TextField(
                         autofocus: false,
                         onChanged: (value) {
                           setState(() {
                             _text = value;
+                          //   if (!regex.hasMatch(value)) {
+                          //     idformat=false;
+                          //   } 아이디가 형식에 맞지 않으면 또 다른 다이얼로그 출력
                           });
-                          username = _text;
+                          email = _text;
                         },
                         // textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
@@ -115,7 +135,7 @@ class _loginState extends State<login> {
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
                           hintText: '비밀번호',
-                          hintStyle: TextStyle(color: Color(0xFFD1D1D4),fontSize: 13.0),
+                          hintStyle: TextStyle(color: Color(0xFFD1D1D4),fontSize: 13.0,fontFamily: 'Inter'),
                           border: OutlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius: BorderRadius.circular(12.0)),
@@ -147,8 +167,12 @@ class _loginState extends State<login> {
                   width: MediaQuery.of(context).size.width,
                   height: 56.0,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       sendCredentialsToServer();
+                      // int userNo = await sendCredentialsToServer();
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => MainPageMap(userNo : userNo)));
                     },
                     child: Text(
                       '로그인',
@@ -317,7 +341,7 @@ class kakaologinbutton extends StatelessWidget {
             ),
           ],
         ),
-        style: CustomButtonStyle(Color(0xFFFFE711), Color(0xFFF7E500), Colors.transparent),
+        style: CustomButtonStyle(Color(0xFFFFE711), Color(0xFFF7E000), Colors.transparent),
       ),
     );
   }
@@ -346,6 +370,7 @@ class signupbutton extends StatelessWidget {
           child: Text(
             '회원가입',
             style: TextStyle(
+              fontFamily: 'Inter',
               fontSize: 14,
               color: Color(0xFF71727A),
             ),
@@ -392,7 +417,7 @@ class idpwfind extends StatelessWidget {
             );
           },
           child: Text(
-            '아이디 찾기',
+            '아이디찾기',
             style: TextStyle(
               fontSize: 12.0,
               color: findtextColor,
@@ -451,12 +476,12 @@ class logoImage extends StatelessWidget {
   }
 }// loginState class
 
-// 로그인 성공시 username, userpassword 저장
-void saveLoginCredentials(String username, String password) async {
+// 로그인 성공시 email, userpassword 저장
+void saveLoginCredentials(String email, String password) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('username', username);
+  await prefs.setString('email', email);
   await prefs.setString('password', password);
-}// 서버로 username, password 보내는 함수
+}// 서버로 email, password 보내는 함수
 
 void _login_fail_pwnone(BuildContext context) {
   showCupertinoModalPopup<void>(
@@ -476,3 +501,11 @@ void _login_fail_pwnone(BuildContext context) {
   );
 }//비밀번호 확인 팝업
 
+// class MyController extends GetxController {
+//   var userNo = 0;
+//
+//   // void increment() {
+//   //   count++;
+//   //   update(); // 상태 변경을 알리기 위해 update()를 호출합니다.
+//   // }
+// }

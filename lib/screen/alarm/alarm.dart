@@ -14,7 +14,7 @@ class alarm extends StatefulWidget {
 
 class _alarmState extends State<alarm> {
   String host = '000';
-
+  int userNo = 1;
   List<Map> alarm = [
     {
       'name': "000님이 나를 팔로우 합니다.",
@@ -66,6 +66,49 @@ class _alarmState extends State<alarm> {
       'image':'assets/images/User_Picture/User_pic_sample6.png'
     },
   ];
+
+  // Future<List<String>> alarmLoad() async {
+  //   final url1 = Uri.parse('http://todaymeet.shop:8080/notifi/all?userNo=${userNo}');
+  //   // final requestData = selectedCategories.toList();
+  //   final jsonData = jsonEncode(requestData);
+  //   final response = await http.get(
+  //     url1,
+  //     headers: {'Content-Type': 'application/json'},
+  //
+  //   );
+  //   if (response.statusCode == 200) {
+  //     // print('전송잘됨');
+  //     // print(selectedCategories.toList());
+  //     // print(url1);
+  //     // var serverData = jsonDecode(utf8.decode(response.bodyBytes));
+  //
+  //     List<dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
+  //     List<String> resultList = [];
+  //     for (dynamic data in result) {
+  //       // 데이터를 String으로 변환하여 결과 리스트에 추가
+  //       String resultItem = data.toString();
+  //       resultList.add(resultItem);
+  //     }
+  //     print(resultList);
+  //     return resultList;
+  //     // print(response);
+  //
+  //     // Navigator.push(
+  //     //   context,
+  //     //   MaterialPageRoute(builder: (context) => favorite()),
+  //     // );
+  //   } else {
+  //     print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+  //     print(selectedCategories.toList());
+  //     // print(widget.password);
+  //     // print(widget.email);
+  //     print(url1);
+  //     print(jsonData);
+  //     print(response.body);
+  //     return ['a'];
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

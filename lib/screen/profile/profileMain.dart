@@ -23,6 +23,14 @@ import '../../model/bottomBar.dart';
 
 
 class profileMain extends StatefulWidget {
+  //불러와야할 정보
+  //username
+  //gender -> 아마 int값
+  //프로필 이미지
+  //birthdate -> 이거 근데 입력 안했을때는 안띄워야하는건가
+  // final int userNo;
+
+  // profileMain({required this.userNo});
   const profileMain({Key? key}) : super(key: key);
 
   @override
@@ -43,22 +51,22 @@ class _profileMainState extends State<profileMain> {
     {"name": '참가한 건수', 'goto': joinEvent(userNo:1)},
     {"name": '비밀번호 변경', 'goto': pwChange()},
     {"name": '차단 관리', 'goto': blockManage()},
-    {"name": '관심사', 'goto': profileFavorite()},
+    {"name": '관심사', 'goto': profileFavorite(userNo: 34,)},
     {"name": 'FAQ', 'goto': oftenQuestion()},
     {"name": '문의하기', 'goto': question()},
     {"name": '공지사항', 'goto': noticeList()},
     {"name": '개인정보처리방침', 'goto': privatePolicy()},
     {"name": '이용약관', 'goto': termsofUse()},
+    // {"name": '기타','goto': userProfile()},
 
   ];
-  secession secessionroute = secession();
+  secession secessionroute = secession(password: 'mmm',email: 'm@test');
   String versionText = 'V 1.0.0';
 
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -67,13 +75,7 @@ class _profileMainState extends State<profileMain> {
     super.dispose();
   }
 
-  Future<void> _handleRefresh() async {
-    // 새로고침 작업 수행
-    await Future.delayed(Duration(seconds: 1));
 
-    // 화면 갱신
-    setState(() {});
-  }
 
 
 
@@ -93,9 +95,16 @@ class _profileMainState extends State<profileMain> {
             style: ButtonStyle(
               overlayColor: MaterialStateProperty.all<Color>(Color(0xFFDDDDDD)),
             ),
-            onPressed: () {
+            onPressed: (){
+              // print(widget.userNo);
               twobutton.logoutDialog(context);
             },
+            // => Get.offAll(login()),
+            // onPressed: () => Get.to( login(),arguments: email, password),
+            // // Get.to( () => NextPage(), arguments: value );
+
+
+
             child: Text(
               '로그아웃',
               style: TextStyle(
@@ -537,19 +546,7 @@ class profileMainBottom extends StatelessWidget {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//필요한 함수 정리
+// 사용자 정보 불러오기, username, gender, birthdate, userimage
+// 팔로우 리스트 불러오기
+// 팔로잉 리스트 불러오기

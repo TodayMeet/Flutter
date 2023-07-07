@@ -35,9 +35,8 @@ class _followListState extends State<followList> {
                imagePath: backarrow,
 
                onPressed:() {
-                 Navigator.push(
-                     context,
-                     MaterialPageRoute(builder: (context) => profileMain()));},
+                 Navigator.pop(context);
+                 },
            ),
           title: Text(username,style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
           centerTitle: true,

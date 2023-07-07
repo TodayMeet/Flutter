@@ -120,6 +120,7 @@ class _ChatPageState extends State<ChatPage> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         resizeToAvoidBottomInset: true,
         appBar: CustomAppBar(
             title: appbarText,
@@ -132,8 +133,6 @@ class _ChatPageState extends State<ChatPage> {
               badgeContent: Center(child: Text(users.length.toString(),style: TextStyle(color: Colors.white,fontSize: 14,fontFamily: 'Roboto'),)),
               child: Center(child: xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();})),
             )
-
-
           // xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();}),
         ),
         endDrawer: Drawer(

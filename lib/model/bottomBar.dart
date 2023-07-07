@@ -13,6 +13,9 @@ import '../screen/profile/profileMain.dart';
 import '../screen/search/searchMain.dart';
 
 class BottomBar extends StatefulWidget {
+  // final int userNo;
+  //
+  // BottomBar({required this.userNo});
   const BottomBar({Key? key}) : super(key: key);
 
   @override
@@ -63,7 +66,7 @@ class _BottomBarState extends State<BottomBar> {
               scale: 4),
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => profileMain()));
+                MaterialPageRoute(builder: (context) => profileMain()));//userNo: 69
           },
         ),
       ],

@@ -1,6 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/main.dart';
+import 'package:front/model/UI/widget/text/textfieldTitle.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
@@ -12,7 +15,10 @@ import 'package:front/data/designconst/constants.dart';
 import '../login/login.dart';
 
 class secession extends StatefulWidget {
-  const secession({Key? key}) : super(key: key);
+  final String email;
+  final String password;
+
+  secession({required this.password, required this.email});
 
   @override
   State<secession> createState() => _secessionState();
@@ -21,7 +27,31 @@ class secession extends StatefulWidget {
 class _secessionState extends State<secession> {
   TextEditingController textarea = TextEditingController();
 
+  Future<void> secessionFunction() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/delete-user');
+    final requestData = {
+      'password' : widget.password,
+      'email': widget.email,
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.post(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonData,
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
 
+      print(url1);
+      print('join success!!임 이건 ?${response.body}');
+      print(response);
+
+
+    } else {
+     print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +63,8 @@ class _secessionState extends State<secession> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed:() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => profileMain()));},
+            Navigator.pop(context);
+            },
         ),
         title: appbarText,
       ),
@@ -44,13 +73,7 @@ class _secessionState extends State<secession> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "사유",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700),
-            ),
+            textfieldTitle(title: '사유', star: false),
             SizedBox(
               height: 8.0,
             ),
@@ -70,18 +93,25 @@ class _secessionState extends State<secession> {
                 ),
               ),
             ),
-
             SizedBox(
               height: 8.0,
-            ),//텍스트필드-입력가능 사이 여백
-            Text(
-              '*200자 내로 입력 가능합니다.',
-              style: TextStyle(color: messageRed),
-            ),//200자 이내로 입력 가능합니다.
+            ),
+            textfieldTitle(title: ' 200자 이내로 입력 가능합니다.', star: true, reverse: true,),//텍스트필드-입력가능 사이 여백 //200자 이내로 입력 가능합니다.
             Spacer(),
             //탈퇴버튼
             //200자가 넘으면 over200Dialog
-            blueButton(buttonText: '탈퇴', onPressed: ()=> twobutton.secessionDialog(context))
+            blueButton(
+                buttonText: '탈퇴',
+                onPressed: (){
+                  // if(textarea.text.length > 200){
+                  //   onebutton.over200Dialog(context);
+                  // }else{
+                  //   twobutton.secessionDialog(context);
+                  // }
+                  // secessionFunction();
+                  print(widget.email);
+                }
+                )
           ],
         ),
       ),

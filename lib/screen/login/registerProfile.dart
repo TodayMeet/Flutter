@@ -30,17 +30,19 @@ import '../../model/UI/widget/text/textfieldTitle.dart';
 import 'login.dart';
 
 class registerProfile extends StatefulWidget {
-  // final String email;
-  // final String password;
-  // registerProfile({required this.email, required this.password});
+  final String email;
+  final String password;
+  registerProfile({required this.email, required this.password});
 
   @override
   _registerProfileState createState() => _registerProfileState();
 }
 
 class _registerProfileState extends State<registerProfile> {
+
   final _idController1 = TextEditingController();
-  File? _imageFile;
+  File? imageFile;
+  bool isimageFileNull = true;
   DateTime now = DateTime.now();
   DateTime? _selectedDate;
   bool isChecked = false;
@@ -50,6 +52,10 @@ class _registerProfileState extends State<registerProfile> {
   bool isJoinSuccess = false;
   List<String> _labels = ['선택안함', '남자', '여자'];
   List<bool> _selections = [false, false, false];
+  int selectedValue =0;
+  int userNo=0;
+  // File defaultImage = Image.file('assets/images/LoginImage/test.png');
+
 
   String convertIsDuplicateToString(bool isDuplicateUsername) {
     return isDuplicateUsername
@@ -76,7 +82,7 @@ class _registerProfileState extends State<registerProfile> {
         isDuplicateUsername = false;
       });
     } else {
-      print('전송 자체가 안됨. 상태 침드: ${response.statusCode}');
+      print('중복. 상태 침드: ${response.statusCode}');
       print(username);
       print(url);
       setState(() {
@@ -85,12 +91,13 @@ class _registerProfileState extends State<registerProfile> {
     }
   }
 
+
   Future<void> join() async {
     final url1 = Uri.parse('http://todaymeet.shop:8080/join');
     final requestData = {
       'username': username,
-      // 'password' : widget.password,
-      // 'email': widget.email,
+      'password' : widget.password,
+      'email': widget.email,
     };
     final jsonData = jsonEncode(requestData);
     final response = await http.post(
@@ -102,26 +109,52 @@ class _registerProfileState extends State<registerProfile> {
       print('전송잘됨');
       print(username);
       print(url1);
-      print(response.body);
+      print('join success!!임 이건 ?${response.body}');
       print(response);
       setState(() {
         isJoinSuccess = true;
       });
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => favorite()),
-      );
+
     } else {
+      print('회원가입 안됨1');
       print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+      print('회원가입 안됨2');
       print(username);
       // print(widget.password);
       // print(widget.email);
+      print('회원가입 안됨3');
       print(url1);
-      print(jsonData);
-      print(response.body);
+      print('회원가입 안됨4');print(jsonData);
+      print('회원가입 안됨5');print(response.body);
       setState(() {
-        isJoinSuccess = true;
+        isJoinSuccess = false;
       });
+    }
+  }
+  Future<int> sendCredentialsToServer() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/loginB');
+    final requestData = {
+      'email': widget.email,
+      'password': widget.password,
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.post(
+      url,
+      body: jsonData,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      // 성공적으로 서버로 전송됨
+      print('로그인 성공');
+
+      final userNo1 = jsonDecode(response.body);
+      print('로그인 userNo : ${userNo1}');
+      return userNo1;
+    }
+    else {
+      print('로그인 안되는듯');
+      print('로그인 실패. 상태 코드: ${response.statusCode}');
+      return userNo;
     }
   }
 
@@ -131,7 +164,8 @@ class _registerProfileState extends State<registerProfile> {
     final pickedImage = await picker.pickImage(source: source);
     if (pickedImage != null) {
       setState(() {
-        _imageFile = File(pickedImage.path);
+        isimageFileNull = false;
+        imageFile = File(pickedImage.path);
       });
     }
   }
@@ -189,25 +223,28 @@ class _registerProfileState extends State<registerProfile> {
                 ),
                 child: Stack(
                   children: [
-                    // 동그라미
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        padding: EdgeInsets.zero,
-                        width: 90,
-                        height: 90,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/LoginImage/test.png'),
-                              fit: BoxFit.cover),
-                        ),
-                      ),
+                    CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  radius: 50,
+                  backgroundImage:
+                  imageFile != null ? FileImage(imageFile!) : null,
+                  child: imageFile == null
+                      ? IconButton(
+                    icon: Icon(
+                      Icons.camera_alt,
+                      color: Colors.black,
                     ),
-                    // ImagePicker
-                    Align(
-                      alignment: Alignment.bottomRight,
+                    onPressed: () {
+                      _pickImage(ImageSource.gallery);
+                    },
+                  )
+                      : null,
+                ),
+
+
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
                       child: CameraButton(
                         onPressed: () {
                           _pickImage(ImageSource.gallery);
@@ -238,6 +275,7 @@ class _registerProfileState extends State<registerProfile> {
                     controller: _idController1,
                     onChanged: (value) {
                       username = _idController1.text;
+                      usernameDuplicate();
                     },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
@@ -255,11 +293,19 @@ class _registerProfileState extends State<registerProfile> {
                 ),
               ),
               SizedBox(height: 8.0),
+
               textfieldTitle(
-                title: '2자 이상 10 자 이하 한글, 영문, 숫자만 입력 가능합니다.',
+                title: ' 2자 이상 10 자 이하 한글, 영문, 숫자만 입력 가능합니다.',
                 star: true,
                 reverse: true,
               ),
+              textfieldTitle(
+                  title:
+                  isDuplicateUsername
+                      ? ' 중복된 닉네임이 존재합니다.'
+                      : ' ',
+                  star: isDuplicateUsername,
+                  reverse: isDuplicateUsername),
               SizedBox(height: 8.0),
               // Text(
               //   convertIsDuplicateToString(isDuplicateUsername),
@@ -267,7 +313,6 @@ class _registerProfileState extends State<registerProfile> {
               // ),
 
               SizedBox(height: 32.0),
-
               textfieldTitle(title: '성별(선택)', star: false),
               SizedBox(
                 height: 8.0,
@@ -298,6 +343,7 @@ class _registerProfileState extends State<registerProfile> {
                     for (int i = 0; i < _selections.length; i++) {
                       _selections[i] = (i == index);
                     }
+                    selectedValue = index;
                   });
                 },
               ),
@@ -436,26 +482,33 @@ class _registerProfileState extends State<registerProfile> {
               SizedBox(
                 height: 24.0,
               ),
-              blueButton(
-                buttonText: '회원가입',
-                onPressed: () {
-                  if (!isChecked || !isChecked1) {
-                    onebutton.checkEssentialDialog(context);
-                  } else if( username.length <2){
-                    onebutton.oneWordNameDialog(context);
-                  }else if( username.length >10){
-                    onebutton.tenWordNameDialog(context);
-                  }else if(!RegExp(r'^[a-zA-Z0-9가-힣]+$').hasMatch(username)){
-                    onebutton.KoEnNumDialog(context);
-                  }  else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => favorite()),
-                    );
-                  }
-                },
-              ), // 임시로 다음 페이지로 넘어가게} )
-            ],
+        blueButton(
+          buttonText: '회원가입',
+          onPressed: () async {
+            if (!isChecked || !isChecked1) {
+              onebutton.checkEssentialDialog(context);
+            } else if (username.length == 0) {
+              onebutton.noInputNameDialog(context);
+            } else if (username.length < 2) {
+              onebutton.oneWordNameDialog(context);
+            } else if (username.length > 10) {
+              onebutton.tenWordNameDialog(context);
+            } else if (!RegExp(r'^[a-zA-Z0-9가-힣]+$').hasMatch(username)) {
+              onebutton.KoEnNumDialog(context);
+            } else {
+              await join();
+              await sendCredentialsToServer();
+              userNo = await sendCredentialsToServer();
+              print('userno: $userNo');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => favorite(userNo: userNo)),
+              );
+            }
+          },
+        ),
+
+        ],
           ),
         ),
       ),

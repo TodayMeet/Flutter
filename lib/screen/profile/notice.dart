@@ -11,6 +11,7 @@ import '../../model/UI/widget/customAppBar.dart';
 
 
 class notice extends StatefulWidget {
+  // final int noticeN
   const notice({Key? key}) : super(key: key);
 
   @override

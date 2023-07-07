@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../model/UI/widget/button/blueButton.dart';
@@ -5,8 +7,6 @@ import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
 import '../../model/UI/widget/text/textfieldTitle.dart';
 import '../../screen/dialog/dialoglist.dart';
-import 'package:front/screen/profile/profileMain.dart';
-
 import '../../data/designconst/constants.dart';
 
 
@@ -24,19 +24,53 @@ class question extends StatefulWidget {
 class _questionState extends State<question> {
 
 
+  Future<void> inquiry() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/inquiry');
+    final requestData = {
+      'user': {'userNo': userNo},
+      'title': title,
+      'content' : content
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.post(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonData,
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+
+      print(url1);
+      print('문의 완료 ?${response.body}');
+      print(response);
+    onebutton.questionConfirmDialog(context);
+
+    } else {
+
+      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+
+      print(url1);
+
+
+    }
+  }
+
   TextEditingController textarea = TextEditingController();
+  String title = '';
   TextEditingController textarea1 = TextEditingController();
+  String content = '';
+  int userNo = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed:() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => profileMain()));},
+            Navigator.pop(context);
+            },
         ),
         title: '문의하기',
       ),
@@ -65,18 +99,14 @@ class _questionState extends State<question> {
               ),
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: textarea,
-                    decoration: InputDecoration(
-                      hintText: "2자 이상 30자 이하 한글, 영문, 숫자 입력 가능",
-                      hintStyle: TextStyle(color: Color(0xFFC8C8CB),fontSize: 13.0),
-                      border: InputBorder.none,
-                    ),
+              child: TextField(
+                controller: textarea,
+                decoration: InputDecoration(
+                  hintText: "2자 이상 30자 이하 한글, 영문, 숫자 입력 가능",
+                  hintStyle: TextStyle(color: Color(0xFFC8C8CB),fontSize: 13.0),
+                  border: InputBorder.none,
+                ),
 
-                  ),
-                ],
               ),
             ),
 
@@ -111,7 +141,10 @@ class _questionState extends State<question> {
               if(textarea1.text.length >500){
                 onebutton.over500Dialog(context);
               }else{
-                onebutton.questionConfirmDialog(context);
+                title=textarea.text;
+                content = textarea1.text;
+                inquiry();
+
               }
             }),
 

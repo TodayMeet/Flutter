@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:front/screen/profile/profileMain.dart';
 import '../../data/designconst/constants.dart';
@@ -14,123 +16,146 @@ class oftenQuestion extends StatefulWidget {
 }
 
 class _oftenQuestionState extends State<oftenQuestion> {
-  String appbarText = '자주 묻는 질문';
-  List<String> entries = <String>[
-    '건수 등록은 어떻게 하나요?',
-    '건수 등록은 어떻게 하나요?',
-    '건수 등록은 어떻게 하나요?',
-    '건수 등록은 어떻게 하나요?'
-  ];
-  List<String> entries1 = <String>[
-    '네비게이션바 가운데 버튼을 누르면 건수를 등록 할 수 있습니다 . 등록 절차에 따라 건수를 입력하시면 새로운 건수 등록이 완료됩니다.',
-    '네비게이션바 가운데 버튼을 누르면 건수를 등록 할 수 있습니다 . 등록 절차에 따라 건수를 입력하시면 새로운 건수 등록이 완료됩니다.',
-    '네비게이션바 가운데 버튼을 누르면 건수를 등록 할 수 있습니다 . 등록 절차에 따라 건수를 입력하시면 새로운 건수 등록이 완료됩니다.',
-    '네비게이션바 가운데 버튼을 누르면 건수를 등록 할 수 있습니다 . 등록 절차에 따라 건수를 입력하시면 새로운 건수 등록이 완료됩니다.',
-  ];
-  List<int> qindex = <int>[1, 2, 3, 4];
-  List<bool> isExpandedList = List<bool>.generate(4, (index) => false);
+  String question = '';
+  String answer = '';
+  int faqno = 0;
+  List<Map> finalresult = [];
+
+  Future<void> questionLoad() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/FAQ/list');
+    final requestData = {
+      'question' : question,
+      'answer' : answer,
+      'faqno' : faqno
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      // body: jsonData,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+
+      List<Map<String, dynamic>> mappedList = result.cast<Map<String, dynamic>>().toList();
+      mappedList.forEach((item) {
+        item["ischecked"] = false;
+      });
+      finalresult = mappedList;
+      List<bool> index = List<bool>.filled(finalresult.length, false);
+      setState(() {
+        finalresult = mappedList;
+      });
+
+    }
+  } //서버로 전송
+
+  @override
+  void initState() {
+    super.initState();
+    questionLoad();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed: () {
+            // questionLoad();
             Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => profileMain()));
           },
         ),
-        title: appbarText,
+        title: '자주 묻는 질문',
       ),
       body: ListView.builder(
-          padding: const EdgeInsets.all(8.0),
-          itemCount: entries.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () {
-                      setState(() {
-                        isExpandedList[index] = !isExpandedList[index];
-                      });
-                    },
+        itemCount: finalresult.length,
+        itemBuilder: (BuildContext context, int index) {
+          final faq = finalresult[index];
+          return Column(
+            children: [
+              ListTile(
+                onTap: () {
+                  setState(() {
+                    faq['ischecked'] = !faq['ischecked'];
+                    print(finalresult.length);
+                  });
+                },
+                title: Row(
+                  children: [
+                    Text(
+                      "Q",
+                      style: TextStyle(
+                          color: Color(0xFF3182F5),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      '${faq['question']}',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    Spacer(),
+                    TextButton(
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>((states) => Colors.transparent),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          faq['ischecked'] = !faq['ischecked'];
+                        });
+                      },
+                      child: Text(
+                        faq['ischecked'] ? '' : '',
+                        style: TextStyle(
+                          fontFamily: 'xeicon',
+                          color: Colors.black,
+                          fontSize: 22.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (faq['ischecked'])
+                Container(
+                  color: Color(0xFFF4F4F4),
+                  child: ListTile(
                     title: Row(
                       children: [
                         Text(
-                          "Q",
+                          "A",
                           style: TextStyle(
-                              color: Color(0xFF3182F5),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700),
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         SizedBox(width: 10),
-                        Text(
-                          '${entries[index]}',
-                          style: TextStyle(
+                        Flexible(
+                          child: Text(
+                            '${faq['answer']}',
+                            style: TextStyle(
                               color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700),
-                        ),
-                        Spacer(),
-                        TextButton(
-                          style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.resolveWith<Color>((states) => Colors.transparent),
+                              fontSize: 14,
+                            ),
+                            softWrap: true,
                           ),
-                            onPressed: () {
-                              setState(() {
-                                isExpandedList[index] = !isExpandedList[index];
-                              });
-                            },
-                            child: Text(
-                              isExpandedList[index]
-                                  ? ''
-                                  : '',
-                              style: TextStyle(
-                                fontFamily: 'xeicon',
-                                color: Colors.black,
-                                fontSize: 22.0,
-                              ),
-                            )),
-
+                        ),
                       ],
                     ),
                   ),
-                  if (isExpandedList[index])
-                    Container(
-                      color: Color(0xFFF4F4F4),
-                      child: ListTile(
-                        title: Row(
-                          children: [
-                            Text(
-                              "A",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Flexible(
-                              child: Text(
-                                '${entries1[index]}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                ),
-                                softWrap: true,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                ],
-              ),
-            );
-          }),
+                )
+            ],
+          );
+        },
+      ),
+
     );
   }
 }

@@ -20,25 +20,13 @@ class Start extends StatefulWidget {
 
 class _Start extends State<Start> {
   // List<dynamic> data = [];
-  String imageLocation = 'assets/images/LoginImage/logoimage.svg';
 
-  @override
-  void initState() {
-    super.initState();
-    Timer(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => login(),
-        ),
-      );
-    });
-    // fetchData();
-  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+      backgroundColor: Colors.white,
       body: startContent(),
     );
   }
@@ -78,15 +66,10 @@ class startContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.zero,
       width: 121,
       height: 84,
-      child: Padding(
-        padding: const EdgeInsets.all(0),
-        child: SvgPicture.asset(
-          "assets/images/LoginImage/logoimage.svg",
-          fit: BoxFit.contain,
-        ),
-      ),
+      child: Image.asset('assets/images/LoginImage/logoimage.png'),
     );
   }
 }
@@ -247,4 +230,19 @@ void saveLoginCredentials(String username, String password) async {
 //   } else {
 //     throw Exception('Failed to get userNo');
 //   }
+// }
+
+
+// @override
+// void initState() {
+//   super.initState();
+//   Timer(Duration(seconds: 2), () {
+//     Navigator.pushReplacement(
+//       context,
+//       MaterialPageRoute(
+//         builder: (context) => login(),
+//       ),
+//     );
+//   });
+//   // fetchData();
 // }

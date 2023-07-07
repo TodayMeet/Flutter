@@ -109,7 +109,13 @@ class _idFindState extends State<idFind> {
           leadingWidget: SvgButton(
               imagePath: backarrow,
               onPressed:() {
-                twobutton.backtoLoginDialog(context);
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => login(),
+                  ),
+                );
               }),
           title: '아이디 찾기',
         ),

@@ -14,11 +14,10 @@ import '../../model/TextPrint.dart';
 import '../../model/showtoast.dart';
 import '../../data/meetList_Provider.dart';
 import '../../model/mainList/meetListView.dart';
+import '../../routes.dart';
 import '../mainMap/mainPageMap.dart';
-import '../setting/setFilter.dart';
 import '../setting/setlocation.dart';
 import 'package:front/data/meetList.dart';
-import 'package:front/model/bottomBar.dart';
 
 RefreshController refreshController = RefreshController(initialRefresh: true);
 late StateNotifierProvider<meetListNotifier, List<meetList>> meetListProvider;
@@ -29,9 +28,7 @@ final StateProvider categoryNameProvider =
 final StateProvider sortProvider = StateProvider<String>((ref) => "최신순");
 
 class MainListBoard extends ConsumerStatefulWidget {
-  const MainListBoard({Key? key/*, required this.meetListData*/}) : super(key: key);
-
-  //final dynamic meetListData;
+  const MainListBoard({Key? key}) : super(key: key);
 
   @override
   MainListBoardState createState() => MainListBoardState();
@@ -44,7 +41,7 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
   //서버에서 listdata 받아오기
   Future<int> postListData(String sort, int pageNo, String categoryName) async {
     try {
-      final url = Uri.parse("http://todaymeet.shop:8080/meet/list/달서");
+      final url = Uri.parse("http://todaymeet.shop:8080/meet/list/${ref.watch(dongProvider)}");
       var postBody = {
         "sort": sort,
         "page": pageNo,
@@ -78,8 +75,6 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
   @override
   void initState() {
     super.initState();
-    //widget.meetListData
-    //    .forEach((element) => tempList.add(meetList.fromJson(element)));
     meetListProvider =
         StateNotifierProvider<meetListNotifier, List<meetList>>((ref) {
       return meetListNotifier(tempList);
@@ -132,7 +127,6 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
         backgroundColor: Colors.white,
         elevation: 1,
       ),
-      bottomNavigationBar: const BottomAppBar(child: BottomBar()),
       body: SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
@@ -231,8 +225,7 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
               heroTag: "필터화면 이동",
               backgroundColor: const Color(0xFF4874EA),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Filter()));
+                Navigator.pushNamed(context, Routes.filterPageRoute);
               },
               child: SvgPicture.asset(
                 "assets/icons/filter.svg",

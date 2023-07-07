@@ -47,6 +47,7 @@ class ListDetail extends ConsumerStatefulWidget {
 class ListDetailState extends ConsumerState<ListDetail> {
   late meet Meet; //건수 정보
   late String pinInformation; // 모임 핀정보
+  late String category;       // 지도 핀용 카테고리
 
   @override
   void initState() {
@@ -60,6 +61,47 @@ class ListDetailState extends ConsumerState<ListDetail> {
     Meet = meet.fromJson(meetData);
     pinInformation = DateFormat("MM.dd hh:mm ").format(Meet.time);
     pinInformation = "$pinInformation${Meet.categoryName}";
+    switch (Meet.categoryName) {
+      case "맛집":
+        category = 'restaurant';
+        break;
+      case "카페":
+        category = 'cafe';
+        break;
+      case "주류":
+        category = 'alcohol';
+        break;
+      case "영화":
+        category = 'movie';
+        break;
+      case "전시":
+        category = 'exhibition';
+        break;
+      case "공연":
+        category = 'performance';
+        break;
+      case "게임":
+        category = 'game';
+        break;
+      case "봉사":
+        category = 'service';
+        break;
+      case "독서":
+        category = 'read';
+        break;
+      case "스터디":
+        category = 'study';
+        break;
+      case "반려동물":
+        category = 'pet';
+        break;
+      case "운동":
+        category = 'exercise';
+        break;
+      default:
+        category = 'restaurant';
+        break;
+    }
   }
 
   //건수 상세화면 새로고침
@@ -213,7 +255,6 @@ class ListDetailState extends ConsumerState<ListDetail> {
                     var marker = new kakao.maps.CustomOverlay({
                       position: position,
                       content: content,
-                      yAnchor: 1
                     });
                     marker.setMap(map);
                   }
@@ -221,17 +262,50 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   marker.setMap(null);
                   
                   var position = new kakao.maps.LatLng(${double.parse(Meet.lat)}, ${double.parse(Meet.lon)});
-                  var content = '<div class="customoverlay">' +
-                     '    <span class="title">' + '$pinInformation' + '</span>' +
-                     '</div>';
+                  var content = '<div class="customoverlay_$category">' +
+                   '    <span class="title">' + '$pinInformation' + '</span>' +
+                   '</div>';
                   addMarker(content, position);
                     
                   ''',
                   customOverlayStyle: '''<style>
-                    .customoverlay {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
-                    .customoverlay .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:700;}
-                    .customoverlay::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
-                    </style>''',
+                      .customoverlay_restaurant {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_restaurant .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_restaurant::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
+                      .customoverlay_cafe {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_cafe .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_cafe::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
+                      .customoverlay_alcohol {position:relative;border-radius:20px;background:#3F51B5;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_alcohol .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_alcohol::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #3F51B5;}
+                      .customoverlay_movie {position:relative;border-radius:20px;background:#673AB7;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_movie .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_movie::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #673AB7;}
+                      .customoverlay_exhibition {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_exhibition .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_exhibition::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #607D8B;}
+                      .customoverlay_performance {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_performance .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_performance::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #607D8B;}
+                      .customoverlay_game {position:relative;border-radius:20px;background:#FF5722;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_game .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_game::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #FF5722;}
+                      .customoverlay_service {position:relative;border-radius:20px;background:##8BC34A;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_service .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_service::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: ##8BC34A;}
+                      .customoverlay_read {position:relative;border-radius:20px;background:#374046;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_read .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_read::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #374046;}
+                      .customoverlay_study {position:relative;border-radius:20px;background:#9C27B0;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_study .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_study::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #9C27B0;}
+                      .customoverlay_pet {position:relative;border-radius:20px;background:#795548;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_pet .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_pet::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #795548;}
+                      .customoverlay_exercise {position:relative;border-radius:20px;background:#DCA966;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_exercise .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_exercise::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #DCA966;}
+                      </style>''',
                 ),
               ],
             ),
@@ -638,14 +712,13 @@ class ListDetailState extends ConsumerState<ListDetail> {
                     var marker = new kakao.maps.CustomOverlay({
                       position: position,
                       content: content,
-                      yAnchor: 1
                     });
                     marker.setMap(map);
                   }
                   
                   marker.setMap(null);
                   var position = new kakao.maps.LatLng(${double.parse(Meet.lat)}, ${double.parse(Meet.lon)});
-                  var content = '<div class="customoverlay">' +
+                  var content = '<div class="customoverlay_$category">' +
                    '    <span class="title">' + '$pinInformation' + '</span>' +
                    '</div>';
                   addMarker(content, position);
@@ -657,9 +730,42 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   
                   ''',
                     customOverlayStyle: '''<style>
-                      .customoverlay {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:700;}
-                      .customoverlay::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
+                      .customoverlay_restaurant {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_restaurant .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_restaurant::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
+                      .customoverlay_cafe {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_cafe .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_cafe::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
+                      .customoverlay_alcohol {position:relative;border-radius:20px;background:#3F51B5;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_alcohol .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_alcohol::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #3F51B5;}
+                      .customoverlay_movie {position:relative;border-radius:20px;background:#673AB7;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_movie .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_movie::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #673AB7;}
+                      .customoverlay_exhibition {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_exhibition .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_exhibition::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #607D8B;}
+                      .customoverlay_performance {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_performance .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_performance::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #607D8B;}
+                      .customoverlay_game {position:relative;border-radius:20px;background:#FF5722;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_game .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_game::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #FF5722;}
+                      .customoverlay_service {position:relative;border-radius:20px;background:##8BC34A;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_service .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_service::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: ##8BC34A;}
+                      .customoverlay_read {position:relative;border-radius:20px;background:#374046;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_read .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_read::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #374046;}
+                      .customoverlay_study {position:relative;border-radius:20px;background:#9C27B0;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_study .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_study::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #9C27B0;}
+                      .customoverlay_pet {position:relative;border-radius:20px;background:#795548;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_pet .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_pet::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #795548;}
+                      .customoverlay_exercise {position:relative;border-radius:20px;background:#DCA966;color:#FFF;padding:5px;max-width:200px;}
+                      .customoverlay_exercise .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
+                      .customoverlay_exercise::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #DCA966;}
                       </style>''',
                     onTapMarker: (message) {
                       if (message.message == 'Map is clicked') {
@@ -767,7 +873,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   children: Meet.comments.asMap().entries.map((c) {
                     return Column(
                       children: [
-                        CommentContainer(context, c.value, c.key),
+                        CommentContainer(context, c.value, c.key, ref, true),
                       ],
                     );
                   }).toList(),
@@ -783,6 +889,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
+                            fullscreenDialog: true,
                               builder: (context) => Comments(
                                     meetNo: Meet.meetNo,
                                   )));

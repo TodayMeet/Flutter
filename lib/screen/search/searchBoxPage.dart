@@ -10,7 +10,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+import '../../data/popularList.dart';
+import '../../model/showtoast.dart';
 import '../../data/recentSearches.dart';
 import 'searchingBox.dart';
 
@@ -30,20 +34,34 @@ class SearchBoxPageState extends ConsumerState<SearchBoxPage> {
   // 최근 검색어 목록
   List<String> searchwords = [];
 
-  // 인기 카테고리 더미데이터
-  final List<String> popularCategory = [
-    '주류',
-    '맛집',
-    '카페',
-    '봉사',
-    '영화',
-    '드라마',
-    '운동',
-    '전시',
-    '공연',
-    '게임'
-  ];
-  final List<int> searchingNum = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10];
+  // 인기 검색어 받아오기
+  List<PopularList> popularList = [];
+  Future<int> getPopularCategoryList() async {
+    try {
+      final url =
+          Uri.parse('http://todaymeet.shop:8080/popular-category');
+
+      http.Response response = await http.get(url);
+
+      if (response.statusCode == 200){
+        var serverData = jsonDecode(utf8.decode(response.bodyBytes));
+        popularList.clear();
+        serverData
+            .forEach((element) => popularList.add(PopularList.fromJson(element)));
+
+        return 1;
+      } else{
+        print('Data download failed!');
+        showToast('Data download failed!');
+        return 0;
+      }
+    }
+    catch (e) {
+      print('There was a problem with the internet connection.');
+      showToast('There was a problem with the internet connection.');
+      return -1;
+    }
+  }
 
   // 최근 검색어 받아오기
   void updateScreen() {
@@ -187,43 +205,83 @@ class SearchBoxPageState extends ConsumerState<SearchBoxPage> {
             ),
 
             // 실시간 인기 카테고리
-            Column(
-              children: [
-                for (int i = 0; i < 10; i++)
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: const Color(0xFFF4F4F4),
-                    ),
-                    height: 40,
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${i + 1}. ${popularCategory[i]}',
-                          style: const TextStyle(
-                            color: Color(0xFF6C6C6C),
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            letterSpacing: -1,
+            FutureBuilder(
+              future: getPopularCategoryList(),
+              builder: (context, snapshot){
+                if(snapshot.hasData){
+                  return Column(
+                    children: [
+                      for (int i = 0; i < popularList.length; i++)
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: const Color(0xFFF4F4F4),
                           ),
-                        ),
-                        Text(
-                          '${searchingNum[i]} 건',
-                          style: const TextStyle(
-                            color: Color(0xFF6C6C6C),
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            letterSpacing: -1,
+                          height: 40,
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    '${i + 1}.',
+                                    style: const TextStyle(
+                                      color: Color(0xFF6C6C6C),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16,
+                                      letterSpacing: -1,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+
+                                  Text(
+                                    popularList[i].name,
+                                    style: const TextStyle(
+                                      color: Color(0xFF6C6C6C),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                      letterSpacing: -1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${popularList[i].count}',
+                                    style: const TextStyle(
+                                      color: Color(0xFF6C6C6C),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      letterSpacing: -1,
+                                    ),
+                                  ),
+
+                                  const Text(
+                                    '건',
+                                    style: TextStyle(
+                                      color: Color(0xFF6C6C6C),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      letterSpacing: -1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-              ],
+                        )
+                    ],
+                  );
+                } else {
+                  return const Center(
+                      child: CircularProgressIndicator());
+                }
+              },
             ),
+
           ],
         ),
       ),

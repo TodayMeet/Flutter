@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:front/model/bottomBar.dart';
 import '../mainList/mainListBoard.dart';
 
 class Filter extends ConsumerStatefulWidget {
@@ -364,9 +363,6 @@ class FilterState extends ConsumerState<Filter> {
                 ),
               ]
           ),
-        ),
-        bottomNavigationBar: const BottomAppBar(
-          child: BottomBar()
         ),
       ),
     );

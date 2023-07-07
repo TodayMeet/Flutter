@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../model/bottomBar.dart';
 import 'searchTabbarItem.dart';
 import 'searchBoxPage.dart';
 
@@ -95,7 +94,6 @@ class SearchBoxState extends ConsumerState<SearchBox>
           body: (ref.watch(textchangeProvider) == "")
               ? const SearchBoxPage()
               : const TabbarPage(),
-          bottomNavigationBar: const BottomBar(),
         )
     );
   }

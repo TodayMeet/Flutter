@@ -18,7 +18,6 @@ import '../../screen/profile/question.dart';
 import '../../screen/profile/secession.dart';
 import '../../screen/profile/termsofUse.dart';
 import '../../data/designconst/constants.dart';
-import '../../model/bottomBar.dart';
 
 
 
@@ -123,7 +122,6 @@ class _profileMainState extends State<profileMain> {
             ],
           ),
         ),
-        bottomNavigationBar: const BottomAppBar(child: BottomBar()),
       ),
     );
   }

@@ -1,29 +1,68 @@
 // 위치 설정 페이지
 
-// 최종 수정일 : 2023.6.22
+// 최종 수정일 : 2023.7.06
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
 // 적용 버튼 입력 시 서버에서 데이터 받아오기
-// 메인 페이지 갈 때 왼쪽 위에 동 정보 바꾸기
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:front/screen/mainList/mainListBoard.dart';
+import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
-import '../../model/setting/mapClass.dart';
+import '../../data/apiKey.dart';
+import '../../data/map/address.dart';
+import '../../model/showtoast.dart';
 import '../mainMap/mainPageMap.dart';
 
-class LocationPage extends ConsumerWidget {
-  LocationPage({super.key});
+class LocationPage extends ConsumerStatefulWidget {
+  const LocationPage({super.key});
+
+  @override
+  LocationPageState createState() => LocationPageState();
+}
+
+class LocationPageState extends ConsumerState<LocationPage> {
 
   final TextEditingController controller = TextEditingController();
   final List<Address> addressList = [];
   final addressStringProvider = StateProvider<String>((ref) => "");
   final addressListProvider = StateProvider<List<Address>?>((ref)=>null);
 
+  // 주소 검색하기
+  Future<void> addList () async{
+    String findquery = ref.watch(addressStringProvider);
+
+    try {
+      Dio dio = Dio();
+
+      final response = await dio.get(
+          'http://todaymeet.shop:8080/map/address?query=$findquery',
+          queryParameters: {'query':findquery},
+      );
+
+      if (response.statusCode == 200){
+        var serverData = response.data;
+        addressList.clear();
+        print(serverData);
+
+        serverData.forEach((element) => addressList.add(Address.fromJson(element)));
+      } else {
+        print("서버 값 오류");
+        showToast("서버 값 오류");
+      }
+    } catch(e) {
+      print('검색 오류');
+      showToast('검색 오류');
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -102,9 +141,10 @@ class LocationPage extends ConsumerWidget {
                         )
                     ),
                     ElevatedButton(
-                        onPressed: (){
-                          addList();
+                        onPressed: () async {
+                          await addList();
                           ref.read(addressListProvider.notifier).state = addressList;
+                          setState(() {});
                         },
                         child: const Text('검색')
                     ),
@@ -120,14 +160,6 @@ class LocationPage extends ConsumerWidget {
       ),
     );
   }
-
-  void addList (){
-    addressList.add(Address(address: "대구광역시 북구 산격동", latitude: 0, longitude:0));
-    for(var i = 1; i < 5; i++) {
-      addressList.add(
-          Address(address:"대구광역시 북구 산격 $i동", latitude:0, longitude:0));
-    }
-  }
 }
 
 ListView addressListView(List<Address>? lists, WidgetRef ref){
@@ -135,6 +167,20 @@ ListView addressListView(List<Address>? lists, WidgetRef ref){
     return ListView(
       children: const [SizedBox(height: 0)],
     );
+  }
+
+  // 동 위치 받아오기
+  Future<void> getDongName(double lat, double lon) async {
+    var kakaoGeoUrl = Uri.parse(
+        'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=$lon&y=$lat');
+    var kakaoGeo = await http.get(kakaoGeoUrl,
+        headers: {"Authorization": "KakaoAK $KakaoRestAPIKey"});
+    String addr = kakaoGeo.body;
+    var addrData = jsonDecode(addr);
+    print(addrData);
+
+    final String dongName = addrData['documents'][0]['region_3depth_name'];
+    ref.read(dongProvider.notifier).state = dongName;
   }
 
   return ListView.builder(
@@ -166,15 +212,16 @@ ListView addressListView(List<Address>? lists, WidgetRef ref){
                   final webViewController = ref.watch(mapControllerProvider);
                   webViewController?.runJavascript(
                       '''
-                      map.panTo(new kakao.maps.LatLng(33.450701, 126.570667));
+                      map.panTo(new kakao.maps.LatLng(${lists[index].lat},${lists[index].lon}));
                       '''
                   );
-
+                  await getDongName(double.parse(lists[index].lat), double.parse(lists[index].lon));
+                  refreshController.requestRefresh();
                   Navigator.pop(context);
                 },
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(lists[index].address,
+                  child: Text(lists[index].address_name,
                       style: const TextStyle(
                           color: Color(0xFF707070),
                           fontSize: 16,

@@ -1,22 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-import 'screen/search/searchMain.dart';
 import 'screen/mainMap/mainPageMap.dart';
+import 'screen/mainList/mainListBoard.dart';
+import 'screen/setting/setlocation.dart';
+import 'screen/setting/setFilter.dart';
+import 'screen/search/searchingBox.dart';
+import 'screen/search/searchMain.dart';
 import 'screen/setting/registerMeeting.dart';
 import 'screen/profile/profileMain.dart';
-import 'screen/chat/chatlist.dart';
+import 'screen/alarm/alarm.dart';
+import 'routes.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerWidget {
+final navigatorKeys = [
+  GlobalKey<NavigatorState>(),
+  GlobalKey<NavigatorState>(),
+  GlobalKey<NavigatorState>(),
+  GlobalKey<NavigatorState>(),
+  GlobalKey<NavigatorState>(),
+];
+
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends ConsumerState<MyApp> {
+  int _selectedIndex = 0;
+
+  void screenTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Pretendard'),
@@ -30,137 +57,238 @@ class MyApp extends ConsumerWidget {
           ),
         );
       },
-      home: MainPage(),
-    );
-  }
-}
+      home: Scaffold(
+        body: WillPopScope(
+          onWillPop: () async {
+            if(navigatorKeys[_selectedIndex].currentState!.canPop()){
+              navigatorKeys[_selectedIndex].currentState!.pop();
+            } else {
+              if(_selectedIndex != 0){
+                setState(() {
+                  _selectedIndex = 0;
+                });
+              } else {
+                SystemNavigator.pop();
+              }
+            }
+            return false;
+          },
+          child: IndexedStack(
+            index: _selectedIndex,
+            children: <Widget>[
+              // 메인 화면
+              Navigator(
+                key: navigatorKeys[0],
+                onGenerateRoute: (settings) {
+                  if (settings.name == Routes.boardPageRoute) {
+                    return MaterialPageRoute(
+                      builder: (context) => const MainListBoard(),
+                      settings: settings,
+                    );
+                  } else if (settings.name == Routes.setLocationPageRoute) {
+                    return MaterialPageRoute(
+                        builder: (context) => LocationPage(),
+                        settings: settings);
+                  } else if (settings.name == Routes.filterPageRoute) {
+                    return MaterialPageRoute(
+                        builder: (context) => const Filter(),
+                        settings: settings);
+                  }
+                  return MaterialPageRoute(
+                    builder: (context) => const MainPageMap(),
+                    settings: settings,
+                  );
+                },
+              ),
 
-class MainPage extends ConsumerStatefulWidget {
-  const MainPage({super.key});
+              // 탐색 화면
+              Navigator(
+                key: navigatorKeys[1],
+                onGenerateRoute: (settings) {
+                  if (settings.name == Routes.searchBoxRoute) {
+                    return MaterialPageRoute(
+                      builder: (context) => searchBox(context),
+                      settings: settings,
+                    );
+                  }
+                  return MaterialPageRoute(
+                      builder: (context) => searchMain(context),
+                      settings: settings);
+                },
+              ),
 
-  @override
-  MainPageState createState() => MainPageState();
-}
+              // 건수 등록 화면
+              Navigator(
+                key: navigatorKeys[2],
+                onGenerateRoute: (settings) {
+                  return MaterialPageRoute(
+                    builder: (context) => const RegisterMeeting(),
+                    settings: settings,
+                  );
+                },
+              ),
 
-class MainPageState extends ConsumerState<MainPage> {
-  int _selectedIndex = 0;
+              // 알림 화면
+              Navigator(
+                key: navigatorKeys[3],
+                onGenerateRoute: (settings) {
+                  return MaterialPageRoute(
+                    builder: (context) => const alarm(),
+                    settings: settings,
+                  );
+                },
+              ),
 
-  void screenTapped(int index){
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: <Widget>[
-          // 메인 화면
-          Navigator(
-            onGenerateRoute: (settings){
-              return MaterialPageRoute(
-                  builder: (context) => const MainPageMap(),
-                  settings: settings
-              );
-            },
+              // 내 정보 화면
+              Navigator(
+                key: navigatorKeys[4],
+                onGenerateRoute: (settings) {
+                  return MaterialPageRoute(
+                    builder: (context) => const profileMain(),
+                    settings: settings,
+                  );
+                },
+              ),
+            ],
           ),
-
-          // 탐색 화면
-          Navigator(
-            onGenerateRoute: (settings){
-              return MaterialPageRoute(
-                  builder: (context) => const SearchMain(),
-                  settings: settings
-              );
-            },
-          ),
-
-          // 건수 등록 화면
-          Navigator(
-            onGenerateRoute: (settings) {
-              return MaterialPageRoute(
-                  builder: (context) => const RegisterMeeting(),
-                  settings: settings,
-              );
-            },
-          ),
-
-          // 알림 화면
-          Navigator(
-            onGenerateRoute: (settings) {
-              return MaterialPageRoute(
-                builder: (context) => const chatlist(),
-                settings: settings,
-              );
-            },
-          ),
-
-          // 내 정보 화면
-          Navigator(
-            onGenerateRoute: (settings) {
-              return MaterialPageRoute(
-                builder: (context) => const profileMain(),
-                settings: settings,
-              );
-            },
-          ),
-        ],
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          // 메인 화면
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              "assets/images/Bottombar/Bottombar_first.png",
-              scale: 4,
+        ),
+        bottomNavigationBar: /*BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          showUnselectedLabels: false,
+          showSelectedLabels: false,
+          onTap: screenTapped,
+          currentIndex: _selectedIndex,
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset("assets/images/Bottombar/home.svg",),
+              label: "home",
             ),
-            label: 'Home'
-          ),
 
-          // 탐색 화면
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                "assets/images/Bottombar/Bottombar_second.png",
-                scale: 4,
-              ),
-              label: 'Search'
-          ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset("assets/images/Bottombar/search.svg",),
+              label: "search",
+            ),
 
-          // 건수 등록 화면
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                "assets/images/Bottombar/Bottombar_center.png",
-                scale: 4,
-              ),
-              label: 'Register'
-          ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset("assets/images/Bottombar/register.svg",),
+              label: "register",
+            ),
 
-          // 알림 화면
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                "assets/images/Bottombar/Bottombar_third.png",
-                scale: 4,
-              ),
-              label: 'Alarm'
-          ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset("assets/images/Bottombar/alarm.svg",),
+              label: "alarm",
+            ),
 
-          // 내 정보 화면
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                "assets/images/Bottombar/Bottombar_fourth.png",
-                scale: 4,
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset("assets/images/Bottombar/my_information.svg",),
+              label: "profile",
+            ),
+          ],
+        ),*/
+
+            Container(
+          decoration: const BoxDecoration(
+              color: Color.fromRGBO(255, 255, 255, 0.08),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, -4),
+                  blurRadius: 8,
+                  color: Color.fromRGBO(255, 255, 255, 0.1),
+                  blurStyle: BlurStyle.outer,
+                )
+              ]),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          height: 48,
+          width: double.infinity,
+          child: Row(
+            children: [
+              Expanded(
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    "assets/images/Bottombar/home.svg",
+                    colorFilter: ColorFilter.mode(
+                        _selectedIndex == 0
+                            ? const Color(0xFF5E5F68)
+                            : const Color(0xFFAEAFB3),
+                        BlendMode.srcIn),
+                  ),
+                  onPressed: () {
+                    screenTapped(0);
+                  },
+                ),
               ),
-              label: 'MyInformation'
+              const SizedBox(width: 8),
+              Expanded(
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    "assets/images/Bottombar/search.svg",
+                    colorFilter: ColorFilter.mode(
+                        _selectedIndex == 1
+                            ? const Color(0xFF5E5F68)
+                            : const Color(0xFFAEAFB3),
+                        BlendMode.srcIn),
+                  ),
+                  onPressed: () {
+                    screenTapped(1);
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                      "assets/images/Bottombar/register.svg"),
+                  onPressed: () {
+                    screenTapped(2);
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    "assets/images/Bottombar/alarm.svg",
+                    colorFilter: ColorFilter.mode(
+                        _selectedIndex == 3
+                            ? const Color(0xFF5E5F68)
+                            : const Color(0xFFAEAFB3),
+                        BlendMode.srcIn),
+                  ),
+                  onPressed: () {
+                    screenTapped(3);
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    "assets/images/Bottombar/my_information.svg",
+                    colorFilter: ColorFilter.mode(
+                        _selectedIndex == 4
+                            ? const Color(0xFF5E5F68)
+                            : const Color(0xFFAEAFB3),
+                        BlendMode.srcIn),
+                  ),
+                  onPressed: () {
+                    screenTapped(4);
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: screenTapped,
+        ),
       ),
     );
   }
+}
+
+Widget searchBox(BuildContext context){
+  return const SearchBox();
+}
+
+Widget searchMain(BuildContext context){
+  return const SearchMain();
 }
 
 class NoGlowScrollBehavior extends ScrollBehavior {

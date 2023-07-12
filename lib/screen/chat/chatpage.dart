@@ -10,7 +10,7 @@ import 'package:front/model/UI/widget/customAppBar.dart';
 import 'package:intl/intl.dart';
 import 'package:badges/badges.dart' as badges;
 
-
+//sddddddd
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
   @override

@@ -109,6 +109,9 @@ class _MeetingFeeState extends State<MeetingFee> {
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: TextField(
+                  enabled: !isPressed,
+                  maxLength: 7,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
                   textAlign: TextAlign.start,
@@ -122,10 +125,11 @@ class _MeetingFeeState extends State<MeetingFee> {
                       color: Color(0xFFC8C8CB),
                       letterSpacing: -0.5,
                     ),
+                    counterText: '',
                   ),
                   controller: controller,
-                  maxLines: null,
-                  expands: true,
+                  maxLines: 1,
+                  expands: false,
                 ),
               ),
               Container(

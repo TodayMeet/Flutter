@@ -59,7 +59,6 @@ class _RegisterMeetingState extends State<RegisterMeeting> {
           centerTitle: true,
           leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
               },
               color: Colors.black,
               icon: SvgPicture.asset(

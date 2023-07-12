@@ -304,16 +304,24 @@ Widget reportButton(String str, BuildContext context) {
           context: context,
           barrierDismissible: false,
           builder: ((context) {
-            return AlertDialog(
-              contentPadding: EdgeInsets.zero,
-              backgroundColor: Colors.white,
-              shadowColor: const Color(0x1A000000),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+            return Container(
+              width: 320,
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x1A000000),
+                    blurRadius: 30,
+                    offset: Offset(0, 8),
+                  )
+                ]
               ),
-              content: SizedBox(
-                width: 320,
-                child: Column(
+              child: AlertDialog(
+                contentPadding: EdgeInsets.zero,
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Padding(
@@ -329,7 +337,6 @@ Widget reportButton(String str, BuildContext context) {
                       ),
                     ),
 
-                    // 네 버튼
                     Container(
                       decoration: const BoxDecoration(
                           border: Border(
@@ -337,6 +344,7 @@ Widget reportButton(String str, BuildContext context) {
                                   color: Color(0xFFDADADA), width: 1))),
                       child: Row(
                         children: [
+                          // 네 버튼
                           SizedBox(
                             width: 160,
                             height: 56,

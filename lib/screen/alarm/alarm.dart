@@ -1,7 +1,21 @@
-import 'package:flutter/cupertino.dart';
+// 알림창 페이지
+
+// 최종 수정일 : 2023.7.11
+// 작업자 : 남재혁 -> 김혁
+
+// 추가 작업 예정 사항
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:front/data/dummy_meetList.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import '../../model/UI/widget/customAppBar.dart';
+import '../../model/showtoast.dart';
+import '../../data/alarm/alarmMessage.dart';
+import '../../data/alarm/indexProcess.dart';
+import '../../data/dummy_meetList.dart';
 import '../mainList/Loading_to_mainListBoard.dart';
 import '../profile/userProfile.dart';
 
@@ -13,163 +27,113 @@ class alarm extends StatefulWidget {
 }
 
 class _alarmState extends State<alarm> {
-  String host = '000';
-  int userNo = 1;
-  List<Map> alarm = [
-    {
-      'name': "000님이 나를 팔로우 합니다.",
-      'time': '방금',
-      'categories': 'follow',
-      'num': 1,
-      'image':'assets/images/User_Picture/User_pic_sample7.png'
-    },
-    {
-      'name': "000님이 나를 팔로우 합니다.",
-      'time': '1분',
-      'categories': 'follow',
-      'num': 1,
-      'image':'assets/images/User_Picture/User_pic_sample6.png'
-    },
-    {
-      'name': "새로운 건수가 3건 등록되었습니다.",
-      'time': '3분',
-      'categories': 'newEvent',
-      'num': 2,
-      'image':'assets/images/User_Picture/User_pic_sample5.png'
-    },
-    {
-      'name': "강남역에서 불금~! 참가가 승인되었습니다.",
-      'time': '5분',
-      'categories': 'approved',
-      'num': 3,
-      'image':'assets/images/User_Picture/User_pic_sample6.png'
-    },
-    {
-      'name': "강남역에서 불금~! 참가가 거절되었습니다.",
-      'time': '7분',
-      'categories': 'denied',
-      'num': 4,
-      'image':'assets/images/User_Picture/User_pic_sample6.png'
-    },
-    {
-      'name': "강남역에서 불금~!에 새로운 댓글이 달렸습니다.",
-      'time': '9분',
-      'categories': 'comment',
-      'num': 5,
-      'image':'assets/images/User_Picture/User_pic_sample6.png'
-    },
-    {
-      'name': "강남역에서 불금~!에서 참가 요청을 했습니다.",
-      'time': '11분',
-      'categories': 'invite',
-      'num': 6,
-      'image':'assets/images/User_Picture/User_pic_sample6.png'
-    },
-  ];
 
-  // Future<List<String>> alarmLoad() async {
-  //   final url1 = Uri.parse('http://todaymeet.shop:8080/notifi/all?userNo=${userNo}');
-  //   // final requestData = selectedCategories.toList();
-  //   final jsonData = jsonEncode(requestData);
-  //   final response = await http.get(
-  //     url1,
-  //     headers: {'Content-Type': 'application/json'},
-  //
-  //   );
-  //   if (response.statusCode == 200) {
-  //     // print('전송잘됨');
-  //     // print(selectedCategories.toList());
-  //     // print(url1);
-  //     // var serverData = jsonDecode(utf8.decode(response.bodyBytes));
-  //
-  //     List<dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
-  //     List<String> resultList = [];
-  //     for (dynamic data in result) {
-  //       // 데이터를 String으로 변환하여 결과 리스트에 추가
-  //       String resultItem = data.toString();
-  //       resultList.add(resultItem);
-  //     }
-  //     print(resultList);
-  //     return resultList;
-  //     // print(response);
-  //
-  //     // Navigator.push(
-  //     //   context,
-  //     //   MaterialPageRoute(builder: (context) => favorite()),
-  //     // );
-  //   } else {
-  //     print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
-  //     print(selectedCategories.toList());
-  //     // print(widget.password);
-  //     // print(widget.email);
-  //     print(url1);
-  //     print(jsonData);
-  //     print(response.body);
-  //     return ['a'];
-  //   }
-  // }
+  // 게시판 컨트롤러
+  RefreshController alarmrefreshController = RefreshController(initialRefresh: true);
+
+  // 현재 알림 리스트
+  List<Alarm> tempAlarm = [];
+
+  // 서버에서 알림 리스트 받아오기
+  Future<void> getAlarmList() async {
+    try {
+      final url = Uri.parse(
+          "http://todaymeet.shop:8080/notifi/all?userNo=${tempUser["userNo"]}");
+
+      http.Response response = await http.get(url);
+      if (response.statusCode == 200) {
+        tempAlarm = [];
+        List<dynamic> serverData = json.decode(utf8.decode(response.bodyBytes));
+        print(serverData);
+        serverData.forEach((element) => tempAlarm.add(Alarm.fromJson(element)));
+        setState(() {});
+      }else{
+        print('서버 통신 오류');
+        showToast('서버 통신 오류');
+      }
+    }catch(e) {
+      print('알림 오류');
+      showToast('알림 오류');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         automaticallyImplyLeading: false,
         title: '알림',
         actionWidget: null,
       ),
-      body: ListView.builder(
-        itemCount: alarm.length,
-        itemBuilder: (context, index) {
-          final items = alarm[index];
-          final alarmCategory = alarm[index]['num'];//0xFFF7F8FA
+      body: SmartRefresher(
+        controller: alarmrefreshController,
+        enablePullUp: false,
+        enablePullDown: true,
+        onRefresh: () async {
+          await getAlarmList();
+          print(tempAlarm);
 
-          return ListTile(
-              leading: Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset(items['image'],fit: BoxFit.cover),
-              ),
-
-              title: Text(items['name']),
-              subtitle: Text(items['time']),
-              onTap: () {
-
-              });
+          alarmrefreshController.refreshCompleted();
         },
-      ),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: ListView.builder(
+            itemCount: tempAlarm.length,
+            itemBuilder: (context, index){
+              return GestureDetector(
+                onTap: (){
+                  pageTransition(context, tempAlarm[index].notiType,
+                      tempAlarm[index].userNumber, tempAlarm[index].meetNumber, tempAlarm[index].name);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xFFF7F8FA),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // 알림창 사진
+                      ClipOval(
+                        child: Image.network(
+                          tempAlarm[index].imageLink,
+                          height: 36,
+                          width: 36,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 알림 메세지
+                          SizedBox(
+                            width: 250,
+                              child: alarmMessage(tempAlarm[index].notiType, tempAlarm[index].name)),
+                          const SizedBox(height:4),
+
+                          // 시간
+                          Text(
+                            tempAlarm[index].time,
+                            style: const TextStyle(
+                              color: Color(0xFF949596),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      )
     );
   }
 }
-// switch(alarmCategory){
-//   case 1:
-//     Navigator.push(
-//     context,
-//     MaterialPageRoute(builder: (context) => userProfile()));
-//     break;
-//   case 2:
-//     Navigator.push(context,
-//         MaterialPageRoute(
-//             builder: (context) => Loading_to_mainListBoard()));
-//     break;
-//   case 3:
-//     Navigator.push(context,
-//         MaterialPageRoute(
-//             builder: (context) => userProfile()));
-//   case 4:
-//     Navigator.push(context,
-//         MaterialPageRoute(
-//             builder: (context) => Loading_to_mainListBoard()));
-//   case 5:
-//     Navigator.push(context,
-//         MaterialPageRoute(
-//             builder: (context) => Loading_to_mainListBoard()));
-//   case 6:
-//     Navigator.push(context,
-//         MaterialPageRoute(
-//             builder: (context) => Loading_to_mainListBoard()));
-// }

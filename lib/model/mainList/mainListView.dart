@@ -62,7 +62,7 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                 Row(
                   children: [
                     StringText_letterspacing('모집 마감 시간: ', 12, FontWeight.w400, Colors.black, -0.5),
-                    StringText_letterspacing(DateFormat('HH:mm').format(list.time), 12, FontWeight.w400, Colors.black, -0.5),
+                    StringText_letterspacing(DateFormat('H:mm').format(list.time), 12, FontWeight.w400, Colors.black, -0.5),
                   ],
                 )
               ],
@@ -99,7 +99,7 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
               children: [
                 StringText(list.address, 13, FontWeight.w700, const Color(0xff949596)), //동네 이름
                 StringText(' ', 13, FontWeight.w700, const Color(0xff949596)),
-                StringText(DateFormat('MM-dd | hh:mm').format(list.time), 13, FontWeight.w700, const Color(0xff949596)),
+                StringText(DateFormat('M-dd | h:mm').format(list.time), 13, FontWeight.w700, const Color(0xff949596)),
               ],
             ), //동네, 날짜, 시간
 

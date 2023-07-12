@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>11928705272-chv6pd09424tb0p7nqk77m8csh22gocm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.11928705272-chv6pd09424tb0p7nqk77m8csh22gocm</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>11928705272-93p6jpjanmameslpveujufllmngs3icn.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDn7wA2PFZeaic4vlXHcQunk995vP_bm9s</string>
+	<key>GCM_SENDER_ID</key>
+	<string>11928705272</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.front</string>
+	<key>PROJECT_ID</key>
+	<string>today-meet-2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>today-meet-2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:11928705272:ios:21e89212129dd71ab8430d</string>
+</dict>
+</plist>

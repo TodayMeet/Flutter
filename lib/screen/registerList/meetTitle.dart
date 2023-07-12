@@ -6,6 +6,7 @@
 // 추가 작업 예정 사항
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../setting/registerMeeting.dart' as meet;
 import 'meetContent.dart';
@@ -40,6 +41,7 @@ class _MeetingTitleState extends State<MeetingTitle> {
                 ),
                 child: TextField(
                   maxLength: 20,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.symmetric(horizontal: 16),

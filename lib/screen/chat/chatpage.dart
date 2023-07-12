@@ -1,21 +1,12 @@
-import 'package:bubble/bubble.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/data/designconst/constants.dart';
 import 'package:front/model/UI/widget/button/svgButton.dart';
 import 'package:front/model/UI/widget/button/xeiconButton.dart';
 import 'package:front/model/UI/widget/customAppBar.dart';
+import 'package:bubble/bubble.dart';
 
 import 'package:intl/intl.dart';
 import 'package:badges/badges.dart' as badges;
-
-//sddddddd
-class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
-  @override
-  _ChatPageState createState() => _ChatPageState();
-}
 
 class ChatMessage extends StatelessWidget {
   final String content;
@@ -67,6 +58,12 @@ class ChatMessage extends StatelessWidget {
     formattedTime.replaceAll('AM', '오전').replaceAll('PM', '오후');
     return replacedTime;
   }//시간 형식 지정
+}
+
+class ChatPage extends StatefulWidget {
+  const ChatPage({Key? key}) : super(key: key);
+  @override
+  _ChatPageState createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
@@ -171,8 +168,8 @@ class _ChatPageState extends State<ChatPage> {
                   return ListTile(
                     leading: Container(
                       child: Image.asset(users['image'],
-                      width: 26,
-                      height: 26,),
+                        width: 26,
+                        height: 26,),
                     ),
                     title: Text(users['name'],style: TextStyle(fontSize: 12.0),),
                     // trailing: Container(

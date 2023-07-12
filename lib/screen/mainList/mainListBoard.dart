@@ -93,8 +93,11 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
         leadingWidth: 110,
         leading: TextButton(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => LocationPage()));
+            Navigator.pushNamed(
+              context,
+              Routes.setLocationPageRoute,
+              arguments: true,
+            );
           },
           child: Row(
             children: [

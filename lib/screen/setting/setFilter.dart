@@ -12,17 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../mainList/mainListBoard.dart';
 
-class Filter extends ConsumerStatefulWidget {
-  const Filter({Key? key}) : super(key: key);
-
-  @override
-  FilterState createState() => FilterState();
-}
-
-class FilterState extends ConsumerState<Filter> {
-  final ScrollController _scrollController = ScrollController();
-
-  List<Map> categories = [
+final categoryProvider = StateProvider<List<Map>>((ref) {
+  return [
     {"name": "맛집", "isChecked": false, "image_color": "0xFFE91E63",
       "category_image": "assets/images/Category/Restaurant.svg"},
     {"name": "카페", "isChecked": false, "image_color": "0xFFE91E63",
@@ -48,6 +39,21 @@ class FilterState extends ConsumerState<Filter> {
     {"name": "운동", "isChecked": false, "image_color": "0xFFDCA966",
       "category_image": "assets/images/Category/Sports.svg"},
   ];
+});
+
+final sortfilterProvider = StateProvider<List<bool>>((ref){
+  return [true, false, false];
+});
+
+class Filter extends ConsumerStatefulWidget {
+  const Filter({Key? key}) : super(key: key);
+
+  @override
+  FilterState createState() => FilterState();
+}
+
+class FilterState extends ConsumerState<Filter> {
+  final ScrollController _scrollController = ScrollController();
 
   bool isSelected1 = true;
   bool isSelected2 = false;
@@ -55,6 +61,8 @@ class FilterState extends ConsumerState<Filter> {
 
   @override
   Widget build(BuildContext context) {
+    List<Map> categories = ref.watch(categoryProvider);
+    List<bool> sort = ref.watch(sortfilterProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -165,7 +173,7 @@ class FilterState extends ConsumerState<Filter> {
                                 RoundedRectangleBorder(
                                   borderRadius : BorderRadius.circular(12),
                                   side: BorderSide(
-                                    color: isSelected1 ? const Color(0xFF5B5B5B)
+                                    color: sort[0] ? const Color(0xFF5B5B5B)
                                         : const Color(0xFFDBDBDB)
                                   ),
                                 ),
@@ -173,16 +181,12 @@ class FilterState extends ConsumerState<Filter> {
                               backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white)
                             ),
                             onPressed: (){
-                              setState(() {
-                                isSelected1 = true;
-                                isSelected2 = false;
-                                isSelected3 = false;
-                              });
+                              ref.read(sortfilterProvider.notifier).state = [true, false, false];
                             },
                             child: Center(
                               child: Text("최신순",
                                 style: TextStyle(
-                                  color : isSelected1 ? Colors.black : const Color(0xFF707070),
+                                  color : sort[0] ? Colors.black : const Color(0xFF707070),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: -0.5,
@@ -205,7 +209,7 @@ class FilterState extends ConsumerState<Filter> {
                                   RoundedRectangleBorder(
                                     borderRadius : BorderRadius.circular(12),
                                     side: BorderSide(
-                                        color: isSelected2 ? const Color(0xFF5B5B5B)
+                                        color: sort[1] ? const Color(0xFF5B5B5B)
                                             : const Color(0xFFDBDBDB)
                                     ),
                                   ),
@@ -213,16 +217,12 @@ class FilterState extends ConsumerState<Filter> {
                                 backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white)
                             ),
                             onPressed: (){
-                              setState(() {
-                                isSelected1 = false;
-                                isSelected2 = true;
-                                isSelected3 = false;
-                              });
+                              ref.read(sortfilterProvider.notifier).state = [false, true, false];
                             },
                             child: Center(
                               child: Text("마감 임박 순",
                                 style: TextStyle(
-                                  color : isSelected2 ? Colors.black : const Color(0xFF707070),
+                                  color : sort[1] ? Colors.black : const Color(0xFF707070),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: -0.5,
@@ -245,7 +245,7 @@ class FilterState extends ConsumerState<Filter> {
                                   RoundedRectangleBorder(
                                     borderRadius : BorderRadius.circular(12),
                                     side: BorderSide(
-                                        color: isSelected3 ? const Color(0xFF5B5B5B)
+                                        color: sort[2] ? const Color(0xFF5B5B5B)
                                             : const Color(0xFFDBDBDB)
                                     ),
                                   ),
@@ -253,16 +253,12 @@ class FilterState extends ConsumerState<Filter> {
                                 backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white)
                             ),
                             onPressed: (){
-                              setState(() {
-                                isSelected1 = false;
-                                isSelected2 = false;
-                                isSelected3 = true;
-                              });
+                              ref.read(sortfilterProvider.notifier).state = [false, false, true];
                             },
                             child: Center(
                               child: Text("참여 높은 순",
                                 style: TextStyle(
-                                  color : isSelected3 ? Colors.black : const Color(0xFF707070),
+                                  color : sort[2] ? Colors.black : const Color(0xFF707070),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: -0.5,
@@ -300,10 +296,10 @@ class FilterState extends ConsumerState<Filter> {
                                     category.add(categories[i]["name"]);
                                   }
                               }
-                              if(isSelected1 == true){
+                              if(sort[0] == true){
                                 //print('정렬 순 : 최신 순');
                                 ref.read(sortProvider.notifier).state = "최신순";
-                              }else if(isSelected2 == true){
+                              }else if(sort[1] == true){
                                 //print('정렬 순 : 마감 임박 순');
                                 ref.read(sortProvider.notifier).state = "마감임박순";
                               }else{
@@ -315,6 +311,7 @@ class FilterState extends ConsumerState<Filter> {
                               }else{
                                 ref.read(categoryNameProvider.notifier).state = category[0];
                               }
+                              print(sort);
                               refreshController.requestRefresh();
 
                               Navigator.pop(context);
@@ -343,10 +340,8 @@ class FilterState extends ConsumerState<Filter> {
                                 for(int index = 0; index < categories.length; index++) {
                                   categories[index]["isChecked"] = false;
                                 }
-                                isSelected1 = true;
-                                isSelected2 = false;
-                                isSelected3 = false;
                               });
+                              ref.read(sortfilterProvider.notifier).state = [true, false, false];
                             },
                               child: const Text("초기화",
                                   style: TextStyle(

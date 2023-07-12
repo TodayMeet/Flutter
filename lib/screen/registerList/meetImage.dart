@@ -15,6 +15,7 @@ import 'package:dotted_border/dotted_border.dart';
 
 import '../setting/registerMeeting.dart' as meet;
 import 'meetApproval.dart';
+import '../../model/showToast.dart';
 
 class MeetingImage extends StatefulWidget {
   const MeetingImage({Key? key}) : super(key: key);
@@ -36,14 +37,27 @@ class _MeetingImageState extends State<MeetingImage> {
     List<XFile>? images = await _imagePicker.pickMultiImage(
         maxHeight: 1920, maxWidth: 1080, imageQuality: 50);
 
-    setState(() {
-      for (int i = 0; i < 5; i++) {
-        if (imageCount < 5 && i < images.length) {
-          _imageFiles.add(images[i]);
-          _showFiles.add(File(images[i].path));
+    if(images.isEmpty){
+      return;
+    }
+
+    for(final image in images ?? []){
+      final file = File(image.path);
+      if(_imageFiles.length < 5 && !_imageFiles.contains(image)){
+        setState(() {
+          _imageFiles.add(image);
+          _showFiles.add(file);
           imageCount++;
-        }
+        });
       }
+    }
+  }
+
+  void removeImage(int index) {
+    setState(() {
+      _showFiles.removeAt(index);
+      _imageFiles.removeAt(index);
+      imageCount--;
     });
   }
 
@@ -79,9 +93,10 @@ class _MeetingImageState extends State<MeetingImage> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                height: 65,
+                margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                height: 89,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     imageCount < 5
                     ? Container(
@@ -92,8 +107,8 @@ class _MeetingImageState extends State<MeetingImage> {
                         borderType: BorderType.RRect,
                         radius: const Radius.circular(8),
                         child: SizedBox(
-                          height: imageSize,
-                          width: imageSize,
+                          height: imageSize-2,
+                          width: imageSize-2,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               shadowColor: Colors.transparent,
@@ -104,6 +119,8 @@ class _MeetingImageState extends State<MeetingImage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SvgPicture.asset("assets/icons/picture.svg"),
+
+                                const SizedBox(height: 2),
                                 Text("($imageCount/5)",
                                   style: const TextStyle(
                                     color: Color(0xFF2F2F2F),
@@ -123,16 +140,44 @@ class _MeetingImageState extends State<MeetingImage> {
                         itemCount: 5,
                         itemBuilder: (BuildContext context, int index){
                           return imageCount > index
-                              ? Container(
-                                width: imageSize,
-                                height: imageSize,
-                                margin: const EdgeInsets.only(right: 8),
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.file(_showFiles[index],
-                                        fit: BoxFit.fill
+                              ? Stack(
+                                children: [
+                                  Center(
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        await _pickImages();
+                                      },
+                                      child: Container(
+                                        width: imageSize,
+                                        height: imageSize,
+                                        margin: const EdgeInsets.only(right: 8),
+                                        child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(12),
+                                            child: Image.file(_showFiles[index],
+                                                fit: BoxFit.fill
+                                            )
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 3.5,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      key: Key('RemoveButton$index'),
+                                      onTap: () => removeImage(index),
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: SvgPicture.asset(
+                                          "assets/icons/image_close.svg"
+                                        ),
+                                      ),
                                     )
-                                ),
+                                  )
+                                ],
                               ): const SizedBox.shrink();
                       }),
                     ),
@@ -176,23 +221,51 @@ class _MeetingImageState extends State<MeetingImage> {
             ]
         ): imageCount == 0 ? const SizedBox.shrink()
           :Container(
-            height: 60,
-            margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+            height: 77,
+            margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: 5,
               itemBuilder: (BuildContext context, int index){
                 return imageCount > index
-                    ? Container(
-                        width: imageSize,
-                        height: imageSize,
-                        margin: const EdgeInsets.only(right: 6),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.file(_showFiles[index],
-                                fit: BoxFit.cover
-                            )
+                    ? Stack(
+                      children: [
+                        Center(
+                          child: GestureDetector(
+                            onTap: () async {
+                              await _pickImages();
+                            },
+                            child: Container(
+                                width: imageSize,
+                                height: imageSize,
+                                margin: const EdgeInsets.only(top: 12, right: 6),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.file(_showFiles[index],
+                                        fit: BoxFit.cover
+                                    )
+                                ),
+                            ),
+                          ),
                         ),
+                        Positioned(
+                            top: 3.5,
+                            right: 0,
+                            child: GestureDetector(
+                              key: Key('RemoveButton$index'),
+                              onTap: () => removeImage(index),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: SvgPicture.asset(
+                                  "assets/icons/image_close.svg"
+                                ),
+                              ),
+                            )
+                        )
+                      ],
                     ): const SizedBox.shrink();
                 }
               ),

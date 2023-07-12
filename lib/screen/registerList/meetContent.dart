@@ -7,6 +7,7 @@
 // 이미지 선택 위젯 완성되면 거기에 연결하기
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../setting/registerMeeting.dart' as meet;
 import 'meetImage.dart';
@@ -41,6 +42,7 @@ class _MeetingContentState extends State<MeetingContent> {
                 ),
                 child: TextField(
                   maxLength: 500,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(16),

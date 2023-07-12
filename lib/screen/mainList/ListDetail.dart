@@ -53,13 +53,13 @@ class ListDetailState extends ConsumerState<ListDetail> {
   void initState() {
     super.initState();
     upLoadData(widget.meetData); //건수 데이터 클래스 객체화
-    print(Meet.meetNo);
+    print("건수 번호 : ${Meet.meetNo}");
   }
 
   // 상세화면 데이터 불러오기
   void upLoadData(dynamic meetData) {
     Meet = meet.fromJson(meetData);
-    pinInformation = DateFormat("MM.dd hh:mm ").format(Meet.time);
+    pinInformation = DateFormat("M.dd hh:mm ").format(Meet.time);
     pinInformation = "$pinInformation${Meet.categoryName}";
     switch (Meet.categoryName) {
       case "맛집":
@@ -269,42 +269,42 @@ class ListDetailState extends ConsumerState<ListDetail> {
                     
                   ''',
                   customOverlayStyle: '''<style>
-                      .customoverlay_restaurant {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_restaurant .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_restaurant::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
-                      .customoverlay_cafe {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_cafe .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_cafe::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
-                      .customoverlay_alcohol {position:relative;border-radius:20px;background:#3F51B5;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_alcohol .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_alcohol::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #3F51B5;}
-                      .customoverlay_movie {position:relative;border-radius:20px;background:#673AB7;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_movie .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_movie::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #673AB7;}
-                      .customoverlay_exhibition {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_exhibition .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_exhibition::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #607D8B;}
-                      .customoverlay_performance {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_performance .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_performance::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #607D8B;}
-                      .customoverlay_game {position:relative;border-radius:20px;background:#FF5722;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_game .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_game::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #FF5722;}
-                      .customoverlay_service {position:relative;border-radius:20px;background:##8BC34A;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_service .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_service::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: ##8BC34A;}
-                      .customoverlay_read {position:relative;border-radius:20px;background:#374046;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_read .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_read::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #374046;}
-                      .customoverlay_study {position:relative;border-radius:20px;background:#9C27B0;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_study .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_study::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #9C27B0;}
-                      .customoverlay_pet {position:relative;border-radius:20px;background:#795548;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_pet .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_pet::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #795548;}
-                      .customoverlay_exercise {position:relative;border-radius:20px;background:#DCA966;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_exercise .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_exercise::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #DCA966;}
+                      .customoverlay_restaurant {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_restaurant .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_restaurant::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #E91E63;}
+                      .customoverlay_cafe {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_cafe .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_cafe::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #E91E63;}
+                      .customoverlay_alcohol {position:relative;border-radius:20px;background:#3F51B5;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_alcohol .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_alcohol::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #3F51B5;}
+                      .customoverlay_movie {position:relative;border-radius:20px;background:#673AB7;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_movie .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_movie::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #673AB7;}
+                      .customoverlay_exhibition {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_exhibition .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_exhibition::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #607D8B;}
+                      .customoverlay_performance {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_performance .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_performance::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #607D8B;}
+                      .customoverlay_game {position:relative;border-radius:20px;background:#FF5722;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_game .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_game::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #FF5722;}
+                      .customoverlay_service {position:relative;border-radius:20px;background:##8BC34A;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_service .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_service::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: ##8BC34A;}
+                      .customoverlay_read {position:relative;border-radius:20px;background:#374046;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_read .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_read::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #374046;}
+                      .customoverlay_study {position:relative;border-radius:20px;background:#9C27B0;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_study .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_study::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #9C27B0;}
+                      .customoverlay_pet {position:relative;border-radius:20px;background:#795548;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_pet .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_pet::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #795548;}
+                      .customoverlay_exercise {position:relative;border-radius:20px;background:#DCA966;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_exercise .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_exercise::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #DCA966;}
                       </style>''',
                 ),
               ],
@@ -481,7 +481,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                         StringText(
                             '마감 시간 : ', 12, FontWeight.w400, Colors.black),
                         StringText_letterspacing(
-                            DateFormat('HH:mm').format(Meet.time),
+                            DateFormat('H:mm').format(Meet.time),
                             12,
                             FontWeight.w400,
                             Colors.black,
@@ -674,7 +674,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                             '시간', 12, FontWeight.w700, Colors.black)),
                     const SizedBox(width: 16),
                     StringText_letterspacing(
-                        DateFormat('yyyy 년 MM 월 dd 일 hh:mm').format(Meet.time),
+                        DateFormat('yyyy 년 M 월 d 일 h:mm').format(Meet.time),
                         14,
                         FontWeight.w400,
                         const Color(0xff5E5F68),
@@ -730,42 +730,42 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   
                   ''',
                     customOverlayStyle: '''<style>
-                      .customoverlay_restaurant {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_restaurant .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_restaurant::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
-                      .customoverlay_cafe {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_cafe .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_cafe::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #E91E63;}
-                      .customoverlay_alcohol {position:relative;border-radius:20px;background:#3F51B5;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_alcohol .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_alcohol::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #3F51B5;}
-                      .customoverlay_movie {position:relative;border-radius:20px;background:#673AB7;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_movie .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_movie::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #673AB7;}
-                      .customoverlay_exhibition {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_exhibition .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_exhibition::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #607D8B;}
-                      .customoverlay_performance {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_performance .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_performance::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #607D8B;}
-                      .customoverlay_game {position:relative;border-radius:20px;background:#FF5722;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_game .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_game::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #FF5722;}
-                      .customoverlay_service {position:relative;border-radius:20px;background:##8BC34A;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_service .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_service::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: ##8BC34A;}
-                      .customoverlay_read {position:relative;border-radius:20px;background:#374046;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_read .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_read::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #374046;}
-                      .customoverlay_study {position:relative;border-radius:20px;background:#9C27B0;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_study .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_study::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #9C27B0;}
-                      .customoverlay_pet {position:relative;border-radius:20px;background:#795548;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_pet .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_pet::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #795548;}
-                      .customoverlay_exercise {position:relative;border-radius:20px;background:#DCA966;color:#FFF;padding:5px;max-width:200px;}
-                      .customoverlay_exercise .title {text-align:center;color:#FFF;padding:5px 8px;font-size:10px;font-weight:400;}
-                      .customoverlay_exercise::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -8px;border: 8px solid transparent;border-top-color: #DCA966;}
+                      .customoverlay_restaurant {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_restaurant .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_restaurant::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #E91E63;}
+                      .customoverlay_cafe {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_cafe .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_cafe::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #E91E63;}
+                      .customoverlay_alcohol {position:relative;border-radius:20px;background:#3F51B5;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_alcohol .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_alcohol::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #3F51B5;}
+                      .customoverlay_movie {position:relative;border-radius:20px;background:#673AB7;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_movie .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_movie::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #673AB7;}
+                      .customoverlay_exhibition {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_exhibition .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_exhibition::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #607D8B;}
+                      .customoverlay_performance {position:relative;border-radius:20px;background:#607D8B;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_performance .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_performance::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #607D8B;}
+                      .customoverlay_game {position:relative;border-radius:20px;background:#FF5722;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_game .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_game::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #FF5722;}
+                      .customoverlay_service {position:relative;border-radius:20px;background:##8BC34A;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_service .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_service::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: ##8BC34A;}
+                      .customoverlay_read {position:relative;border-radius:20px;background:#374046;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_read .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_read::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #374046;}
+                      .customoverlay_study {position:relative;border-radius:20px;background:#9C27B0;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_study .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_study::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #9C27B0;}
+                      .customoverlay_pet {position:relative;border-radius:20px;background:#795548;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_pet .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_pet::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #795548;}
+                      .customoverlay_exercise {position:relative;border-radius:20px;background:#DCA966;color:#FFF;padding:5px 8px;max-width:200px;}
+                      .customoverlay_exercise .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
+                      .customoverlay_exercise::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #DCA966;}
                       </style>''',
                     onTapMarker: (message) {
                       if (message.message == 'Map is clicked') {

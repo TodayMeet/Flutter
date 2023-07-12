@@ -37,7 +37,8 @@ class _BannerState extends State<Banner> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SizedBox(
+    return Container(
+      color: Colors.black45,
       height: 252,
       width: size.width,
       child: Stack(
@@ -50,21 +51,36 @@ class _BannerState extends State<Banner> {
                 currentPage = page;
               });
             },
-            children: [
-              SvgPicture.asset(
-                  "assets/images/Category/Cafe.svg",
-                  colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-                  fit: BoxFit.fitHeight
+            children: const [
+              Center(
+                child: Text('상단 배너 1',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.5,
+                  ),
+                ),
               ),
-              SvgPicture.asset(
-                  "assets/images/Category/Alcohol.svg",
-                  colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-                  fit: BoxFit.fitHeight
+              Center(
+                child: Text('상단 배너 2',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.5,
+                  ),
+                ),
               ),
-              SvgPicture.asset(
-                  "assets/images/Category/Exhibition.svg",
-                  colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-                  fit: BoxFit.fitHeight
+              Center(
+                child: Text('상단 배너 3',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.5,
+                  ),
+                ),
               ),
             ],
           ),
@@ -87,7 +103,7 @@ class _BannerState extends State<Banner> {
 
   Widget _buildPageIndicator(bool isCurrentPage) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 6.0),
+      margin: const EdgeInsets.symmetric(horizontal: 3.0),
       height: 8.0,
       width: 8.0,
       decoration: BoxDecoration(
@@ -232,18 +248,18 @@ class RecommendHost extends StatefulWidget {
 
   @override
   State<RecommendHost> createState() {
-    return _RecommendHostState(image, name, follow);
+    return _RecommendHostState();
   }
 }
 
 class _RecommendHostState extends State<RecommendHost> {
-  _RecommendHostState(this.image, this.name, this.follow);
-  final String image;
-  final String name;
-  bool follow;
 
   @override
   Widget build(BuildContext context) {
+    final String image = widget.image;
+    final String name = widget.name;
+    bool follow = widget.follow;
+
     return Container(
       margin: const EdgeInsets.only(right: 12),
       padding: const EdgeInsets.all(18),
@@ -253,16 +269,14 @@ class _RecommendHostState extends State<RecommendHost> {
       ),
       child: Column(
         children: [
-          Container(
+          SizedBox(
             width: 36,
             height: 36,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
             child: ClipOval(
               child: Image.asset(
-                  image,
-                  fit: BoxFit.cover,
+                image,
+                width: 36,
+                height: 36,
               ),
             ),
           ),
@@ -278,48 +292,57 @@ class _RecommendHostState extends State<RecommendHost> {
             ),
           ),
           const SizedBox(height: 10),
-          ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: follow == false ?
-                  const MaterialStatePropertyAll<Color>(Color(0xFF5881EB))
-                    :const MaterialStatePropertyAll<Color>(Color(0xFFD6D6DD)),
-                textStyle: const MaterialStatePropertyAll<TextStyle>(
-                  TextStyle(
+          SizedBox(
+            height: 24,
+            child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: follow == false ?
+                    const MaterialStatePropertyAll<Color>(Color(0xFF5881EB))
+                      :const MaterialStatePropertyAll<Color>(Color(0xFFD6D6DD)),
+                  shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)
+                    )
+                  ),
+                  shadowColor: const MaterialStatePropertyAll<Color>(
+                    Colors.transparent
+                  ),
+                  alignment: Alignment.center,
+                  padding: const MaterialStatePropertyAll<EdgeInsetsGeometry>(
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 0)
+                  )
+                ),
+                onPressed: follow == false ?(){
+                  setState(() {
+                    widget.follow = true;
+                  });
+                }:null,
+                child: follow == false ? Row(
+                      children: [
+                        const Text(
+                          "팔로우",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 10,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset(
+                          "assets/icons/add_person.svg",
+                          width: 13,
+                          height: 13,
+                        )
+                      ],
+                ):const Text(
+                  "팔로우",
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 10,
                     color: Colors.white,
-                  )
-                ),
-                shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)
-                  )
-                ),
-                shadowColor: const MaterialStatePropertyAll<Color>(
-                  Colors.transparent
-                ),
-                alignment: Alignment.center,
-              ),
-              onPressed: follow == false ?(){
-                setState(() {
-                  follow = true;
-                });
-              }:null,
-              child: follow == false ? Row(
-                    children: [
-                      const Text(
-                        "팔로우"
-                      ),
-                      const SizedBox(width: 5),
-                      SvgPicture.asset(
-                        "assets/icons/add_person.svg",
-                        width: 13,
-                        height: 13,
-                      )
-                    ],
-              ):const Text(
-                "팔로우"
-              )
+                  ),
+                )
+            ),
           )
         ],
       ),
@@ -329,9 +352,9 @@ class _RecommendHostState extends State<RecommendHost> {
 
 // 추천 호스트 더미 데이터
 List<List<dynamic>> host_image = [
-  ["assets/images/ProfileImage/testprofile.jpg","술주정뱅이",false],
-  ["assets/images/ProfileImage/testprofile.jpg","운동쟁이", true],
-  ["assets/images/ProfileImage/testprofile.jpg","술주정뱅이", true],
-  ["assets/images/ProfileImage/testprofile.jpg","장국영", false],
-  ["assets/images/ProfileImage/testprofile.jpg","브론즈에서는챌린저",false],
+  ["assets/images/User_Picture/User_pic_sample1.png","술주정뱅이",false],
+  ["assets/images/User_Picture/User_pic_sample2.png","운동쟁이", true],
+  ["assets/images/User_Picture/User_pic_sample3.png","술주정뱅이", true],
+  ["assets/images/User_Picture/User_pic_sample4.png","장국영", false],
+  ["assets/images/User_Picture/User_pic_sample5.png","브론즈에서는챌린저",false],
 ];

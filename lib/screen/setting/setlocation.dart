@@ -63,6 +63,7 @@ class LocationPageState extends ConsumerState<LocationPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool arg = ModalRoute.of(context)?.settings.arguments as bool;
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -152,7 +153,7 @@ class LocationPageState extends ConsumerState<LocationPage> {
                 ),
               ),
               Expanded(
-                child:addressListView(ref.watch(addressListProvider), ref)
+                child:addressListView(ref.watch(addressListProvider), ref, arg)
               ),
             ],
           ),
@@ -162,7 +163,7 @@ class LocationPageState extends ConsumerState<LocationPage> {
   }
 }
 
-ListView addressListView(List<Address>? lists, WidgetRef ref){
+ListView addressListView(List<Address>? lists, WidgetRef ref, bool isBoardPage){
   if(lists == null || lists.isEmpty){
     return ListView(
       children: const [SizedBox(height: 0)],
@@ -216,7 +217,10 @@ ListView addressListView(List<Address>? lists, WidgetRef ref){
                       '''
                   );
                   await getDongName(double.parse(lists[index].lat), double.parse(lists[index].lon));
-                  refreshController.requestRefresh();
+                  if(isBoardPage == true) {
+                    refreshController.requestRefresh();
+                  }
+
                   Navigator.pop(context);
                 },
                 child: Align(

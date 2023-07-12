@@ -45,38 +45,7 @@ class _chatlistState extends State<chatlist> {
 
         ),
 
-
       ),
-
-
-
-      // actionWidget: actions[
-      // IconButton(
-      //     onPressed: () {
-      //       Navigator.push(
-      //           context, MaterialPageRoute(builder: (context) => alarm()));
-      //     },
-      //     icon: Icon(
-      //       Icons.notifications_none,
-      //       color: Colors.black,
-      //     ))
-      // ],
-
-
-
-
-
-      // actions: [
-      //   IconButton(
-      //       onPressed: () {
-      //         Navigator.push(
-      //             context, MaterialPageRoute(builder: (context) => alarm()));
-      //       },
-      //       icon: Icon(
-      //         Icons.notifications_none,
-      //         color: Colors.black,
-      //       ))
-      // ],profileTestImage[index]
       body: ListView.builder(
         itemCount: chatList.length,
         itemBuilder: (context, index) {
@@ -103,7 +72,6 @@ class _chatlistState extends State<chatlist> {
           );
         },
       ),
-      bottomNavigationBar: const BottomAppBar(child: BottomBar()),
     );
     ;
   }

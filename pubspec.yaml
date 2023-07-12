@@ -52,6 +52,12 @@ dependencies:
   json_annotation: ^4.8.1
   dio: ^5.2.1+1
   badges: ^3.1.1
+  flutter_picker: ^2.1.0
+  firebase_messaging: ^14.6.4
+  flutter_local_notifications: ^15.1.0+1
+  firebase_core: ^2.14.0
+  bubble: ^1.2.1
+  flutter_secure_storage: ^8.0.0
 
 dev_dependencies:
   flutter_test:
@@ -89,6 +95,7 @@ flutter:
     - assets/images/List_Image/
     - assets/images/LoginImage/
     - assets/images/User_Picture/
+    - assets/images/ProfileImage/
     - assets/icons/
     - assets/icons/detail/
     - assets/icons/mainList/
@@ -105,6 +112,10 @@ flutter:
     - family: xeicon
       fonts:
         - asset: assets/fonts/xeicon.ttf
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
 #    - family: Roboto
 #      fonts:
 #        - asset: assets/fonts/Roboto-Regular.ttf

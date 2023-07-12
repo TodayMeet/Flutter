@@ -7,6 +7,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:front/model/UI/widget/customAppBar.dart';
 
 import 'package:front/screen/login/pwFind.dart';
 
@@ -16,29 +17,21 @@ import 'dart:async';
 
 
 class idFindResult extends StatefulWidget {
+  String email = '';
+  idFindResult({required this.email});
+
   @override
   State<idFindResult> createState() => _idFindResultState();
 }
 
 class _idFindResultState extends State<idFindResult> {
-  String result = 'abcd@gmail.com';
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 1.0,
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: const Text(
-            '아이디 찾기',
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-        ),
+      backgroundColor: Colors.white,
+        appBar: CustomAppBar(title: '아이디 찾기'),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 16.0),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -53,7 +46,8 @@ class _idFindResultState extends State<idFindResult> {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              result,
+              // 'abcd@gmail.com',
+              '${widget.email}',
               style: TextStyle(
                 fontSize: 38.4,
                 fontWeight: FontWeight.bold,

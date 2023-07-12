@@ -1,3 +1,5 @@
+import 'package:bubble/bubble.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/data/designconst/constants.dart';
@@ -26,35 +28,34 @@ class ChatMessage extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment:
-      isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              formatTime(),
-              style: TextStyle(fontSize: 10,),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Row(
+        mainAxisAlignment:
+        isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (isSentByMe==true)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(formatTime(), style: TextStyle(fontSize: 10,),),
             ),
-          ],
-        ),
-        Container(
-          alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: isSentByMe ? Colors.yellow : Colors.white,
+          Bubble(
+            margin: BubbleEdges.symmetric(vertical: 10.0),
+            // padding: EdgeInsets.all(10),
+            elevation: 0,
+            stick: true,
+            nip: isSentByMe ? BubbleNip.rightTop : BubbleNip.leftTop,
+            color: isSentByMe ? Colors.yellow : Colors.white,
+            child: Text(content, style: TextStyle(color: Colors.black, fontSize: 15,),softWrap: true, overflow: TextOverflow.visible,),),
+
+          if (isSentByMe==false)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(formatTime(), style: TextStyle(fontSize: 10,),),
             ),
-            child: Text(
-              content,
-              style: TextStyle(color: Colors.black, fontSize: 15),
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -107,6 +108,18 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    messages.add(
+      ChatMessage(
+        content: '안녕하세요!',
+        isSentByMe: false,
+        time: DateTime.now().toString(),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     ChatMessage? lastMessages;
     if (messages.isNotEmpty) {
@@ -120,10 +133,13 @@ class _ChatPageState extends State<ChatPage> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         resizeToAvoidBottomInset: true,
         appBar: CustomAppBar(
             title: appbarText,
-            leadingWidget: SvgButton(imagePath: backarrow, onPressed: (){}),
+            leadingWidget: SvgButton(imagePath: backarrow, onPressed: (){
+              Navigator.pop(context);
+            }),
             actionWidget: badges.Badge(
               badgeStyle: badges.BadgeStyle(
                 badgeColor: Color(0xFFB3261E),
@@ -132,8 +148,6 @@ class _ChatPageState extends State<ChatPage> {
               badgeContent: Center(child: Text(users.length.toString(),style: TextStyle(color: Colors.white,fontSize: 14,fontFamily: 'Roboto'),)),
               child: Center(child: xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();})),
             )
-
-
           // xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();}),
         ),
         endDrawer: Drawer(
@@ -204,6 +218,7 @@ class _ChatPageState extends State<ChatPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
                           width: MediaQuery.of(context).size.width-86,
                           height: 46,
                           decoration: BoxDecoration(
@@ -211,11 +226,8 @@ class _ChatPageState extends State<ChatPage> {
                             color: Color(0xFFF5F6FA),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          child: Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Center(
                             child: TextField(
-                              textAlignVertical: TextAlignVertical.center,
                               controller: textEditingController,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -261,7 +273,7 @@ class _ChatPageState extends State<ChatPage> {
                               child: Text(
                                 '전송',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 13),
+                                    fontWeight: FontWeight.w700, fontSize: 13),
                               ),
                             ),
                           ),
@@ -274,6 +286,7 @@ class _ChatPageState extends State<ChatPage> {
             ],
           ),
         ),
+
       ),
     );
   }
@@ -281,3 +294,26 @@ class _ChatPageState extends State<ChatPage> {
 
 
 
+// Container(
+// width: MediaQuery.of(context).size.width-86,
+// height: 46,
+// decoration: BoxDecoration(
+// border: Border.all(color: Colors.transparent),
+// color: Color(0xFFF5F6FA),
+// borderRadius: BorderRadius.circular(10.0),
+// ),
+// child: Padding(
+// padding:
+// const EdgeInsets.symmetric(horizontal: 16.0),
+// child: TextField(
+// textAlignVertical: TextAlignVertical.center,
+// controller: textEditingController,
+// decoration: InputDecoration(
+// border: InputBorder.none,
+// hintText: '메시지를 입력해주세요.',
+// hintStyle: TextStyle(fontSize: 13,color: Color(0xFFC8C8CB)),
+//
+// ),
+// ),
+// ),
+// ),

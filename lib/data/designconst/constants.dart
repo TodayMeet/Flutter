@@ -4,7 +4,7 @@ const Color buttonBlue = Color(0xFF4874EA);
 //color: rgb(72,116,234);
 const Color messageRed = Color(0xFFFF3D00);
 const Color hinttextColor = Color(0xFFC8C8CB);
-const String pwTitle = '2자 이상 12자 이하 영문, 숫자 특수기호만 입력 가능';
+const String pwTitle = ' 2자 이상 12자 이하 영문, 숫자 특수기호만 입력 가능';
 const String backarrow = 'assets/icons/backarrow.svg';
 const String fowardarrow = 'assets/icons/fowardarrow.svg';
 const String camera = 'assets/icons/detail/Camera.svg';

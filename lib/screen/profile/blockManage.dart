@@ -77,9 +77,7 @@ class _blockManageState extends State<blockManage> {
         leadingWidget: SvgButton(
         imagePath: backarrow,
         onPressed:() {
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => profileMain()));},
+          Navigator.pop(context);},
       ),
         title: '차단 관리',
       ),

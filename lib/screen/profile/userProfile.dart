@@ -24,12 +24,6 @@ class _userProfileState extends State<userProfile> {
   int follower = 100;
   int following = 100;
 
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     double halfWidth = MediaQuery.of(context).size.width / 2;
@@ -39,8 +33,7 @@ class _userProfileState extends State<userProfile> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => profileMain()));
+            Navigator.pop(context);
           },
         ),
         title: name + '님의 프로필',
@@ -112,8 +105,7 @@ class _userProfileState extends State<userProfile> {
                         whiteButton(
                           buttonText: '차단',
                           onPressed: (){
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context)=>profileMain()));
+                            Navigator.pop(context);
                         },
                             width: (MediaQuery.of(context).size.width - 148) / 2 ,
                         )
@@ -145,7 +137,7 @@ class _userProfileState extends State<userProfile> {
                       Text('팔로워',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Color(0xFFA7A8A9)),),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>followList()));
+                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>followList()));
                         },
                         child: Text(follower.toString(),style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.w700,color: Color(0xFF1F2024)),),
                       )
@@ -167,7 +159,7 @@ class _userProfileState extends State<userProfile> {
                       Text('팔로우',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Color(0xFFA7A8A9)),),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>followList()));
+                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>followList()));
                         },
                         child: Text(following.toString(),style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.w700,color: Color(0xFF1F2024)),),
                       )
@@ -180,7 +172,7 @@ class _userProfileState extends State<userProfile> {
           //개최한 건수 리스트 출력
         ],
       ),
-      bottomNavigationBar: const BottomAppBar(child: BottomBar()),
+
     );
   }
 }

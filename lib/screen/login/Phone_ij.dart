@@ -38,45 +38,53 @@ class _Phone_ijState extends State<Phone_ij> {
   String _text3 = '';
   int _countdown = 180;
   bool _isCountdownStarted = false;
-  bool _ijSuccess = false;
+  bool isCodeSend = false;
   String phoneNumber = '';
   String apvNum = '';
-  
+  bool isDupicate = true;
+
 
 
 
   Future<void> phonenumDuplicate() async {
     final url = Uri.parse('http://todaymeet.shop:8080/phone/${phoneNumber}');
-    // final requestData = {
-    //   'phoneNumber': phoneNumber,
-    // };
-    // final jsonData = jsonEncode(requestData);
+    final requestData = {
+      'phoneNumber': phoneNumber,
+    };
+    final jsonData = jsonEncode(requestData);
     final response = await http.get(
       url,
       // headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
+
       print('전송잘됨');
       print(phoneNumber);
-      print(url);
-      print(response.body);
+      // print(url);
+      // print(response.body);
       // final responseData = jsonDecode(response.body);
       if (response.body == 'phone number duplicate!!') {
-        print("asdf");
-        onebutton.alreadyphoneDialog(context);
+        print('중복');
+        print(phoneNumber);
+        isCodeSend = false;
       } else {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => accountsetting()));
+        print('중복아님============================================');
+        print(phoneNumber);
+        isCodeSend = true;
+
       }
     } else {
+      isCodeSend=false;
       print('전송 자체가 안됨. 상태 침드: ${response.statusCode}');
-      onebutton.alreadyphoneDialog(context);
+      print(phoneNumber);
+
     }
   }
 
   void startCountdown() {
-    if (!_isCountdownStarted) {
-      _isCountdownStarted = true;
+    _isCountdownStarted = true;
+    if (_isCountdownStarted) {
+
       Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
           if (_countdown > 0) {
@@ -135,6 +143,7 @@ class _Phone_ijState extends State<Phone_ij> {
                         setState(() {
                           _text2 = value;
                         });
+                        phoneNumber = _text2;
                       },
                       style: TextStyle(fontSize: 13.0),
                       decoration: InputDecoration(
@@ -150,14 +159,19 @@ class _Phone_ijState extends State<Phone_ij> {
                     height: 46,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (!_isCountdownStarted) {
+                        phonenumDuplicate();
+
+                        if(isCodeSend){
+                          _isCountdownStarted=false;
                           startCountdown();
+                        }else{
+                          onebutton.alreadyphoneDialog(context);
                         }
+
                       },
                       style: ButtonStyle(
                         elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
                           if (states.contains(MaterialState.pressed)) {
-                            // 버튼 눌려있을때는 높이 0으로 해놓고
                             return 0;
                           }
                           return 0.5; // 이건 디폴트
@@ -232,7 +246,7 @@ class _Phone_ijState extends State<Phone_ij> {
                   Text(
                     '$minutes:${seconds.toString().padLeft(2, '0')}',
                     style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 10.0,
                         fontWeight: FontWeight.w700,
                         color: Colors.black),
                   ),
@@ -243,7 +257,12 @@ class _Phone_ijState extends State<Phone_ij> {
                     height: 46,
                     child: ElevatedButton(
                       onPressed: () {
-                        onebutton.certificationSuccessDialog(context);
+
+                        if(_countdown==0){
+                          onebutton.inputTimeOverDialog(context);
+                        }else{
+                          onebutton.certificationSuccessDialog(context);
+                        }
                       },
                       style: ButtonStyle(
                         elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {

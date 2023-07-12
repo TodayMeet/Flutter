@@ -16,9 +16,7 @@ import '../../model/UI/widget/customAppBar.dart';
 class hostEvent extends ConsumerStatefulWidget {
   const hostEvent({Key? key, required this.userNo
   }) : super(key: key);
-
   final int userNo;
-
   @override
   ConsumerState createState() => _hostEventState();
 }
@@ -83,13 +81,12 @@ class _hostEventState extends ConsumerState<hostEvent> {
     List<meetList> viewList = ref.watch(meetListProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed:() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => profileMain()));},
+            Navigator.pop(context);},
           width: 24.0,
           height: 24.0,
         ),

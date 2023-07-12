@@ -103,7 +103,7 @@ class _chatlistState extends State<chatlist> {
           );
         },
       ),
-      bottomNavigationBar: const BottomAppBar(child: BottomBar()),
+
     );
     ;
   }

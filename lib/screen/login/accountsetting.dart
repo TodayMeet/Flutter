@@ -38,7 +38,9 @@ class _accountsettingState extends State<accountsetting> {
   bool isDuplicatepw = false;
   bool obscureText = true;
   bool obscureText1 = true;
-  final _emailController = TextEditingController();
+  String text3 = '';
+  String password='';
+  // final _emailController = TextEditingController();
   final _pwordController = TextEditingController();
 
   @override
@@ -52,23 +54,30 @@ class _accountsettingState extends State<accountsetting> {
     final response = await http.get(
       url,
     );
-    if (response.statusCode == 200) {
-      print('전송잘됨');
-      print(email);
-      print(url);
-      print(response.body);
+    if(email==''){
       setState(() {
-        isDuplicate = false;
+        isDuplicate =false;
       });
     } else {
-      // print('전송 자체가 안됨. 상태 침드: ${response.statusCode}');
-      // print(email);
-      // print(url);
-      setState(() {
-        isDuplicate = true;
-      });
-      // print(isDuplicate);
+      if (response.statusCode == 200) {
+        print('전송잘됨');
+        print(email);
+        print(url);
+        print(response.body);
+        setState(() {
+          isDuplicate = false;
+        });
+      } else {
+        print('전송 자체가 안됨. 상태 침드: ${response.statusCode}');
+        print(email);
+        print(url);
+        setState(() {
+          isDuplicate = true;
+        });
+        print(isDuplicate);
+      }
     }
+
   }
 
   @override
@@ -92,22 +101,32 @@ class _accountsettingState extends State<accountsetting> {
   bool isPasswordMatch() {
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
-    return password == confirmPassword;
+    if(password =='' || confirmPassword==''){
+      return true;
+    } else{
+      return password == confirmPassword;
+    }
   }
 
 
 
-  // void _toregisterProfile() {
-  //   final String email = _idController.text;
-  //   final String password = _passwordController.text;
-  //
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => registerProfile(email: email, password: password),
-  //     ),
-  //   );
-  // }
+  void _toregisterProfile() {
+
+    if(password==''){
+      onebutton.noInputPwDialog(context);
+    }else if(email==''){
+      onebutton.noInputIDDialog(context);
+    } else if (isDuplicate){
+      onebutton.emailDuplicateCheckDialog(context);
+    } else{
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => registerProfile(email: email,password: password),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,9 +171,10 @@ class _accountsettingState extends State<accountsetting> {
                     child: TextField(
                       controller: _idController,
                       onChanged: (value) {
+                        email= _idController.text;
                         emailnumDuplicate();
-                        // print(isDuplicate);
-                        // print(convertIsDuplicateToString);
+                        print(isDuplicate);
+                        print(convertIsDuplicateToString);
                       },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
@@ -218,6 +238,7 @@ class _accountsettingState extends State<accountsetting> {
                           onPressed: () {
                             setState(() {
                               obscureText = !obscureText;
+
                             });
                           },
                           icon: Icon(
@@ -228,6 +249,11 @@ class _accountsettingState extends State<accountsetting> {
                           ),
                         ),
                       ),
+                      onChanged: (value){
+                        setState(() {
+                          password = value;
+                        });
+                      },
                     ),
                   ),
                   SizedBox(
@@ -265,7 +291,7 @@ class _accountsettingState extends State<accountsetting> {
                           vertical: 12.0,
                           horizontal: 16.0,
                         ),
-                        hintText: '2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                        hintText: pwTitle,
                         hintStyle: TextStyle(
                           color: hinttextColor,
                           fontSize: 13,
@@ -274,6 +300,7 @@ class _accountsettingState extends State<accountsetting> {
                           onPressed: () {
                             setState(() {
                               obscureText1 = !obscureText1;
+                              isPasswordMatch();
                             });
                           },
                           icon: Icon(
@@ -304,32 +331,20 @@ class _accountsettingState extends State<accountsetting> {
                 ],
               ), //비밀번호 확인
               Spacer(),
-              nextButton(),
-
-
-
+              blueButton(buttonText: '다음', onPressed: () {
+                print(email);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => registerProfile(email: email, password: password),
+                  ),
+                );
+                // _toregisterProfile();
+              },),
             ],
           ),
         ),
       ),
     );
-  }
-}
-
-class nextButton extends StatelessWidget {
-  const nextButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return blueButton(buttonText: '다음', onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => registerProfile(),
-          ),
-        );
-      },);
   }
 }

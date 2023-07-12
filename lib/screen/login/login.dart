@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 
 import '../../data/designconst/constants.dart';
 import '../../screen/dialog/dialoglist.dart';

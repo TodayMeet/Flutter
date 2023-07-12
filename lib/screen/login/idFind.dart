@@ -42,8 +42,35 @@ class _idFindState extends State<idFind> {
   bool _ijSuccess = false;
   String phoneNumber = '';
   String apvNum = '';
+  String email = '';
 
 
+  Future<void> idResultLoad() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/find-email/010-1234-1234');
+    final requestData = {
+      'email' : email,
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      print("===========================이거 잘 됨");
+      print('result는 이거다!!!!! ${response.body}');
+      email = response.body;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => idFindResult(email: email),
+        ),
+      );
+
+    } else{
+      print('==================================이거 안됨');
+    }
+
+  } //서버로 전송
 
 
   Future<void> phonenumDuplicate() async {
@@ -91,12 +118,15 @@ class _idFindState extends State<idFind> {
     }
   }
 
+
   void resetCountdown() {
     setState(() {
       _isCountdownStarted = false;
       _countdown = 0;
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +163,6 @@ class _idFindState extends State<idFind> {
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-
                 children: [
                   SizedBox(width: 16.0),
                   Expanded(
@@ -290,12 +319,13 @@ class _idFindState extends State<idFind> {
             ),
             Spacer(),
             blueButton(buttonText: '아이디 찾기', onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => idFindResult(),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => idFindResult(),
+              //   ),
+              // );
+              idResultLoad();
             },)
 
           ]),

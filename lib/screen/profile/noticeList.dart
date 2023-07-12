@@ -38,7 +38,7 @@ class _noticeListState extends State<noticeList> {
     final requestData = {
       'question' : question,
       'answer' : answer,
-      'faqno' : faqno
+      'noticeno' : noticeNo
     };
     final jsonData = jsonEncode(requestData);
     final response = await http.get(
@@ -47,7 +47,7 @@ class _noticeListState extends State<noticeList> {
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      final result = jsonDecode(response.body);
+      final result = jsonDecode(utf8.decode(response.bodyBytes));
       List<Map<String, dynamic>> mappedList = result.cast<Map<String, dynamic>>().toList();
       mappedList.forEach((item) {
         item["index"] = mappedList.length-item['noticeNo'];
@@ -96,10 +96,10 @@ class _noticeListState extends State<noticeList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => notice(),
+                      builder: (context) => notice(noticeNo: notices['noticeNo'],),
                     ),
                   );
-                  print('${notices['time']}');
+
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,

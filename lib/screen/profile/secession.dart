@@ -41,14 +41,13 @@ class _secessionState extends State<secession> {
     );
     if (response.statusCode == 200) {
       print('전송잘됨');
-
       print(url1);
-      print('join success!!임 이건 ?${response.body}');
-      print(response);
+      print('asdfasdf'+response.body);
+
 
 
     } else {
-     print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
     }
   }
@@ -103,13 +102,26 @@ class _secessionState extends State<secession> {
             blueButton(
                 buttonText: '탈퇴',
                 onPressed: (){
-                  // if(textarea.text.length > 200){
-                  //   onebutton.over200Dialog(context);
-                  // }else{
-                  //   twobutton.secessionDialog(context);
-                  // }
+
+                  if(textarea.text.length > 200){
+                    onebutton.over200Dialog(context);
+                  }else{
+                    print(widget.email);
+                    print(widget.password);
+                    secessionFunction();
+                    print("ads");
+                    // twobutton.secessionDialog(context);
+                  }
+
+                  // print(widget.email);
+                  // print(widget.password);
                   // secessionFunction();
-                  print(widget.email);
+                  // Navigator.pushAndRemoveUntil(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (BuildContext context) => login()),
+                  //         (route) => false);
+
                 }
                 )
           ],

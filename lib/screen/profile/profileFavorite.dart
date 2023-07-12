@@ -182,6 +182,7 @@ class _profileFavoriteState extends State<profileFavorite> {
     super.initState();
     _initialize();
   }
+
   Future<void> _initialize() async {
 
     List<String> loadedCategories = await categoryLoad();
@@ -313,7 +314,7 @@ class _profileFavoriteState extends State<profileFavorite> {
                 if (checkedCount > 5) {
                   onebutton.overFiveDialog(context);
                 } else {
-                  // categoryLoad();
+                  categoryLoad();
                   print("userNo는");
                   print(widget.userNo);
                   print('새로 선택한 관심사는');

@@ -17,12 +17,15 @@ import 'dart:async';
 
 
 class idFindResult extends StatefulWidget {
+  String email = '';
+  idFindResult({required this.email});
+
   @override
   State<idFindResult> createState() => _idFindResultState();
 }
 
 class _idFindResultState extends State<idFindResult> {
-  String result = 'abcd@gmail.com';
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,8 @@ class _idFindResultState extends State<idFindResult> {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              result,
+              // 'abcd@gmail.com',
+              '${widget.email}',
               style: TextStyle(
                 fontSize: 38.4,
                 fontWeight: FontWeight.bold,

@@ -16,8 +16,6 @@ class termsofUse extends StatefulWidget {
 
 class _termsofUseState extends State<termsofUse> {
   String text = '';
-  String appbarText = '이용약관';
-
 
   @override
   void initState() {
@@ -48,7 +46,7 @@ class _termsofUseState extends State<termsofUse> {
           height: 24.0,
 
         ),
-        title: appbarText,
+        title: '이용약관',
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -69,7 +67,7 @@ class privatePolicy extends StatefulWidget {
 
 class _privatePolicyState extends State<privatePolicy> {
   String text = '';
-  String appbarText = '개인정보처리방침';
+
 
   @override
   void initState() {
@@ -103,7 +101,7 @@ class _privatePolicyState extends State<privatePolicy> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
+          padding: const EdgeInsets.all(24.0),
           child: Center(
             child: Text(text,style: TextStyle(fontSize: 14.0),),
           ),

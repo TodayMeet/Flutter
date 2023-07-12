@@ -80,8 +80,11 @@ class twobutton {
         rightButtonText: '확인',
         onLeftPressed: () {
           Navigator.pop(context);
+
         },
         onRightPressed: () {
+
+
           Navigator.pop(context);
           Navigator.pushAndRemoveUntil(
               context,

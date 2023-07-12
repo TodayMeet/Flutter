@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,7 +13,8 @@ import '../../model/UI/widget/customAppBar.dart';
 import '../../model/UI/widget/text/textfieldTitle.dart';
 
 class favorite extends StatefulWidget {
-  const favorite({Key? key}) : super(key: key);
+  final int userNo;
+  favorite({required this.userNo});
 
   @override
   State<favorite> createState() => _favoriteState();
@@ -95,12 +98,46 @@ class _favoriteState extends State<favorite> {
       "category_image": "assets/images/Category/Sports.svg"
     },
   ];
-  Color textColor = Color(0xff2f3036);
+  Set<String> selectedCategories = {};
 
+
+
+  Future<void> categoryChange() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/usercategory/${widget.userNo}');
+    final requestData = selectedCategories.toList();
+    final jsonData = jsonEncode(requestData);
+    final response = await http.put(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonData,
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+      print(selectedCategories.toList());
+      print(url1);
+      print(response.body);
+      print(response);
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => favorite()),
+      // );
+    } else {
+      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+      print(selectedCategories.toList());
+      // print(widget.password);
+      // print(widget.email);
+      print(url1);
+      print(jsonData);
+      print(response.body);
+
+    }
+  }
+  Color textColor = Color(0xff2f3036);
   @override
   Widget build(BuildContext context) {
     int checkedCount =
-        categories.where((category) => category["isChecked"]).length;
+        categories.where((categories) => categories["isChecked"]).length;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
@@ -122,7 +159,10 @@ class _favoriteState extends State<favorite> {
           Column(
             // 카테고리
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: categories.map((category) {
+            children: categories.map((categories) {
+              if(categories['isChecked']){
+                selectedCategories.add(categories['name']);
+              }
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Container(
@@ -131,24 +171,23 @@ class _favoriteState extends State<favorite> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ListTile(
-
                       leading: Container(
                         alignment: Alignment.center,
                         width: 36,
                         height: 36,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(int.parse(category["image_color"])),
+                          color: Color(int.parse(categories["image_color"])),
                         ),
-                        child: SvgPicture.asset(category["category_image"]),
+                        child: SvgPicture.asset(categories["categories_image"]),
                       ),
-                      title: Text(category["name"],
+                      title: Text(categories["name"],
                           style: const TextStyle(
                               fontWeight: FontWeight.w700, fontSize: 15)),
 
                       trailing: Container(
-                        width: category['isChecked'] ? 64 : 45,
-                        child: category['isChecked']
+                        width: categories['isChecked'] ? 64 : 45,
+                        child: categories['isChecked']
                             ? TextButton(
                           style: ButtonStyle(
                             overlayColor: MaterialStateProperty.resolveWith<Color>(
@@ -163,8 +202,9 @@ class _favoriteState extends State<favorite> {
                             ),
                           ),
                           onPressed: () {
+                            print('userNo ${widget.userNo}');
                             setState(() {
-                              category['isChecked'] = false;
+                              categories['isChecked'] = false;
                             });
                           },
                           child: Row(
@@ -191,7 +231,7 @@ class _favoriteState extends State<favorite> {
                           ),
                           onPressed: () {
                             setState(() {
-                              category['isChecked'] = true;
+                              categories['isChecked'] = true;
                             });
                           },
                           child: Text('관심',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Colors.white),),
@@ -208,14 +248,18 @@ class _favoriteState extends State<favorite> {
           blueButton(
               buttonText: '시작하기',
               onPressed: () {
+                //
                 if (checkedCount > 5) {
                   onebutton.overFiveDialog(context);
                 } else {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => MainPageMap()),
-                          (route) => false);
+                  print(widget.userNo); //userNo를 가지고 있음음                  print(selectedCategories.toList());
+                  categoryChange();
+
+                  // Navigator.pushAndRemoveUntil(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (BuildContext context) => MainPageMap()),
+                  //         (route) => false);
                 }
               })
         ]),

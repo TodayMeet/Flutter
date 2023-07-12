@@ -84,13 +84,12 @@ class _joinEventState extends ConsumerState<joinEvent> {
     List<meetList> viewList = ref.watch(meetListProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed:() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => profileMain()));},
+            Navigator.pop(context);},
         ),
         title: '참가한 건수',
       ),

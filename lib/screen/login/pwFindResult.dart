@@ -8,6 +8,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/data/designconst/constants.dart';
+import 'package:front/model/UI/widget/button/svgButton.dart';
+import 'package:front/model/UI/widget/customAppBar.dart';
+import 'package:front/model/UI/widget/text/textfieldTitle.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../screen/dialog/dialoglist.dart';
 
@@ -23,6 +26,10 @@ class _pwFindResultState extends State<pwFindResult> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final String buttonText = '비밀번호 변경';
+  String password ='';
+  String confirmPassword ='';
+  bool obscureText1 = true;
+  bool obscureText = true;
 
   @override
   void dispose() {
@@ -32,29 +39,29 @@ class _pwFindResultState extends State<pwFindResult> {
     super.dispose();
   }
 
+  bool isPasswordMatch() {
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+    if(password =='' || confirmPassword==''){
+      return true;
+    } else{
+      return password == confirmPassword;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-            size: 25,
-          ),
-          onPressed: () {
-            twobutton.backtoLoginDialog(context);
-          },
-        ),
-        centerTitle: true,
-        title: Text(
-          '비밀번호 변경',
-          style: TextStyle(
-              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-      ),
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
+      appBar: CustomAppBar(
+          title: '비밀번호 변경',
+      leadingWidget: SvgButton(
+        imagePath: backarrow,
+      onPressed: (){
+        twobutton.backtoLoginDialog(context);
+      }
+      ),),
       body: Padding(
         padding: EdgeInsets.all(24.0),
         child: Column(
@@ -63,22 +70,7 @@ class _pwFindResultState extends State<pwFindResult> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [
-                  Text(
-                    "새 비밀번호 ",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    "*",
-                    style: TextStyle(
-                      color: messageRed,
-                      fontSize: 14.0,
-                    ),
-                  )
-                ]),
+                textfieldTitle(title: '새 비밀번호', star: true),
                 SizedBox(height: 8.0),
                 Center(
                   child: Container(
@@ -90,16 +82,34 @@ class _pwFindResultState extends State<pwFindResult> {
                     ),
                     child: TextField(
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: obscureText,
+                      onChanged: (value) {
+                        password = _passwordController.text;
+                        isPasswordMatch();
+                      },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                           vertical: 16.0,
                           horizontal: 12.0,
                         ),
-                        hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                        hintText: pwTitle,
                         hintStyle: TextStyle(
                           color: hinttextColor,
                           fontSize: 13,
+                        ),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              obscureText = !obscureText;
+
+                            });
+                          },
+                          icon: Icon(
+                            obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Color(0xFFD0D0D0),
+                          ),
                         ),
                         border: InputBorder.none,
                       ),
@@ -109,10 +119,7 @@ class _pwFindResultState extends State<pwFindResult> {
                 SizedBox(
                   height: 8.0,
                 ),
-                Text(
-                  '* 2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
-                  style: TextStyle(fontSize:12.0,color: messageRed),
-                ),
+                textfieldTitle(title: pwTitle, star: true,reverse: true,)
               ],
             ),
             SizedBox(height: 24.0),
@@ -120,22 +127,7 @@ class _pwFindResultState extends State<pwFindResult> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [
-                  Text(
-                    "새 비밀번호 확인 ",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    "*",
-                    style: TextStyle(
-                      color: messageRed,
-                      fontSize: 14.0,
-                    ),
-                  )
-                ]),
+                textfieldTitle(title: '새 비밀번호 확인', star: true,reverse: false),
                 SizedBox(height: 8.0),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -146,35 +138,51 @@ class _pwFindResultState extends State<pwFindResult> {
                   ),
                   child: TextField(
                     controller: _confirmPasswordController,
-                    obscureText: true,
+                    obscureText: obscureText1,
+                    onChanged: (value) {
+                      confirmPassword = _confirmPasswordController.text;
+                      isPasswordMatch();
+                    },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 16.0,
                         horizontal: 12.0,
                       ),
-                      hintText: '*2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
+                      hintText: pwTitle,
                       hintStyle: TextStyle(
                         color: hinttextColor,
                         fontSize: 13,
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            obscureText1 = !obscureText1;
+
+                          });
+                        },
+                        icon: Icon(
+                          obscureText1
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Color(0xFFD0D0D0),
+                        ),
                       ),
                       border: InputBorder.none,
                     ),
                   ),
                 ),
                 SizedBox(height: 8.0),
-                Text(
-                  '* 비밀번호가 일치합니다.',
-                  style: TextStyle(fontSize:12.0,color: messageRed),
-                ),
-                Text(
-                  '* 비밀번호가 일치하지 않습니다.',
-                  style: TextStyle(fontSize:12.0,color: messageRed),
-                ),
+
                 SizedBox(height: 8.0),
+                textfieldTitle(title: pwTitle, star: true,reverse: true,),
                 Text(
-                  '* 2자 이상 12 자 이하 영문, 숫자, 특수기호만 입력 가능합니다.',
-                  style: TextStyle(fontSize:12.0,color: messageRed),
+                  isPasswordMatch()
+                      ? '* 비밀번호가 일치합니다.'
+                      : '* 비밀번호가 일치하지 않습니다.',
+                  style: TextStyle(color: messageRed, fontSize: 12.0),
                 ),
+
+
               ],
             ),
 

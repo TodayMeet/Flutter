@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:front/screen/dialog/dialoglist.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:front/screen/profile/profileMain.dart';
 
 import '../../data/designconst/constants.dart';
@@ -12,7 +14,9 @@ import '../../model/UI/widget/customAppBar.dart';
 import '../../model/UI/widget/text/textfieldTitle.dart';
 
 class profileFavorite extends StatefulWidget {
-  const profileFavorite({Key? key}) : super(key: key);
+  final int userNo;
+
+  profileFavorite({required this.userNo});
 
   @override
   State<profileFavorite> createState() => _profileFavoriteState();
@@ -96,8 +100,105 @@ class _profileFavoriteState extends State<profileFavorite> {
       "category_image": "assets/images/Category/Sports.svg"
     },
   ];
+  Set<String> selectedCategories = {};
   Color textColor = Color(0xff2f3036);
+  int test = 34;
 
+  Future<List<String>> categoryLoad() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/usercategory/${test}');
+    final requestData = selectedCategories.toList();
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+
+    );
+    if (response.statusCode == 200) {
+      // print('전송잘됨');
+      // print(selectedCategories.toList());
+      // print(url1);
+      // var serverData = jsonDecode(utf8.decode(response.bodyBytes));
+
+      List<dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
+      List<String> resultList = [];
+      for (dynamic data in result) {
+        // 데이터를 String으로 변환하여 결과 리스트에 추가
+        String resultItem = data.toString();
+        resultList.add(resultItem);
+      }
+      print(resultList);
+      return resultList;
+      // print(response);
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => favorite()),
+      // );
+    } else {
+      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+      print(selectedCategories.toList());
+      // print(widget.password);
+      // print(widget.email);
+      print(url1);
+      print(jsonData);
+      print(response.body);
+      return ['a'];
+    }
+  }
+
+  Future<void> categoryChange() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/usercategory/${widget.userNo}');
+    final requestData = selectedCategories.toList();
+    final jsonData = jsonEncode(requestData);
+    final response = await http.put(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonData,
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+      print(selectedCategories.toList());
+      print(url1);
+      print(response.body);
+      print(response);
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => favorite()),
+      // );
+    } else {
+      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+      print(selectedCategories.toList());
+      // print(widget.password);
+      // print(widget.email);
+      print(url1);
+      print(jsonData);
+      print(response.body);
+
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+
+    List<String> loadedCategories = await categoryLoad();
+
+    for (String name in loadedCategories) {
+      for (Map category in categories) {
+        if (category['name'] == name) {
+          category['isChecked'] = true;
+          break;
+        }
+      }
+    }
+    for (Map category in categories) {
+      print(category['isChecked']);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     int checkedCount =
@@ -109,8 +210,7 @@ class _profileFavoriteState extends State<profileFavorite> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => profileMain()));
+            Navigator.pop(context);
           },
         ),
         title: appbarText,
@@ -123,6 +223,9 @@ class _profileFavoriteState extends State<profileFavorite> {
             // 카테고리
             crossAxisAlignment: CrossAxisAlignment.center,
             children: categories.map((category) {
+              if (category['isChecked']) {
+                selectedCategories.add(category['name']);
+              }
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Container(
@@ -207,15 +310,23 @@ class _profileFavoriteState extends State<profileFavorite> {
 
           blueButton(
               buttonText: '저장하기',
-              onPressed: () {
+              onPressed: () async {
                 if (checkedCount > 5) {
                   onebutton.overFiveDialog(context);
                 } else {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => profileMain()),
-                      (route) => false);
+                  categoryLoad();
+                  print("userNo는");
+                  print(widget.userNo);
+                  print('새로 선택한 관심사는');
+                  print(selectedCategories.toList());
+                  print('기존에 선택했던 관심사는');
+
+
+
+
+
+                  // print(categor);
+                  // categoryChange();
                 }
               })
         ]),
@@ -223,3 +334,5 @@ class _profileFavoriteState extends State<profileFavorite> {
     );
   }
 }
+
+

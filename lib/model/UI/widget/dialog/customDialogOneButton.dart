@@ -20,6 +20,7 @@ class CustomDialogOneButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(16.0)),
       ),
@@ -47,7 +48,7 @@ class CustomDialogOneButton extends StatelessWidget {
               ),
             ),
             Divider(
-              thickness: 0.5,
+              thickness: 0,
               height: 0,
               color: Colors.grey,
             ),

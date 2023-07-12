@@ -42,10 +42,6 @@ class _profileEditState extends State<profileEdit> {
   List<bool> _selections = [false, false, false];
 
 
-
-
-
-
   @override
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -81,9 +77,7 @@ class _profileEditState extends State<profileEdit> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed:() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => profileMain()));},
+            Navigator.pop(context);},
         ),
         title: '프로필 수정',
       ),
@@ -135,6 +129,7 @@ class _profileEditState extends State<profileEdit> {
               SizedBox(height: 8.0),
               Center(
                 child: Container(
+                  padding: EdgeInsets.zero,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.0),
@@ -206,7 +201,7 @@ class _profileEditState extends State<profileEdit> {
               textfieldTitle(title: '생년월일(선택)', star: false), //생년월일 선택 텍스트
               SizedBox(height: 8,),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0,),
+                padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 12.0),
                 height: 46,
                 decoration: BoxDecoration(
                   color: Color(0xFFEDEDED),
@@ -222,6 +217,7 @@ class _profileEditState extends State<profileEdit> {
                     ),
                     Spacer(),
                     IconButton(
+                      padding: EdgeInsets.zero,
                         onPressed: () {
                           _selectDate(context);
                         },
@@ -233,11 +229,7 @@ class _profileEditState extends State<profileEdit> {
 
 
               blueButton(buttonText: '저장', onPressed: (){
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            profileMain()));
+                Navigator.pop(context);
               })
             ],
           ),

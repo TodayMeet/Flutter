@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:front/data/designconst/constants.dart';
 import 'package:front/model/TextPrint.dart';
+import 'package:front/model/UI/widget/button/svgButton.dart';
 import 'package:front/screen/profile/noticeList.dart';
+import 'package:intl/intl.dart';
 
 import '../../model/UI/widget/customAppBar.dart';
 
@@ -11,48 +16,76 @@ import '../../model/UI/widget/customAppBar.dart';
 
 
 class notice extends StatefulWidget {
-  const notice({Key? key}) : super(key: key);
+  final int noticeNo;
+  notice({required this.noticeNo});
+  // const notice({Key? key}) : super(key: key);
 
   @override
   State<notice> createState() => _noticeState();
 }
 
 class _noticeState extends State<notice> {
-  String noticetext = '';
+  String title = '';
+  List<String> images = [];
+  String time = '';
+  String content = ''' ''';
+
+
+
+
+  Future<void> noticeContentLoad() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/notice/detail?noticeNo=${widget.noticeNo}');
+    final requestData = {
+      'noticeNo' : widget.noticeNo,
+      'title' : title,
+      'content' : content,
+      'images' : images,
+      'time' : time
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(response.body);
+      final result = jsonDecode(utf8.decode(response.bodyBytes));
+      setState(() {
+        title = result["title"];
+        content = result["content"];
+        time = result["time"];
+        images = List<String>.from(result["images"]);
+      });
+    }
+  } //서버로 전송
 
   @override
   void initState() {
+    noticeContentLoad();
     super.initState();
-    loadText();
   }
 
-  Future<void> loadText() async {
-    String loadedText = await rootBundle.loadString('assets/texts/noticeTest.txt');
-    setState(() {
-      noticetext = loadedText;
-    });
-  }
-  String titletext = '2022년 1월 1일 안드로이드 업데이트 예정';
-  String date = '2021.11.23 12:33';
 
 
   @override
   Widget build(BuildContext context) {
+    DateFormat timeformat = DateFormat("yyyy.MM.dd HH:mm");
+    DateTime t1 = DateTime.parse(time);
+    String t2 = timeformat.format(t1);
+
     String appbarText = '공지사항';
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        leadingWidget: IconButton(
-          iconSize: 14.93,
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => noticeList()));
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Color(0xFF2F2F2F),
-          ),
-        ),
+        leadingWidget: SvgButton(
+            imagePath: backarrow,
+            onPressed: (){
+              print(t1);
+              print(timeformat.format(t1));
+              // Navigator.pop(context);
+            }),
+
+
         title: appbarText,
       ),
       body: SingleChildScrollView(
@@ -62,9 +95,9 @@ class _noticeState extends State<notice> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              Text(titletext,style: TextStyle(fontSize: 18,),),
+              Text(title,style: TextStyle(fontSize: 18,),),
               SizedBox(height: 4,),
-              Text(date,style: TextStyle(fontSize: 14,color: Color(0xFF71727A)),),
+              Text('${t2}',style: TextStyle(fontSize: 14,color: Color(0xFF71727A)),),
               SizedBox(height: 16,),
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -73,7 +106,7 @@ class _noticeState extends State<notice> {
                 child: Center(child: SvgPicture.asset('assets/icons/Image.svg',width: 71,height: 70,))
               ),
               SizedBox(height: 16,),
-              Text(noticetext,style: TextStyle(fontSize: 14,color: Colors.black),),
+              Text(content,style: TextStyle(fontSize: 14,color: Colors.black),),
 
             ],
           ),

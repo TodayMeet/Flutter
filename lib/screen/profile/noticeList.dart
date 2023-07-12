@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-import 'package:front/screen/profile/notice.dart';
 import 'package:front/screen/profile/profileMain.dart';
-
+import 'package:intl/intl.dart';
 import '../../data/designconst/constants.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
+import 'notice.dart';
 
 // import 'mainListView.dart';
 
@@ -19,46 +19,76 @@ class noticeList extends StatefulWidget {
 }
 
 class _noticeListState extends State<noticeList> {
-  List<String> entries = <String>[
-    '업데이트 안내드립니다.',
-    '업데이트 안내드립니다.',
-    '업데이트 안내드립니다.',
-    '업데이트 안내드립니다.',
-    '업데이트 안내드립니다.'
-  ];
-  List<String> entries1 = <String>[
-    'googlelogin',
-    'kakao_login_large_wide',
-    'logoimage',
-    'naverlogin',
-    'titleimage'
-  ];
-  String appbarText = '공지사항';
-  int year = 2022;
-  int month = 6;
-  int day = 15;
-  // DateTime uploadDate = DateTime(year,month,day);
+  String question = '';
+  String answer = '';
+  int faqno = 0;
+  List<Map> result = [];
+  List<Map> finalresult = [];
 
-  String imageIcon = 'assets/images/ProfileImage/Image.svg';
+
+  int noticeNo=0;
+  String title = '';
+  String image = '';
+  String time='';
+  DateFormat timeformat = DateFormat("yyyy.MM.dd");
+
+
+  Future<void> noticeLoad() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/notice/list');
+    final requestData = {
+      'question' : question,
+      'answer' : answer,
+      'noticeno' : noticeNo
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      // body: jsonData,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final result = jsonDecode(utf8.decode(response.bodyBytes));
+      List<Map<String, dynamic>> mappedList = result.cast<Map<String, dynamic>>().toList();
+      mappedList.forEach((item) {
+        item["index"] = mappedList.length-item['noticeNo'];
+      });
+
+      setState(() {
+        finalresult = mappedList;
+
+      });
+      print(finalresult);
+    }
+  } //서버로 전송
+
+
+  @override
+  void initState() {
+    super.initState();
+    noticeLoad();
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => profileMain()));
+            // noticeLoad();
+            Navigator.pop(context);
           },
         ),
-        title: appbarText,
+        title: '공지사항',
       ),
       body: ListView.builder(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          itemCount: entries.length,
+          itemCount: finalresult.length,
           itemBuilder: (BuildContext context, int index) {
+            final notices = finalresult[finalresult.length-1 - index];
+            DateTime writeTime = DateTime.parse(notices['time']);
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: GestureDetector(
@@ -66,29 +96,20 @@ class _noticeListState extends State<noticeList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => notice(),
+                      builder: (context) => notice(noticeNo: notices['noticeNo'],),
                     ),
                   );
+
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: 48,
                   child: Row(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFFF5F6FA),
-                          shape: BoxShape.circle,
-                        ),
-                        width: 50,
-                        height: 50,
-                        child: Center(
-                          child: SvgPicture.asset(
-                            'assets/icons/Image.svg',
-                            width: 22,
-                            height: 22,
-                            fit: BoxFit.contain,
-                          ),
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(
+                            notices['image']
                         ),
                       ),
                       SizedBox(
@@ -99,15 +120,17 @@ class _noticeListState extends State<noticeList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${entries[index]}',
+                            '${notices['title']}',
                             style:
-                                TextStyle(color: Colors.black, fontSize: 14.0),
+                            TextStyle(color: Colors.black, fontSize: 14.0),
                           ),
                           SizedBox(
                             height: 4,
                           ),
                           Text(
-                            '2022.06.15',
+                            '${timeformat.format(writeTime)}',
+                            // '${ timeformat.format.parse(notices['time']) }',
+                            // String formattedDate = format.format(dateTime);
                             style: TextStyle(
                                 color: Color(0xFF71727A), fontSize: 12),
                           ),
@@ -119,6 +142,9 @@ class _noticeListState extends State<noticeList> {
               ),
             );
           }),
+
     );
   }
 }
+
+

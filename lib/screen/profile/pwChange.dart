@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:front/screen/dialog/dialoglist.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
@@ -50,9 +51,8 @@ class _pwChangeState extends State<pwChange> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed:() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => profileMain()));},
+            Navigator.pop(context);
+            },
         ),
         title: '비밀번호 변경',
       ),
@@ -91,9 +91,9 @@ class _pwChangeState extends State<pwChange> {
                           });
                         },
                         icon: SvgPicture.asset(
-                          obscureText1 ? 'assets/icons/detail/Visibility.svg' : 'assets/icons/detail/Visibility.svg',
-                          width: 16,
-                          height: 16,
+                          obscureText1
+                              ?   'assets/icons/detail/Visibility_off.svg'
+                              :   'assets/icons/detail/Visibility.svg',
                           color: Color(0xFFD0D0D0),
                         ),
                       ),
@@ -138,8 +138,8 @@ class _pwChangeState extends State<pwChange> {
                         },
                           icon: SvgPicture.asset(
                             obscureText2
-                                ?   'assets/icons/detail/Visibility.svg'
-                                :   'assets/icons/detail/Visibility_off.svg',
+                                ?   'assets/icons/detail/Visibility_off.svg'
+                                :   'assets/icons/detail/Visibility.svg',
                             color: Color(0xFFD0D0D0),
                           )
                       ),
@@ -182,14 +182,13 @@ class _pwChangeState extends State<pwChange> {
                           });
                         },
                         icon: SvgPicture.asset(
-                          obscureText3 ? 'assets/icons/detail/Visibility.svg' : 'assets/icons/detail/Visibility_off.svg',
+                          obscureText3 ? 'assets/icons/detail/Visibility_off.svg' : 'assets/icons/detail/Visibility.svg' ,
                           color: Color(0xFFD0D0D0),
                         ),
                       ),
                     ),
                   ),
-                ),
-//텍스트필드
+                ), //텍스트필드
                 SizedBox(height: 8.0),
                 textfieldTitle(title: pwTitle, star: true, reverse: true,),
 
@@ -199,12 +198,14 @@ class _pwChangeState extends State<pwChange> {
             Spacer(),
 
             blueButton(buttonText: '저장', onPressed: (){
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => profileMain()),
-              );
+              // Navigator.pop(context);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) => profileMain()),
+              onebutton.pwChangeDialog(context);
+
+
             })//변경 버튼
           ],
         ),

@@ -83,8 +83,8 @@ class _alarmState extends State<alarm> {
             itemBuilder: (context, index){
               return GestureDetector(
                 onTap: (){
-                  pageTransition(context, tempAlarm[index].notiType,
-                      tempAlarm[index].userNumber, tempAlarm[index].meetNumber, tempAlarm[index].name);
+                  pageTransition(context, tempAlarm[index].notiType, tempAlarm[index].userNumber,
+                      tempAlarm[index].meetNumber, tempAlarm[index].name, tempAlarm[index].processed);
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
@@ -111,7 +111,7 @@ class _alarmState extends State<alarm> {
                         children: [
                           // 알림 메세지
                           SizedBox(
-                            width: 250,
+                            width: MediaQuery.of(context).size.width - 114,
                               child: alarmMessage(tempAlarm[index].notiType, tempAlarm[index].name)),
                           const SizedBox(height:4),
 

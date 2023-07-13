@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../main.dart';
 import 'package:front/screen/login/pwFind.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Phone_ij.dart';
@@ -54,7 +55,7 @@ class _loginState extends State<login> {
       print(userNo);
       // Get.to( MainPageMap(),arguments: userNo);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MainPageMap()));
+          context, MaterialPageRoute(builder: (context) => MyAppPage()));
       return userNo;
     }else if(_text==null ){
       print('assssssssss');

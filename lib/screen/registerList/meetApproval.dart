@@ -7,9 +7,11 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:front/data/dummy_meetList.dart';
 import 'package:http_parser/http_parser.dart';
 
 import '../setting/registerMeeting.dart' as meet;
+import '../../routes.dart';
 
 class MeetingApproval extends StatefulWidget {
   const MeetingApproval({Key? key}) : super(key: key);
@@ -50,7 +52,7 @@ class _MeetingApprovalState extends State<MeetingApproval> {
       'content' : meet.meetInfo.content,
       'Files' : imagefiles,
       'approval' : meet.meetInfo.approval,
-      'userNo' : 1,
+      'userNo' : tempUser["userNo"],
     });
 
     // 서버로 받은 응답
@@ -206,7 +208,9 @@ class _MeetingApprovalState extends State<MeetingApproval> {
               print('content : '+meet.meetInfo.content);
               print('approval : '+meet.meetInfo.approval.toString());
               _registerMeet();
-              Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                  context,
+                  Routes.registerRoute);
             },
             child: const Text('등록 완료',
               style: TextStyle(

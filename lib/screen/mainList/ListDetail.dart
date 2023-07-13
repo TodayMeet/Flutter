@@ -138,28 +138,56 @@ class ListDetailState extends ConsumerState<ListDetail> {
 
   // 참가하기
   Future<void> addUser() async {
-    try {
-      final url = Uri.parse('http://todaymeet.shop:8080/meetuseradd');
-      var postBody = {
-        "meet": {"meetNo": Meet.meetNo},
-        "user": {"userNo": tempUser['userNo']}
-      };
-      http.Response response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(postBody),
-      );
-      if (response.statusCode == 200) {
-        print(response.body);
-        updateData();
-        showToast('참가했습니다');
-      } else {
-        print('Data update failed! : ${response.statusCode}');
-        showToast('Data update failed!');
+    if(Meet.approval == true) {
+      // 참가 승인 없이 참가하는 경우
+      try {
+        final url = Uri.parse('http://todaymeet.shop:8080/meetuseradd');
+        var postBody = {
+          "meet": {"meetNo": Meet.meetNo},
+          "user": {"userNo": tempUser['userNo']}
+        };
+        http.Response response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(postBody),
+        );
+        if (response.statusCode == 200) {
+          print(response.body);
+          updateData();
+          showToast('참가했습니다');
+        } else {
+          print('Data update failed! : ${response.statusCode}');
+          showToast('Data update failed!');
+        }
+      } catch (e) {
+        print('There was a problem with the internet connection.');
+        showToast('There was a problem with the internet connection.');
       }
-    } catch (e) {
-      print('There was a problem with the internet connection.');
-      showToast('There was a problem with the internet connection.');
+    } else {
+      // 참가 승인이 필요한 경우
+      try {
+        final url = Uri.parse('http://todaymeet.shop:8080/approval/make');
+        var postBody = {
+          "meet": {"meetNo": Meet.meetNo},
+          "user": {"userNo": tempUser["userNo"]}
+        };
+        http.Response response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(postBody),
+        );
+        if (response.statusCode == 200) {
+          print(response.body);
+          updateData();
+          showToast('참가 요청했습니다');
+        } else {
+          print('Data update failed! : ${response.statusCode}');
+          showToast('Data update failed!');
+        }
+      } catch (e) {
+        print('There was a problem with the internet connection.');
+        showToast('There was a problem with the internet connection.');
+      }
     }
   }
 
@@ -653,10 +681,12 @@ class ListDetailState extends ConsumerState<ListDetail> {
                         child: StringText_letterspacing(
                             '내용', 12, FontWeight.w700, Colors.black, -0.5)),
                     const SizedBox(width: 16),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: StringText_letterspacing(Meet.content, 14,
-                          FontWeight.w400, const Color(0xff5E5F68), -0.5),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: StringText_letterspacing(Meet.content, 14,
+                            FontWeight.w400, const Color(0xff5E5F68), -0.5),
+                      ),
                     ),
                   ],
                 ), //모임 내용
@@ -822,7 +852,15 @@ class ListDetailState extends ConsumerState<ListDetail> {
                         child: StringText_letterspacing(
                             '참가 인원', 12, FontWeight.w700, Colors.black, -0.5)),
                     const SizedBox(width: 16),
-                    StringText_letterspacing(
+
+                    Meet.peopleLimit == 100
+                      ?StringText_letterspacing(
+                        '$curUserNum명 참여중 / 최대 - 명까지',
+                        14,
+                        FontWeight.w400,
+                        const Color(0xff5E5F68),
+                        -0.5)
+                      :StringText_letterspacing(
                         '$curUserNum명 참여중 / 최대 ${Meet.peopleLimit} 명까지',
                         14,
                         FontWeight.w400,

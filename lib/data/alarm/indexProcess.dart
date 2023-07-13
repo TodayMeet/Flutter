@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:front/data/dummy_meetList.dart';
 import 'package:front/screen/mainList/Loading_to_ListDetail.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 
+import '../../model/showtoast.dart';
 import '../../screen/profile/userProfile.dart';
 import '../../screen/mainList/Comments.dart';
 
@@ -182,7 +185,69 @@ Widget alarmMessage(int index, String value) {
 }*/
 
 void pageTransition(BuildContext context, int index, int? userNumber,
-    int? meetNumber, String name) {
+    int? meetNumber, String name, bool processed) {
+  // 참가 승인
+  void approvalPositive () async {
+    try{
+      final url = Uri.parse("http://todaymeet.shop:8080/approval/ok");
+      var postBody = {
+        "meet":{
+          "meetNo":meetNumber
+        },
+        "user":{
+          "userNo":userNumber
+        }
+      };
+
+      Response response = await post(
+          url,
+          headers: {'Content-Type' : 'application/json'},
+          body: json.encode(postBody),
+      );
+
+      if (response.statusCode == 200){
+        print(response);
+      }else{
+        print("서버 통신 오류");
+        showToast("서버 통신 오류");
+      }
+    }catch(e){
+      print("참가 승인 오류");
+      showToast("참가 승인 오류");
+    }
+  }
+
+  // 참가 승인
+  void approvalNegative () async {
+    try{
+      final url = Uri.parse("http://todaymeet.shop:8080/approval/not");
+      var postBody = {
+        "meet":{
+          "meetNo":meetNumber
+        },
+        "user":{
+          "userNo":userNumber
+        }
+      };
+
+      Response response = await post(
+        url,
+        headers: {'Content-Type' : 'application/json'},
+        body: json.encode(postBody),
+      );
+
+      if (response.statusCode == 200){
+        print(response);
+      }else{
+        print("서버 통신 오류");
+        showToast("서버 통신 오류");
+      }
+    }catch(e){
+      print("참가 승인 오류");
+      showToast("참가 승인 오류");
+    }
+  }
+
   switch (index) {
     // 다른 유저가 나를 팔로우 했을 때
     case 1:
@@ -234,109 +299,117 @@ void pageTransition(BuildContext context, int index, int? userNumber,
 
     // 유저가 참여 요청을 했을 때(참여방식이 '확인 후 승인')
     case 7:
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: ((context) {
-            return Container(
-              width: 320,
-              decoration: const BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Color(0x1A000000),
-                  blurRadius: 30,
-                  offset: Offset(0, 8),
-                ),
-              ]),
-              child: AlertDialog(
-                  contentPadding: EdgeInsets.zero,
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+      if(processed == true){
+        showToast("참가 승인 여부를 결정한 알림입니다.");
+      }else {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: ((context) {
+              return Container(
+                width: 320,
+                decoration: const BoxDecoration(boxShadow: [
+                  BoxShadow(
+                    color: Color(0x1A000000),
+                    blurRadius: 30,
+                    offset: Offset(0, 8),
                   ),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 36.0),
-                        child: Text(
-                          "$name님이 창가 요청을 했습니다\n"
-                          "참가를 승인 하시겠습니까",
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            letterSpacing: -0.5,
-                            height: 1.4,
+                ]),
+                child: AlertDialog(
+                    contentPadding: EdgeInsets.zero,
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 36.0),
+                          child: Text(
+                            "$name님이 창가 요청을 했습니다\n"
+                                "참가를 승인 하시겠습니까",
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              letterSpacing: -0.5,
+                              height: 1.4,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                top: BorderSide(
-                                    color: Color(0xFFDADADA), width: 1))),
-                        child: Row(
-                          children: [
-                            // 승인 버튼
-                            SizedBox(
-                              width: 160,
-                              height: 56,
-                              child: TextButton(
-                                  style: const ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStatePropertyAll<Color>(
-                                            Color(0xFF4874EA)),
-                                    shape: MaterialStatePropertyAll<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                bottomLeft:
-                                                    Radius.circular(16)))),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("승인",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16,
-                                      ))),
-                            ),
+                        Container(
+                          decoration: const BoxDecoration(
+                              border: Border(
+                                  top: BorderSide(
+                                      color: Color(0xFFDADADA), width: 1))),
+                          child: Row(
+                            children: [
+                              // 승인 버튼
+                              SizedBox(
+                                width: 160,
+                                height: 56,
+                                child: TextButton(
+                                    style: const ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStatePropertyAll<Color>(
+                                          Color(0xFF4874EA)),
+                                      shape: MaterialStatePropertyAll<
+                                          RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                  Radius.circular(16)))),
+                                    ),
+                                    onPressed: () async {
+                                      // 참가 승인 요청
+                                      approvalPositive();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("승인",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                        ))),
+                              ),
 
-                            // 거절 버튼
-                            SizedBox(
-                              width: 160,
-                              height: 56,
-                              child: TextButton(
-                                  style: const ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStatePropertyAll<Color>(
-                                            Colors.white),
-                                    shape: MaterialStatePropertyAll<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                bottomRight:
-                                                    Radius.circular(16)))),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("거절",
-                                      style: TextStyle(
-                                        color: Color(0xFF4874EA),
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16,
-                                      ))),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
-            );
-          }));
+                              // 거절 버튼
+                              SizedBox(
+                                width: 160,
+                                height: 56,
+                                child: TextButton(
+                                    style: const ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStatePropertyAll<Color>(
+                                          Colors.white),
+                                      shape: MaterialStatePropertyAll<
+                                          RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  bottomRight:
+                                                  Radius.circular(16)))),
+                                    ),
+                                    onPressed: () {
+                                      // 참가 승인 거부
+                                      approvalNegative();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("거절",
+                                        style: TextStyle(
+                                          color: Color(0xFF4874EA),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                        ))),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    )),
+              );
+            }));
+      }
       break;
 
     default:

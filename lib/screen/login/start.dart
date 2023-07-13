@@ -6,12 +6,11 @@
 // 화면 전체 수정
 
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'login.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../main.dart';
+import 'login.dart';
 
 class Start extends StatefulWidget {
   @override
@@ -21,7 +20,44 @@ class Start extends StatefulWidget {
 class _Start extends State<Start> {
   // List<dynamic> data = [];
 
+  final storage = const FlutterSecureStorage();
+  String? userInfo = '';
 
+  @override
+  void initState() {
+    super.initState();
+
+    //비동기로 flutter secure storage 정보를 불러오는 작업.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(seconds: 2),(){
+        _asyncMethod();
+      });
+    });
+  }
+
+_asyncMethod() async {
+  //read 함수를 통하여 key값에 맞는 정보를 불러오기
+  //(데이터가 없을때는 null을 반환을 합니다.)
+  userInfo = await storage.read(key: "login");
+  print(userInfo);
+
+  //user의 정보가 있다면 바로 메인 페이지로 가기
+  if (userInfo != null) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MyAppPage()
+      ),
+    );
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => login(),
+      ),
+    );
+  }
+}
   @override
   Widget build(BuildContext context) {
 

@@ -6,10 +6,6 @@ import '../../data/designconst/constants.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 
 
-
-
-
-
 class followList extends StatefulWidget {
   final username;
   final userNo;
@@ -89,7 +85,7 @@ class _followListState extends State<followList> {
               Tab(child: Column(
                 children: [
                   Text('팔로워',style: TextStyle(fontSize: 14.0,color: Colors.black),),
-                  Text(followers.length.toString(),style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
+                  Text("followers.length.toString()",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
                 ],
               ),),
               Tab(child: Column(
@@ -104,10 +100,10 @@ class _followListState extends State<followList> {
         body: TabBarView(
           children: [
             ListView.builder(
-              itemCount: followers.length,
+              itemCount: 2,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(followers[index]),
+                  title: Text("followers[index]"),
                 );
               },
             ),

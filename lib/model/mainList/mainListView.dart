@@ -178,8 +178,12 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                           "assets/icons/mainList/people.svg"
                       ), //사람 아이콘
                       const SizedBox(width: 6,),
-                      StringText_letterspacing(
-                          '${list.peopleNum} / ${list.peopleLimit}', 12, FontWeight.w700, const Color(0xffA4A4A7), -0.5), // 현재 인원수 / 최대 인원수
+
+                      list.peopleLimit == 100   // 최대 인원수 무제한인 경우
+                        ?StringText_letterspacing(
+                          '${list.peopleNum} / -', 12, FontWeight.w700, const Color(0xffA4A4A7), -0.5) // 현재 인원수 / -
+                        :StringText_letterspacing(
+                          '${list.peopleNum} / ${list.peopleLimit}', 12, FontWeight.w700, const Color(0xffA4A4A7), -0.5) // 현재 인원수 / 최대 인원수
                     ],
                   ),
                 )

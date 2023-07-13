@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../routes.dart';
-import '../../data/dummy_meetList.dart';
+import '../../data/userNo.dart';
 import '../../data/meetList.dart';
 import '../../screen/mainList/Loading_to_ListDetail.dart';
 import '../../screen/search/searchPageElement.dart' as element;
@@ -51,7 +51,7 @@ Widget ListViewer(BuildContext context, WidgetRef ref, meetList List) {
         onTap: (){
           Navigator.push(context,
               MaterialPageRoute(
-                  builder: (context) => Loading_to_ListDetail(meetNo: List.meetNo, userNo: tempUser['userNo'],)));
+                  builder: (context) => Loading_to_ListDetail(meetNo: List.meetNo, userNo: UserNo.myuserNo,)));
         }, // -> 건수 상세 페이지로 이동
       ),
       const SizedBox(height: 18,)

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:front/data/dummy_meetList.dart';
+import 'package:front/data/userNo.dart';
+import 'package:front/screen/alarm/alarm.dart';
 import 'package:front/screen/mainList/Loading_to_ListDetail.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
@@ -261,7 +262,7 @@ void pageTransition(BuildContext context, int index, int? userNumber,
           context,
           MaterialPageRoute(
               builder: (context) => Loading_to_ListDetail(
-                  meetNo: meetNumber!, userNo: tempUser["userNo"])));
+                  meetNo: meetNumber!, userNo: UserNo.myuserNo)));
       break;
 
     // 설정된 위치에 관심 카테고리에 새로운 건수가 등록된 경우
@@ -276,7 +277,7 @@ void pageTransition(BuildContext context, int index, int? userNumber,
           context,
           MaterialPageRoute(
               builder: (context) => Loading_to_ListDetail(
-                  meetNo: meetNumber!, userNo: tempUser["userNo"])));
+                  meetNo: meetNumber!, userNo: UserNo.myuserNo)));
       break;
 
     // 건수 참가 거절이 된 경우
@@ -285,7 +286,7 @@ void pageTransition(BuildContext context, int index, int? userNumber,
           context,
           MaterialPageRoute(
               builder: (context) => Loading_to_ListDetail(
-                  meetNo: meetNumber!, userNo: tempUser["userNo"])));
+                  meetNo: meetNumber!, userNo: UserNo.myuserNo)));
       break;
 
     // 내가 등록한 또는 참여한 건수에 댓글이 달린 경우
@@ -364,6 +365,7 @@ void pageTransition(BuildContext context, int index, int? userNumber,
                                     onPressed: () async {
                                       // 참가 승인 요청
                                       approvalPositive();
+                                      alarmrefreshController.requestRefresh();
                                       Navigator.pop(context);
                                     },
                                     child: const Text("승인",
@@ -393,6 +395,7 @@ void pageTransition(BuildContext context, int index, int? userNumber,
                                     onPressed: () {
                                       // 참가 승인 거부
                                       approvalNegative();
+                                      alarmrefreshController.requestRefresh();
                                       Navigator.pop(context);
                                     },
                                     child: const Text("거절",

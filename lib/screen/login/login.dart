@@ -1,6 +1,7 @@
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:front/screen/login/start.dart';
 
 import '../../data/designconst/constants.dart';
 
@@ -70,8 +71,6 @@ class _loginState extends State<login> {
       print("userNo : ");
       print(userNo);
       // Get.to( MainPageMap(),arguments: userNo);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyAppPage()));
       await getToken();
       final sendToken = {
         'userNo' : userNo,
@@ -85,11 +84,16 @@ class _loginState extends State<login> {
         headers: {'Content-Type': 'application/json'},
       );
       print(response1.body);
-      if(response1.body=='success'){
 
+      if(response1.body=='success'){
         UserNo.myuserNo = userNo;
+
+        await storage.write(
+          key: "login",
+          value: "id $email password $password",
+        );
         Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageMap()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MyAppPage()));
       }
       return userNo;
     }else if(_text==null ){

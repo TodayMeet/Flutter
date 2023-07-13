@@ -18,7 +18,7 @@ import '../../model/showtoast.dart';
 import '../../model/mainList/CategoryContainer.dart';
 import '../../model/TextPrint.dart';
 import '../../model/mainList/Invitation.dart';
-import '../../data/dummy_meetList.dart';
+import '../../data/userNo.dart';
 import '../../data/meet.dart';
 import '../../model/mainList/CommentContainer.dart';
 import '../../data/apiKey.dart';
@@ -109,7 +109,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
     try {
       final url =
           Uri.parse('http://todaymeet.shop:8080/meet/detail/${Meet.meetNo}');
-      var postBody = {"userNo": tempUser['userNo']};
+      var postBody = {"userNo": UserNo.myuserNo};
       http.Response response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -144,7 +144,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
         final url = Uri.parse('http://todaymeet.shop:8080/meetuseradd');
         var postBody = {
           "meet": {"meetNo": Meet.meetNo},
-          "user": {"userNo": tempUser['userNo']}
+          "user": {"userNo": UserNo.myuserNo}
         };
         http.Response response = await http.post(
           url,
@@ -169,7 +169,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
         final url = Uri.parse('http://todaymeet.shop:8080/approval/make');
         var postBody = {
           "meet": {"meetNo": Meet.meetNo},
-          "user": {"userNo": tempUser["userNo"]}
+          "user": {"userNo": UserNo.myuserNo}
         };
         http.Response response = await http.post(
           url,
@@ -194,10 +194,10 @@ class ListDetailState extends ConsumerState<ListDetail> {
   // 참가 취소
   Future<void> subUser() async {
     try {
-      final url = Uri.parse('http://todaymeet.shop:8080/meetuserremove');
+      final url = Uri.parse('http://todaymeet.shop:8080/meetuseremove');
       var postBody = {
         "meet": {"meetNo": Meet.meetNo},
-        "user": {"userNo": tempUser['userNo']}
+        "user": {"userNo": UserNo.myuserNo}
       };
 
       http.Response response = await http.post(
@@ -554,7 +554,26 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   Expanded(
                     child: SizedBox(
                       height: 46,
-                      child: OutlinedButton.icon(
+                      child:Meet.hostUser["userNo"] == UserNo.myuserNo
+                      ?Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: Color(particitationButtonColor),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                              color: const Color(0xFFE1E2E7),
+                          )
+                        ),
+                        child: Center(
+                          child: StringText_letterspacing(
+                              "호스트입니다.",
+                              16,
+                              FontWeight.w700,
+                              const Color(0xff5E5F68),
+                              -0.5),
+                        ),
+                      )
+                      :OutlinedButton.icon(
                           icon: Icon(particitationButtonIcon,
                               color: const Color(0xff5E5F68)),
                           onPressed: () {
@@ -613,7 +632,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                                     builder: (BuildContext context) {
                                       return Invitaiton(
                                           meetNo: Meet.meetNo,
-                                          userNo: tempUser['userNo'],
+                                          userNo: UserNo.myuserNo,
                                           userLimit: Meet.peopleLimit,
                                           curUserNum: curUserNum);
                                     });

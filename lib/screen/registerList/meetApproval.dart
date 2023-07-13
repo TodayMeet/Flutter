@@ -7,7 +7,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:front/data/dummy_meetList.dart';
+import 'package:front/data/userNo.dart';
 import 'package:http_parser/http_parser.dart';
 
 import '../setting/registerMeeting.dart' as meet;
@@ -52,7 +52,7 @@ class _MeetingApprovalState extends State<MeetingApproval> {
       'content' : meet.meetInfo.content,
       'Files' : imagefiles,
       'approval' : meet.meetInfo.approval,
-      'userNo' : tempUser["userNo"],
+      'userNo' : UserNo.myuserNo,
     });
 
     // 서버로 받은 응답

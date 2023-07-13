@@ -6,7 +6,7 @@
 // 추가 작업 예정 사항
 
 import 'package:flutter/material.dart';
-import 'package:front/data/dummy_meetList.dart';
+import 'package:front/data/userNo.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -19,6 +19,9 @@ import '../../data/dummy_meetList.dart';
 import '../mainList/Loading_to_mainListBoard.dart';
 import '../profile/userProfile.dart';
 
+// 게시판 컨트롤러
+RefreshController alarmrefreshController = RefreshController(initialRefresh: true);
+
 class alarm extends StatefulWidget {
   const alarm({Key? key}) : super(key: key);
 
@@ -28,9 +31,6 @@ class alarm extends StatefulWidget {
 
 class _alarmState extends State<alarm> {
 
-  // 게시판 컨트롤러
-  RefreshController alarmrefreshController = RefreshController(initialRefresh: true);
-
   // 현재 알림 리스트
   List<Alarm> tempAlarm = [];
 
@@ -38,7 +38,7 @@ class _alarmState extends State<alarm> {
   Future<void> getAlarmList() async {
     try {
       final url = Uri.parse(
-          "http://todaymeet.shop:8080/notifi/all?userNo=${tempUser["userNo"]}");
+          "http://todaymeet.shop:8080/notifi/all?userNo=${UserNo.myuserNo}");
 
       http.Response response = await http.get(url);
       if (response.statusCode == 200) {

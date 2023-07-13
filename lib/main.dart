@@ -387,6 +387,7 @@ void showFlutterNotification(RemoteMessage message) {
     debugPrint("--------------------------- type Chat");
   } else {
     debugPrint("--------------------------- type Notifi");
+    alarmrefreshController.requestRefresh();
   }
   data.forEach((key, value) {
     debugPrint('Key: $key, Value: $value');

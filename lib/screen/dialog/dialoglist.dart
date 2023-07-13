@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../login/start.dart';
 import 'package:flutter/material.dart';
 import '../../data/userNo.dart';
 import '../../model/UI/widget/dialog/customDialogOneButton.dart';
@@ -41,6 +42,8 @@ class twobutton {
           Navigator.pop(context);
         },
         onRightPressed: () {
+          storage.delete(key: "login");
+          print('------------------------------자동 로그인 삭제------------------------------');
           Navigator.pop(context);
           Navigator.pushAndRemoveUntil(
               context,

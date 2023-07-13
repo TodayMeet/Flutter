@@ -13,7 +13,7 @@ import 'dart:convert';
 import 'package:front/data/Comment.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/model/mainList/CommentContainer.dart';
-import '../../data/dummy_meetList.dart';
+import '../../data/userNo.dart';
 import '../../model/showtoast.dart';
 
 StateProvider replyProvider = StateProvider<int>((ref)=>-1);
@@ -81,7 +81,7 @@ class _CommentsState extends ConsumerState<Comments> {
       final url = Uri.parse('http://todaymeet.shop:8080/meetcommentadd');
       var postBody = {
         "meetNo": widget.meetNo,
-        "user": {"userNo": tempUser['userNo']},
+        "user": {"userNo": UserNo.myuserNo},
         "parentNo": commentNo,
         "content": Content
       };

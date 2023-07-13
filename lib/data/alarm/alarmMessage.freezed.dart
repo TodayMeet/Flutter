@@ -26,6 +26,7 @@ mixin _$Alarm {
   String get name => throw _privateConstructorUsedError;
   String get imageLink => throw _privateConstructorUsedError;
   int get notiType => throw _privateConstructorUsedError;
+  bool get processed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +44,8 @@ abstract class $AlarmCopyWith<$Res> {
       int? meetNumber,
       String name,
       String imageLink,
-      int notiType});
+      int notiType,
+      bool processed});
 }
 
 /// @nodoc
@@ -65,6 +67,7 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
     Object? name = null,
     Object? imageLink = null,
     Object? notiType = null,
+    Object? processed = null,
   }) {
     return _then(_value.copyWith(
       time: null == time
@@ -91,6 +94,10 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
           ? _value.notiType
           : notiType // ignore: cast_nullable_to_non_nullable
               as int,
+      processed: null == processed
+          ? _value.processed
+          : processed // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -107,7 +114,8 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
       int? meetNumber,
       String name,
       String imageLink,
-      int notiType});
+      int notiType,
+      bool processed});
 }
 
 /// @nodoc
@@ -125,6 +133,7 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
     Object? name = null,
     Object? imageLink = null,
     Object? notiType = null,
+    Object? processed = null,
   }) {
     return _then(_$_Alarm(
       time: null == time
@@ -151,6 +160,10 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
           ? _value.notiType
           : notiType // ignore: cast_nullable_to_non_nullable
               as int,
+      processed: null == processed
+          ? _value.processed
+          : processed // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -164,7 +177,8 @@ class _$_Alarm with DiagnosticableTreeMixin implements _Alarm {
       required this.meetNumber,
       required this.name,
       required this.imageLink,
-      required this.notiType});
+      required this.notiType,
+      required this.processed});
 
   factory _$_Alarm.fromJson(Map<String, dynamic> json) =>
       _$$_AlarmFromJson(json);
@@ -181,10 +195,12 @@ class _$_Alarm with DiagnosticableTreeMixin implements _Alarm {
   final String imageLink;
   @override
   final int notiType;
+  @override
+  final bool processed;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Alarm(time: $time, userNumber: $userNumber, meetNumber: $meetNumber, name: $name, imageLink: $imageLink, notiType: $notiType)';
+    return 'Alarm(time: $time, userNumber: $userNumber, meetNumber: $meetNumber, name: $name, imageLink: $imageLink, notiType: $notiType, processed: $processed)';
   }
 
   @override
@@ -197,7 +213,8 @@ class _$_Alarm with DiagnosticableTreeMixin implements _Alarm {
       ..add(DiagnosticsProperty('meetNumber', meetNumber))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('imageLink', imageLink))
-      ..add(DiagnosticsProperty('notiType', notiType));
+      ..add(DiagnosticsProperty('notiType', notiType))
+      ..add(DiagnosticsProperty('processed', processed));
   }
 
   @override
@@ -214,13 +231,15 @@ class _$_Alarm with DiagnosticableTreeMixin implements _Alarm {
             (identical(other.imageLink, imageLink) ||
                 other.imageLink == imageLink) &&
             (identical(other.notiType, notiType) ||
-                other.notiType == notiType));
+                other.notiType == notiType) &&
+            (identical(other.processed, processed) ||
+                other.processed == processed));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, time, userNumber, meetNumber, name, imageLink, notiType);
+  int get hashCode => Object.hash(runtimeType, time, userNumber, meetNumber,
+      name, imageLink, notiType, processed);
 
   @JsonKey(ignore: true)
   @override
@@ -243,7 +262,8 @@ abstract class _Alarm implements Alarm {
       required final int? meetNumber,
       required final String name,
       required final String imageLink,
-      required final int notiType}) = _$_Alarm;
+      required final int notiType,
+      required final bool processed}) = _$_Alarm;
 
   factory _Alarm.fromJson(Map<String, dynamic> json) = _$_Alarm.fromJson;
 
@@ -259,6 +279,8 @@ abstract class _Alarm implements Alarm {
   String get imageLink;
   @override
   int get notiType;
+  @override
+  bool get processed;
   @override
   @JsonKey(ignore: true)
   _$$_AlarmCopyWith<_$_Alarm> get copyWith =>

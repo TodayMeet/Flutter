@@ -89,7 +89,7 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
           onTap: () {
             meetLocation = searchResults.value[index]['place_name'];
             meetAddress = searchResults.value[index]['address_name'];
-            meet.meetInfo.address = meetLocation;
+            meet.meetInfo.address = meetAddress;
             meet.meetInfo.lat = searchResults.value[index]['y'];
             meet.meetInfo.lon = searchResults.value[index]['x'];
             Navigator.pop(context);
@@ -152,7 +152,7 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
         meetLocation =
             addrData['documents'][0]['road_address']['building_name'];
         meetAddress = addrData['documents'][0]['road_address']['address_name'];
-        meet.meetInfo.address = meetLocation;
+        meet.meetInfo.address = meetAddress;
       }
 
       meet.meetInfo.lat = userLat.toString();

@@ -18,7 +18,6 @@ import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/dummy_meetList.dart';
 import '../../model/setting/location.dart';
 import '../../data/apiKey.dart';
 import '../../data/map/pin.dart';
@@ -494,7 +493,7 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
                   print('meetNo ${message.message} is clicked');
                   Navigator.push(context,
                       MaterialPageRoute(
-                          builder: (context) => Loading_to_ListDetail(meetNo: int.parse(message.message), userNo: tempUser['userNo'],)
+                          builder: (context) => Loading_to_ListDetail(meetNo: int.parse(message.message), userNo: UserNo.myuserNo,)
                       )
                   );
                 },

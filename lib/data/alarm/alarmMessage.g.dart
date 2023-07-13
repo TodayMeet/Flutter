@@ -13,6 +13,7 @@ _$_Alarm _$$_AlarmFromJson(Map<String, dynamic> json) => _$_Alarm(
       name: json['name'] as String,
       imageLink: json['imageLink'] as String,
       notiType: json['notiType'] as int,
+      processed: json['processed'] as bool,
     );
 
 Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
       'name': instance.name,
       'imageLink': instance.imageLink,
       'notiType': instance.notiType,
+      'processed': instance.processed,
     };

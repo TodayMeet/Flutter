@@ -1,6 +1,7 @@
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:front/screen/login/start.dart';
 
 import '../../data/designconst/constants.dart';
 
@@ -10,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../main.dart';
 import 'package:front/screen/login/pwFind.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Phone_ij.dart';
@@ -66,6 +68,9 @@ class _loginState extends State<login> {
     if (response.statusCode == 200) {
       print('로그인 성공');
       final userNo = jsonDecode(response.body);
+      print("userNo : ");
+      print(userNo);
+      // Get.to( MainPageMap(),arguments: userNo);
       await getToken();
       final sendToken = {
         'userNo' : userNo,
@@ -79,11 +84,16 @@ class _loginState extends State<login> {
         headers: {'Content-Type': 'application/json'},
       );
       print(response1.body);
-      if(response1.body=='success'){
 
+      if(response1.body=='success'){
         UserNo.myuserNo = userNo;
+
+        await storage.write(
+          key: "login",
+          value: "id $email password $password",
+        );
         Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageMap()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MyAppPage()));
       }
       return userNo;
     }else if(_text==null ){

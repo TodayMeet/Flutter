@@ -13,6 +13,7 @@ class Alarm with _$Alarm{
     required String name,
     required String imageLink,
     required int notiType,
+    required bool processed,
   }) = _Alarm;
 
   factory Alarm.fromJson(Map<String, dynamic> json) => _$AlarmFromJson(json);

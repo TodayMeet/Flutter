@@ -12,7 +12,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:front/screen/mainList/Comments.dart';
 import 'package:intl/intl.dart';
 
-import '../../data/dummy_meetList.dart';
+import '../../data/userNo.dart';
 import 'package:front/data/Comment.dart';
 import 'package:front/model/TextPrint.dart';
 
@@ -104,7 +104,7 @@ Widget commentBox(Comment comment, BuildContext context, WidgetRef ref, bool com
               -0.5),
 
           // 댓글 작성자가 본인인지 확인
-          tempUser["userNo"] == comment.userNo
+          UserNo.myuserNo == comment.userNo
               ? IntrinsicHeight(
                 child: Row(
                     children: [

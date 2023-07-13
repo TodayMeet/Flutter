@@ -58,7 +58,7 @@ class whiteButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(6.0),
             ),
           ),
-          overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+          // overlayColor: MaterialStateProperty.all<Color>(Colors.blue),
 
         ),
       ),

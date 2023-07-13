@@ -1,5 +1,10 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+
 import '../../data/designconst/constants.dart';
+
+import '../../data/userNo.dart';
 import '../../screen/dialog/dialoglist.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +37,20 @@ class _loginState extends State<login> {
   final regex = RegExp(r'^[a-zA-Z@,.]+$');
   bool idformat = true;
   bool pwformat = true;
+  String? token = '';
 
+  Future<void> getToken() async {
+    // String? token;
+
+    if(defaultTargetPlatform == TargetPlatform.iOS ||defaultTargetPlatform == TargetPlatform.macOS||defaultTargetPlatform == TargetPlatform.android) {
+      debugPrint("===================token=======================================");
+      token = await FirebaseMessaging.instance.getToken();
+    }
+    else{
+      token = await FirebaseMessaging.instance.getToken();
+    }
+    debugPrint("fcmToken : $token");// 이 토큰이 있어야 서버에서 알림을 보낼 수 있습니다.
+  }
 
   Future<int> sendCredentialsToServer() async {
     final url = Uri.parse('http://todaymeet.shop:8080/loginB');
@@ -47,24 +65,39 @@ class _loginState extends State<login> {
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      // 성공적으로 서버로 전송됨
       print('로그인 성공');
-
       final userNo = jsonDecode(response.body);
       print("userNo : ");
       print(userNo);
       // Get.to( MainPageMap(),arguments: userNo);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MyAppPage()));
+      await getToken();
+      final sendToken = {
+        'userNo' : userNo,
+        'token' : token
+      };
+      final jsonData1 = jsonEncode(sendToken);
+      final tokenurl = Uri.parse('http://todaymeet.shop:8080/fcm/token');
+      final response1 = await http.post(
+        tokenurl,
+        body: jsonData1,
+        headers: {'Content-Type': 'application/json'},
+      );
+      print(response1.body);
+      if(response1.body=='success'){
+
+        UserNo.myuserNo = userNo;
+        Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageMap()));
+      }
       return userNo;
     }else if(_text==null ){
-      print('assssssssss');
       onebutton.noInputIDDialog(context);
       return 0;
     }
 
     else if(_text1 ==null){
-      print('qwerqwer');
       onebutton.noInputPwDialog(context);
       return 0;
     }
@@ -169,10 +202,8 @@ class _loginState extends State<login> {
                   child: ElevatedButton(
                     onPressed: () async {
                       sendCredentialsToServer();
-                      // int userNo = await sendCredentialsToServer();
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => MainPageMap(userNo : userNo)));
+
+
                     },
                     child: Text(
                       '로그인',

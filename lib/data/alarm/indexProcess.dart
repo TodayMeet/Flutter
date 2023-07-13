@@ -187,7 +187,7 @@ void pageTransition(BuildContext context, int index, int? userNumber,
     // 다른 유저가 나를 팔로우 했을 때
     case 1:
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => userProfile()));
+          context, MaterialPageRoute(builder: (context) => userProfile(userNo: 1,)));
       break;
 
     // 내가 팔로우한 유저가 건수를 등록했을 때
@@ -202,7 +202,7 @@ void pageTransition(BuildContext context, int index, int? userNumber,
     // 설정된 위치에 관심 카테고리에 새로운 건수가 등록된 경우
     case 3:
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => userProfile()));
+          context, MaterialPageRoute(builder: (context) => userProfile(userNo: 1,)));
       break;
 
     // 건수 참가 승인이 된 경우

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:front/model/UI/widget/button/WhiteButton.dart';
+import '../../data/userNo.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
 import '../../screen/dialog/dialoglist.dart';
@@ -41,10 +42,10 @@ class _profileMainState extends State<profileMain> {
   final ScrollController _scrollController = ScrollController();
 
 
-  secession secessionroute = secession(password: 'ooo', email: "39delete@test");
+  
   String versionText = 'V 1.0.0';
 
-  int userNo = 1;
+  int userNo = UserNo.myuserNo;
   String username = ' ';
   int follownum = 0;
   int followeenum = 0;
@@ -52,10 +53,34 @@ class _profileMainState extends State<profileMain> {
   String genderString = '';
   String birth = '';
   String userprofileimage = '';
+  List<int> followNoList = [];
 
-  Future<void> userInfoLoad() async {
+
+
+
+  Future<void> followingLoad() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/follow/list?userNo=${userNo}');
+    print('foloowingLoad의 userNo입니다============================${userNo}');
+
+    final requestData = {
+      "userNo": userNo,
+      "userProfileImage":  userprofileimage,
+      "username": username
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final responseData2 = jsonDecode(response.body);
+      followNoList = responseData2.map<int>((user) => user['userNo'] as int).toSet().toList();
+    } else {}
+  }//팔로잉 정보 불러오기
+
+  Future<void> myInfoLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/user-profile/${userNo}');
-    //{username,follownum,followeenum,gender,birth,userpofileimage}
+
     final requestData = {
       'userNo': userNo,
       'username': username,
@@ -104,18 +129,14 @@ class _profileMainState extends State<profileMain> {
           {"name": '개인정보처리방침', 'goto': privatePolicy()},
           {"name": '이용약관', 'goto': termsofUse()},
           {"name": '채팅임시', 'goto': chatlist()},
-          {"name": '사용자프로필', 'goto': userProfile()},
-          {
-            "name": '팔로우리스트',
-            'goto': followList(
-              username: username,
-              userNo: userNo,// 외부 클래스의 username 참조
-            )
-          },
+
         ]);
       });
     } else {}
   }
+
+
+
   //사용자 정보 불어오기
 
   // final List<Map<String, dynamic>> menu = [
@@ -143,11 +164,19 @@ class _profileMainState extends State<profileMain> {
   //     )
   //   },
   // ];
+
+
+
+
+
+
+
   final List<Map<String, dynamic>> menu = [];
   @override
   void initState() {
     super.initState();
-    userInfoLoad();
+    myInfoLoad();
+    // followingLoad();
   }
 
   @override
@@ -172,8 +201,12 @@ class _profileMainState extends State<profileMain> {
             style: ButtonStyle(
               overlayColor: MaterialStateProperty.all<Color>(Color(0xFFDDDDDD)),
             ),
-            onPressed: () {
+            onPressed: () async {
+              // print(userNo);
+              // await followingLoad();
+              // print(followNoList);
               twobutton.logoutDialog(context);
+
             },
             child: Text(
               '로그아웃',
@@ -193,18 +226,15 @@ class _profileMainState extends State<profileMain> {
                 padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      child: Image.network(userprofileimage),
-                      radius: 35,
+                    ClipOval(
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        color: Colors.blue,
+                        child: Image.network(userprofileimage)
+                      ),
                     ),
-                    // Container(
-                    //   width: 70,
-                    //   height: 70,
-                    //   decoration: BoxDecoration(
-                    //     shape: BoxShape.circle,
-                    //   ),
-                    //   child: Image.network(userprofileimage),
-                    // ),
+
                     SizedBox(
                       width: 20,
                     ),
@@ -275,10 +305,10 @@ class _profileMainState extends State<profileMain> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => followList(username: username,)));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => followList(username: username,userNo: userNo,)));
                             },
                             child: Text(
                               follownum.toString(),
@@ -402,7 +432,7 @@ class _profileMainState extends State<profileMain> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => secessionroute),
+                                MaterialPageRoute(builder: (context) => secession(userNo: userNo)),
                               );
                             },
                             child: const Text(

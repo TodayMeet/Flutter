@@ -1,6 +1,10 @@
+//그냥 끝
+
+
+
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/main.dart';
 import 'package:front/model/UI/widget/text/textfieldTitle.dart';
@@ -8,17 +12,15 @@ import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
 import '../../screen/dialog/dialoglist.dart';
-
 import 'package:front/screen/profile/profileMain.dart';
 import 'package:front/data/designconst/constants.dart';
 
 import '../login/login.dart';
 
 class secession extends StatefulWidget {
-  final String email;
-  final String password;
+  final int userNo;
 
-  secession({required this.password, required this.email});
+  secession({required this.userNo});
 
   @override
   State<secession> createState() => _secessionState();
@@ -27,35 +29,12 @@ class secession extends StatefulWidget {
 class _secessionState extends State<secession> {
   TextEditingController textarea = TextEditingController();
 
-  Future<void> secessionFunction() async {
-    final url1 = Uri.parse('http://todaymeet.shop:8080/delete-user');
-    final requestData = {
-      'password' : widget.password,
-      'email': widget.email,
-    };
-    final jsonData = jsonEncode(requestData);
-    final response = await http.post(
-      url1,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonData,
-    );
-    if (response.statusCode == 200) {
-      print('전송잘됨');
-      print(url1);
-      print('asdfasdf'+response.body);
-
-
-
-    } else {
-      print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     String appbarText = '탈퇴신청';
     return Scaffold(
+
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
@@ -99,31 +78,17 @@ class _secessionState extends State<secession> {
             Spacer(),
             //탈퇴버튼
             //200자가 넘으면 over200Dialog
-            blueButton(
-                buttonText: '탈퇴',
-                onPressed: (){
-
+            blueButton(buttonText: '탈퇴', onPressed: (){
                   if(textarea.text.length > 200){
                     onebutton.over200Dialog(context);
                   }else{
-                    print(widget.email);
-                    print(widget.password);
-                    secessionFunction();
-                    print("ads");
-                    // twobutton.secessionDialog(context);
+                    print('${widget.userNo}');
+
+                    twobutton.secessionDialog(context);
+
                   }
 
-                  // print(widget.email);
-                  // print(widget.password);
-                  // secessionFunction();
-                  // Navigator.pushAndRemoveUntil(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (BuildContext context) => login()),
-                  //         (route) => false);
-
-                }
-                )
+                })
           ],
         ),
       ),

@@ -1,10 +1,30 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import '../../data/userNo.dart';
 import '../../model/UI/widget/dialog/customDialogOneButton.dart';
 import '../../model/UI/widget/dialog/customDialogTwoButton.dart';
 import '../../screen/login/login.dart';
-import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
 
+Future<void> secessionFunction() async {
+  final url = Uri.parse('http://todaymeet.shop:8080/delete-userno/${UserNo.myuserNo}');
 
+  final requestData = {
+    'userNo': UserNo.myuserNo,
+  };
+  final jsonData = jsonEncode(requestData);
+  final response2 = await http.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+  );
+  if (response2.statusCode == 200) {
+    final responseData2 = jsonDecode(response2.body);
+    print(responseData2);
+  } else {
+    print('asdffsdf');
+  }
+}
 
 
 
@@ -80,17 +100,15 @@ class twobutton {
         rightButtonText: '확인',
         onLeftPressed: () {
           Navigator.pop(context);
-
         },
         onRightPressed: () {
-
-
-          Navigator.pop(context);
+          secessionFunction();
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) => login()),
                   (route) => false);
+
 
         },
       ),

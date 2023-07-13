@@ -10,6 +10,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:front/data/userNo.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -519,6 +520,7 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
               heroTag: "현재 위치 불러오기",
               backgroundColor: const Color(0xFF4874EA),
               onPressed: () async {
+                // print(UserNo.myuserNo);
                 await getLocationData();
                 final webViewController = ref.watch(mapControllerProvider);
                 webViewController?.runJavascript('''

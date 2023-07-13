@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:front/model/UI/widget/button/WhiteButton.dart';
 import 'package:front/screen/profile/profileMain.dart';
@@ -11,18 +14,131 @@ import '../../model/bottomBar.dart';
 import 'followList.dart';
 
 class userProfile extends StatefulWidget {
-  const userProfile({Key? key}) : super(key: key);
+  final int userNo;
+  userProfile ({required this.userNo});
+
+  // const userProfile({Key? key}) : super(key: key);
 
   @override
   State<userProfile> createState() => _userProfileState();
 }
 
 class _userProfileState extends State<userProfile> {
-  String name = '이름';
-  String gender = '성별';
-  String birthdate = '2000.07.19';
-  int follower = 100;
-  int following = 100;
+  int userNo = 0;
+  String username = '';
+  int gender = 0;
+  String genderString = '';
+  String birth = '2000.07.19';
+  int follownum = 100;
+  int followingnum = 100;
+  String userprofileimage = '';
+  int myuserNo = 1;
+  bool isFollow = false;
+
+
+
+  Future<void> follow() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/follow/add');
+    final requestData = {
+      "followerNo":widget.userNo,
+      "followeeNo": myuserNo
+
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.post(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonData,
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+
+      print(url1);
+      print('문의 완료    ${response.body}');
+      print(response);
+
+
+    } else {
+
+      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+
+      print(url1);
+
+
+    }
+  }
+
+  Future<void> unfollow() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/follow/minus');
+    final requestData = {
+      "followerNo":widget.userNo,
+      "followeeNo": myuserNo
+
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.post(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonData,
+    );
+    if (response.statusCode == 200) {
+      print('전송잘됨');
+      print(url1);
+      print('문의 완료    ${response.body}');
+      print(response);
+    } else {
+      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+      print(url1);
+
+
+    }
+  }
+
+  Future<void> userInfoLoad() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/user-profile/${widget.userNo}');
+    //{username,follownum,followeenum,gender,birth,userpofileimage}
+    final requestData = {
+      'userNo': widget.userNo,
+      'username': username,
+      'follownum': follownum,
+      'followeenum': followingnum,
+      'gender': gender,
+      'birth': birth,
+      'userprofileimage': userprofileimage
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      setState(() {
+        userNo = responseData['userNo'];
+        userprofileimage = responseData['userProfileImage'];
+        username = responseData['username'];
+        birth = (responseData['birth'].substring(0,10)).replaceAll('-', '.');
+
+        if (responseData['gender'] == 1) {
+          genderString = '(남)';
+        } else if (responseData['gender'] == 2) {
+          genderString = '(여)';
+        }
+        follownum = responseData['followNum'];
+        followingnum = responseData['followeeNum'];
+        print(responseData);
+
+      });
+    } else {}
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    userInfoLoad();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +149,11 @@ class _userProfileState extends State<userProfile> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            // follow();
           },
         ),
-        title: name + '님의 프로필',
+        title: username + '님의 프로필',
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -46,6 +163,7 @@ class _userProfileState extends State<userProfile> {
             child: Row(
               children: [
                 CircleAvatar(
+                  //clipoval 씌우기
                   radius: 35,
                 ),
                 SizedBox(
@@ -57,11 +175,11 @@ class _userProfileState extends State<userProfile> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        nameGender(name: name, gender: gender),
+                        nameGender(name: username, gender: genderString),
                         SizedBox(
                           width: 8.0,
                         ),
-                        birthDate(birthdate: birthdate),
+                        birthDate(birthdate: birth),
                       ],
                     ),//유저이름, 성, 생년월일
                     SizedBox(
@@ -85,23 +203,7 @@ class _userProfileState extends State<userProfile> {
                           width: 10.0,
                         ),//팔로우 버튼과 차단 버튼 사이 여백
 
-                        // Container(
-                        //   width: (MediaQuery.of(context).size.width - 148) / 2,
-                        //   height: 40,
-                        //   child: OutlinedButton(
-                        //       style: OutlinedButton.styleFrom(
-                        //           padding: EdgeInsets.symmetric(vertical:0),
-                        //           shape: RoundedRectangleBorder(
-                        //             borderRadius: BorderRadius.all(Radius.circular(6)),
-                        //           )
-                        //       ),
-                        //       onPressed: (){
-                        //         // Navigator.push(
-                        //         //     context,
-                        //         //     MaterialPageRoute(
-                        //         //         builder: (context) => profileMain()));
-                        //       }, child: Text('차단',style: TextStyle(color: Color(0xFF666666),fontSize: 14.0,),)),
-                        // ),
+
                         whiteButton(
                           buttonText: '차단',
                           onPressed: (){
@@ -137,9 +239,9 @@ class _userProfileState extends State<userProfile> {
                       Text('팔로워',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Color(0xFFA7A8A9)),),
                       GestureDetector(
                         onTap: () {
-                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>followList()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>followList(userNo: widget.userNo,username: username)));
                         },
-                        child: Text(follower.toString(),style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.w700,color: Color(0xFF1F2024)),),
+                        child: Text(follownum.toString(),style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.w700,color: Color(0xFF1F2024)),),
                       )
                     ],
                   ),
@@ -159,9 +261,9 @@ class _userProfileState extends State<userProfile> {
                       Text('팔로우',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Color(0xFFA7A8A9)),),
                       GestureDetector(
                         onTap: () {
-                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>followList()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>followList(userNo: widget.userNo,username: username)));
                         },
-                        child: Text(following.toString(),style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.w700,color: Color(0xFF1F2024)),),
+                        child: Text(followingnum.toString(),style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.w700,color: Color(0xFF1F2024)),),
                       )
                     ],
                   ),
@@ -210,7 +312,7 @@ class nameGender extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '${name}(${gender})',
+      '${name} ${gender}',
       style: TextStyle(
           color: Colors.black,
           fontSize: 16.0,

@@ -86,7 +86,9 @@ class _hostEventState extends ConsumerState<hostEvent> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed:() {
-            Navigator.pop(context);},
+            print('불러온것들 임미다.......................${tempList}');
+            // Navigator.pop(context);
+            },
           width: 24.0,
           height: 24.0,
         ),

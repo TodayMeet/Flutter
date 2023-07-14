@@ -23,41 +23,20 @@ class followList extends StatefulWidget {
 }
 
 class _followListState extends State<followList> {
-  int userNo = UserNo.myuserNo;
+
   String userProfileImage = '';
   String username = '';
-
-
-  List<Map> follower = [];
-  List<Map> following = [];
-
-   // List<String> followers = [
-  // {userNo: 2, userProfileImage: 'http://todaymeet.shop:8080/imagetest/10', username: 'yrdyvbser3'},
-  // {userNo: 3, userProfileImage: http://todaymeet.shop:8080/imagetest/8, username: yrdyv4}
-  // ]
-
-
-   Future<void> followerLoad() async {
-     final url = Uri.parse('http://todaymeet.shop:8080/followee/list?userNo=${widget.userNo}');
-     final requestData = {
-       "userNo": userNo,
-       "userProfileImage":  userProfileImage,
-       "username": username
-     };
-     final jsonData = jsonEncode(requestData);
-     final response = await http.get(url, headers: {'Content-Type': 'application/json'},);
-     if (response.statusCode == 200) {
-       final responseData = jsonDecode(response.body);
-       print(responseData);
-
-     } else {}
-   }//팔로워 정보 불러오기
+  List<dynamic> follower = [];
+  List<dynamic> following = [];
+  bool isFollow = false;
+  bool isMe = false;
 
   Future<void> followingLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/follow/list?userNo=${widget.userNo}');
+    print('foloowingLoad의 userNo입니다============================${widget.userNo}');
 
     final requestData = {
-      "userNo": userNo,
+      "userNo": widget.userNo,
       "userProfileImage":  userProfileImage,
       "username": username
     };
@@ -67,27 +46,106 @@ class _followListState extends State<followList> {
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      print(responseData);
+      final responseData2 =jsonDecode(utf8.decode(response.bodyBytes));
+      print('responseData2 입니다 .......................... ${responseData2}');
+      setState(() {
+        following = responseData2;
+      });
     } else {}
   }//팔로잉 정보 불러오기
 
-  List<Map> followerr = [
-    {'userNo': 2, 'userProfileImage': 'http://todaymeet.shop:8080/imagetest/10', 'username': 'yrdyvbser3'},
-    {'userNo': 3, 'userProfileImage': 'http://todaymeet.shop:8080/imagetest/10', 'username': 'yrdyv4'}
-  ];
+  Future<void> followerLoad() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/followee/list?userNo=${widget.userNo}');
+    print('folooweeLoad의 userNo입니다============================${widget.userNo}');
+
+    final requestData = {
+      "userNo": widget.userNo,
+      "userProfileImage":  userProfileImage,
+      "username": username
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final responseData3 =jsonDecode(utf8.decode(response.bodyBytes));
+      print('responseData2 입니다 .......................... ${responseData3}');
+      setState(() {
+        follower = responseData3;
+      });
+    } else {}
+  }//팔로잉 정보 불러오기
 
 
-   List<Map> followingg = [
-  {'userNo': 5, 'userProfileImage': 'http://todaymeet.shop:8080/imagetest/1', 'username': 'yrdycrey'},
-  {'userNo': 6, 'userProfileImage': 'http://todaymeet.shop:8080/imagetest/1', 'username': 'q'},
-  {'userNo': 3, 'userProfileImage': 'http://todaymeet.shop:8080/imagetest/8', 'username': 'yrdyv4'},
-  {'userNo': 3, 'userProfileImage': 'http://todaymeet.shop:8080/imagetest/8', 'username': 'yrdyv4'}
-   ];
+
+  Future<void> follow() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/follow/add');
+    final requestData = {
+      "followerNo": UserNo.myuserNo,
+      "followeeNo": widget.userNo
+
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.post(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonData,
+    );
+    if (response.statusCode == 200) {
+      isFollow = true;
+
+    } else {
+
+      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+
+      print(url1);
+
+
+    }
+  }
+
+  Future<void> unfollow() async {
+    final url1 = Uri.parse('http://todaymeet.shop:8080/follow/minus');
+    final requestData = {
+      "followerNo": UserNo.myuserNo,
+      "followeeNo": widget.userNo
+
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.post(
+      url1,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonData,
+    );
+    if (response.statusCode == 200) {
+      isFollow = false;
+    } else {
+      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+      print(url1);
+
+
+    }
+  }
+
+
+
+
 
 
   @override
+  void initState() {
+    super.initState();
+     followingLoad();
+     followerLoad();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -99,9 +157,7 @@ class _followListState extends State<followList> {
           leading: SvgButton(
             imagePath: backarrow,
             onPressed:() {
-              // Navigator.pop(context);
-              followerLoad();
-              // followingLoad();
+              Navigator.pop(context);
             },
           ),
           title: Text(widget.username,style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
@@ -111,39 +167,48 @@ class _followListState extends State<followList> {
               Tab(child: Column(
                 children: [
                   Text('팔로워',style: TextStyle(fontSize: 14.0,color: Colors.black),),
-                  Text(followerr.length.toString(),style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
+                  Text(follower.length.toString(),style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
                 ],
               ),),
               Tab(child: Column(
                 children: [
                   Text('팔로잉',style: TextStyle(fontSize: 14.0,color: Colors.black),),
-                  Text(followingg.length.toString(),style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
+                  Text(following.length.toString(),style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w700,color: Colors.black),),
                 ],
               ),),
             ],
           ),
         ),
-        body: RefreshIndicator(
-          onRefresh: () async{},
-          child: TabBarView(
-            children: [
-              ListView.builder(
-                itemCount: followerr.length,
-                itemBuilder: (context, index) {
-                  final item = followerr[index];
-                  return GestureDetector(
+        body: TabBarView(
+          children: [
+            ListView.builder(
+              itemCount: follower.length,
+              itemBuilder: (context, index) {
+
+                final item = follower[index];
+                if( item['userNo']==UserNo.myuserNo ){
+                  isMe = true;
+                } else{
+                  isMe = false;
+                }
+                return Container(
+                  height: 60,
+                  child: GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => userProfile(userNo: item['userNo'],)));
+                      if (isMe) {
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                            builder: (context) => const profileMain()), (route) => false);
+                      } else {
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                userProfile(userNo: item['userNo'],)));
+                      }
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.only(left: 8),
                       decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: const BorderSide(
-                              color: const Color(0xFFE3E3E3), width: 1.0),
-                        ),
+
                       ),
                       child: Row(
 
@@ -164,44 +229,57 @@ class _followListState extends State<followList> {
                             ),
                           ),
                           const Spacer(),
-                          ElevatedButton(
-                              onPressed: (){
-                                // followerLoad();
-                              },
-                              child: Text('팔로우'))
+                          if (!isMe) Container(
+
+                            child: ElevatedButton(
+                                onPressed: (){},
+                                style: ButtonStyle(
+
+                                    backgroundColor: MaterialStateProperty.all(
+                                        UserNo.FollowList.contains(item['userNo']) ? hinttextColor : buttonBlue)
+                                ),
+                                child: Text(UserNo.FollowList.contains(item['userNo']) ? '팔로잉' : '팔로우',
+                                    style: TextStyle(fontWeight: FontWeight.w700, color: UserNo.FollowList.contains(item['userNo']) ? Colors.black : Colors.white),)
+                            ),
+                          ) else Text(' '),
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
-              ListView.builder(
-                itemCount: followingg.length,
-                itemBuilder: (context, index) {
-                  final item = followingg[index];
-                  return GestureDetector(
+                  ),
+                );
+              },
+            ),
+            ListView.builder(
+              itemCount: following.length,
+              itemBuilder: (context, index) {
+                final item = following[index];
+                item['userNo']==UserNo.myuserNo  ? isMe=true : isMe=false;
+
+                return Container(
+                  height: 60,
+                  child: GestureDetector(
                     onTap: () {
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => userProfile(userNo: item['userNo'],)));
+                      isMe
+                      ? Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => profileMain()))
+                      : Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => userProfile(userNo: item['userNo'],)));
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.only(left: 8),
                       decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: const BorderSide(
-                              color: const Color(0xFFE3E3E3), width: 1.0),
-                        ),
+
                       ),
                       child: Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircleAvatar(
-                              child: Image.network(item['userProfileImage']),
-                              radius: 15,
-                            ),
-                          ),
+                          ClipOval(child: Container(
+                              width: 40,
+                              height: 40,
+                              color: Colors.blue,
+                              child: Image.network(item['userProfileImage'])
+                          ),),
+                          SizedBox(width: 10,),
                           Text(
                             item['username'].toString(),
                             style: const TextStyle(
@@ -211,17 +289,36 @@ class _followListState extends State<followList> {
                             ),
                           ),
                           const Spacer(),
-                          ElevatedButton(
-                              onPressed: (){},
-                              child: Text('팔로우'))
+                          if (!isMe) Container(
+
+                            child: ElevatedButton(
+                                onPressed: (){},
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        UserNo.FollowList.contains(item['userNo'])
+                                            ? hinttextColor
+                                            : buttonBlue)
+                                ),
+                                child: Text(
+                                  UserNo.FollowList.contains(item['userNo'])
+                                      ? '팔로잉'
+                                      : '팔로우',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color:
+                                      UserNo.FollowList.contains(item['userNo'])
+                                          ? Colors.black
+                                          : Colors.white
+                                  ),)),
+                          ) else Text(' '),
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

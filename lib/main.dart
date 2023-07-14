@@ -31,6 +31,13 @@ Future<void> main() async {
 
   // setting 함수
   await setupFlutterNotifications();
+  
+  // 세로화면 고정
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(const ProviderScope(child: MyApp()));
 }

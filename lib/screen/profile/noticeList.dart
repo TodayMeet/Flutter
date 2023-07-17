@@ -96,7 +96,7 @@ class _noticeListState extends State<noticeList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => notice(noticeNo: notices['noticeNo'],),
+                      builder: (context) => notice(noticeNo: notices['noticeNo'],image: notices['images'],),
                     ),
                   );
 
@@ -106,34 +106,14 @@ class _noticeListState extends State<noticeList> {
                   height: 48,
                   child: Row(
                     children: [
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundImage: NetworkImage(
-                            notices['image']
-                        ),
-                      ),
-                      SizedBox(
-                        width: 16,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${notices['title']}',
-                            style:
-                            TextStyle(color: Colors.black, fontSize: 14.0),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            '${timeformat.format(writeTime)}',
-                            // '${ timeformat.format.parse(notices['time']) }',
-                            // String formattedDate = format.format(dateTime);
-                            style: TextStyle(
-                                color: Color(0xFF71727A), fontSize: 12),
-                          ),
+                  notices['image']==null
+                      ? Container(height: 50,width: 50,decoration: BoxDecoration(shape: BoxShape.circle),color: Color(0xFFF5F6FA),child: SvgPicture.asset('assets/icons/Image.svg'),)
+                      : CircleAvatar(radius: 25, backgroundImage: NetworkImage(notices['image']),),
+                      SizedBox(width: 16,),
+                      Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          SizedBox(height:20.0,child: Text('${notices['title']}', style: TextStyle(color: Colors.black, fontSize: 14.0),)),
+                          SizedBox(height: 4,),
+                          Text('${timeformat.format(writeTime)}', style: TextStyle(color: Color(0xFF71727A), fontSize: 12,fontFamily: 'Inter'),),
                         ],
                       ),
                     ],

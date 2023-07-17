@@ -138,12 +138,7 @@ class _oftenQuestionState extends State<oftenQuestion> {
                         ),
                         SizedBox(width: 10),
                         Flexible(
-                          child: Text(
-                            '${faq['answer']}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                            ),
+                          child: Text('${faq['answer']}', style: TextStyle(color: Colors.black, fontSize: 14,),
                             softWrap: true,
                           ),
                         ),

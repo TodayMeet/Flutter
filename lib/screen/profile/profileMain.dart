@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:front/screen/chat/chatlist.dart';
-
-import 'package:front/screen/profile/userProfile.dart';
+import 'package:front/screen/profile/privatePolicy.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -156,6 +155,61 @@ class _profileMainState extends State<profileMain> {
       });
     } else {}
   } //내정보 불러오기
+  Future<void> myInfoLoad1() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/user-profile/1');
+
+    final requestData = {
+      'userNo': userNo,
+      'username': username,
+      'follownum': follownum,
+      'followeenum': followeenum,
+      'gender': gender,
+      'birth': birth,
+      'userprofileimage': userprofileimage
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      setState(() {
+        userNo = responseData['userNo'];
+        userprofileimage = responseData['userProfileImage'];
+        username = responseData['username'];
+        birth = (responseData['birth'].substring(0,10)).replaceAll('-', '.');
+
+        if (responseData['gender'] == 1) {
+          genderString = '(남)';
+        } else if (responseData['gender'] == 2) {
+          genderString = '(여)';
+        }
+        print(responseData);
+        menu.clear();
+        menu.addAll([
+          {"name": '개최한 건수', 'goto': hostEvent(userNo: userNo)},
+          {"name": '참가한 건수', 'goto': joinEvent(userNo: userNo)},
+          {"name": '비밀번호 변경', 'goto': pwChange()},
+          {"name": '차단 관리', 'goto': blockManage()},
+          {
+            "name": '관심사',
+            'goto': profileFavorite(
+              userNo: userNo,
+            )
+          },
+          {"name": 'FAQ', 'goto': oftenQuestion()},
+          {"name": '문의하기', 'goto': question()},
+          {"name": '공지사항', 'goto': noticeList()},
+          {"name": '개인정보처리방침', 'goto': privatePolicy()},
+          {"name": '이용약관', 'goto': termsofUse()},
+
+
+
+        ]);
+      });
+    } else {}
+  } //내정보 불러오기
 
 
   final List<Map<String, dynamic>> menu = [];
@@ -175,6 +229,7 @@ class _profileMainState extends State<profileMain> {
 
   @override
   Widget build(BuildContext context) {
+
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
     return SafeArea(
@@ -190,6 +245,7 @@ class _profileMainState extends State<profileMain> {
               overlayColor: MaterialStateProperty.all<Color>(Color(0xFFDDDDDD)),
             ),
             onPressed: ()  {
+
               twobutton.logoutDialog(context);
             },
             child: Text(

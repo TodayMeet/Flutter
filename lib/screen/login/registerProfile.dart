@@ -27,6 +27,7 @@ import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
 import '../../model/UI/widget/text/textfieldTitle.dart';
+import '../profile/privatePolicy.dart';
 import 'login.dart';
 
 class registerProfile extends StatefulWidget {

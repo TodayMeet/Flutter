@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:front/screen/profile/profileMain.dart';
+
 import '../login/start.dart';
 import 'package:flutter/material.dart';
 import '../../data/userNo.dart';
@@ -390,4 +392,23 @@ class onebutton{
       ),
     );
   }
+  static void favoriteChangeDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '관심사가 변경되었습니다.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => profileMain()),
+                  (route) => false);
+
+        },
+
+      ),
+    );
+  }
+
 }

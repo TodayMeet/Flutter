@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front/screen/profile/userProfile.dart';
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +24,7 @@ import '../../data/meet.dart';
 import '../../model/mainList/CommentContainer.dart';
 import '../../data/apiKey.dart';
 import '../alarm/alarm.dart';
+import '../chat/chatpage.dart';
 import 'Comments.dart';
 
 //state provider
@@ -341,6 +343,40 @@ class ListDetailState extends ConsumerState<ListDetail> {
         });
   }
 
+  Future<int> participateChatting() async{
+    try{
+      final url = Uri.parse("http://todaymeet.shop:8080/chat/participant");
+      var postbody = {
+        "meet":{
+          "meetNo":Meet.meetNo
+        },
+        "user":{
+          "userNo":UserNo.myuserNo
+        }
+      };
+
+      http.Response response = await http.post(
+        url,
+        headers: {"Content-Type":"application/json"},
+        body: json.encode(postbody)
+      );
+
+      if(response.statusCode == 200){
+        print(response);
+        print('---------------------채팅방 참가 완료--------------------');
+        return 0;
+      } else{
+        print('채팅방 참가 서버 오류');
+        showToast('채팅방 참가 서버 오류');
+        return 1;
+      }
+    } catch(e){
+      print('채팅방 참가 오류');
+      showToast('채팅방 참가 오류');
+      return -1;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //결합된 provider
@@ -532,21 +568,32 @@ class ListDetailState extends ConsumerState<ListDetail> {
                 const SizedBox(
                   height: 10,
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ClipOval(
-                      child: Image.asset(
-                          'assets/images/User_Picture/User_pic_null.png',
-                          width: 26,
-                          height: 26),
-                    ), //사용자 사진
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    StringText_letterspacing(
-                        Meet.username, 12, FontWeight.w400, Colors.black, -0.5),
-                  ],
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (builder) => userProfile(userNo: Meet.hostUser["userNo"]),
+                        fullscreenDialog: true
+                      )
+                    );
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipOval(
+                        child: Image.asset(
+                            'assets/images/User_Picture/User_pic_null.png',
+                            width: 26,
+                            height: 26),
+                      ), //사용자 사진
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      StringText_letterspacing(
+                          Meet.username, 12, FontWeight.w400, Colors.black, -0.5),
+                    ],
+                  ),
                 ), //호스트 사진, 이름
 
                 const SizedBox(height: 12),
@@ -666,10 +713,19 @@ class ListDetailState extends ConsumerState<ListDetail> {
                 SizedBox(
                   height: 46,
                   child: OutlinedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // 채팅방 입장
-                      print(Meet.userList.toString());
-                      print(Meet.peopleNum.toString());
+                      int result = await participateChatting();
+                      if(result == 0) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ChatPage(meetTitle: Meet.title,
+                                        meetNo: Meet.meetNo)
+                            )
+                        );
+                      }
                     },
                     style: OutlinedButton.styleFrom(
                         backgroundColor: const Color(0xff4874EA),

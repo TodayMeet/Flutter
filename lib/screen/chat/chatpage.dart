@@ -1,316 +1,635 @@
+// 채팅 페이지
+
+// 최종 수정일 : 2023.7.17
+// 작업자 : 김혁
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:front/data/designconst/constants.dart';
-import 'package:front/model/UI/widget/button/svgButton.dart';
-import 'package:front/model/UI/widget/button/xeiconButton.dart';
-import 'package:front/model/UI/widget/customAppBar.dart';
-import 'package:bubble/bubble.dart';
-
-import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:convert';
 
-class ChatMessage extends StatelessWidget {
-  final String content;
-  final bool isSentByMe;
-  final String time;
-  const ChatMessage({
-    required this.content,
-    required this.isSentByMe,
-    required this.time,
-  });
+import '../../data/chat/chatMessage.dart';
+import '../../data/chat/participant.dart';
+import '../../data/chat/messageManagement.dart';
+import '../../data/designconst/constants.dart';
+import '../../data/userNo.dart';
+import '../../model/UI/widget/button/svgButton.dart';
+import '../../model/UI/widget/button/xeiconButton.dart';
+import '../../model/showtoast.dart';
+import '../profile/userProfile.dart';
+
+final chatMessageProvider = StateNotifierProvider((ref) => ChatMessageState());
+
+class ChatPage extends ConsumerStatefulWidget {
+  const ChatPage({required this.meetNo, required this.meetTitle, Key? key})
+      : super(key: key);
+
+  final int meetNo;
+  final String meetTitle;
+
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment:
-        isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (isSentByMe==true)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(formatTime(), style: TextStyle(fontSize: 10,),),
-            ),
-          Bubble(
-            margin: BubbleEdges.symmetric(vertical: 10.0),
-            // padding: EdgeInsets.all(10),
-            elevation: 0,
-            stick: true,
-            nip: isSentByMe ? BubbleNip.rightTop : BubbleNip.leftTop,
-            color: isSentByMe ? Colors.yellow : Colors.white,
-            child: Text(content, style: TextStyle(color: Colors.black, fontSize: 15,),softWrap: true, overflow: TextOverflow.visible,),),
-
-          if (isSentByMe==false)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(formatTime(), style: TextStyle(fontSize: 10,),),
-            ),
-        ],
-      ),
-    );
-  }
-
-  String formatTime() {
-    final now = DateTime.now();
-    final formattedTime = DateFormat('aa hh:mm').format(now);
-    final timeSuffix = now.hour >= 12 ? '오후' : '오전';
-    final replacedTime =
-    formattedTime.replaceAll('AM', '오전').replaceAll('PM', '오후');
-    return replacedTime;
-  }//시간 형식 지정
+  ChatPageState createState() => ChatPageState();
 }
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
-  @override
-  _ChatPageState createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
-  final String appbarText = '오늘 같이 놀 사람~!';
-
-  final List<ChatMessage> messages = <ChatMessage>[];
+class ChatPageState extends ConsumerState<ChatPage> {
   TextEditingController textEditingController = TextEditingController();
   ScrollController scrollController = ScrollController();
-  List<Map>users=[
-    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '개굴개굴'},
-    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '꺄르르'},
-    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '보라돌이'},
-    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '오늘만산다'},
-    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '심심해'},
-    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '건수없나'},
-    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '요기어때'},
-    {'image' : 'assets/images/User_Picture/User_pic_sample1.png','name' : '곰돌이푸'},
-  ];
-  bool isFollow = false;
-  void _sendMessage() {
-    if (textEditingController.text.isNotEmpty) {
-      setState(() {
-        ChatMessage message = ChatMessage(
-          content: textEditingController.text,
-          isSentByMe: true,
-          time: DateTime.now().toString(),
-        );
-        messages.add(message);
-        textEditingController.clear();
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
-          scrollController.animateTo(
-            scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 1),
-            curve: Curves.easeInOut,
-          );
-        });
-      });
+
+  List<ChatParticipant> users = [];
+  // 참여자 정보
+  // profileImage
+  // userName
+  // userNo
+  // follow
+
+  //List<ChattingMessage> messages = [];
+  // 채팅 메시지
+  // profileImage
+  // userName
+  // comment
+  // time
+
+  // 채팅 전송
+  Future<void> _sendMessage() async {
+    final message = ChattingMessage(
+      userImage: null,
+      name: null,
+      content: textEditingController.text,
+      isSentByMe: true,
+      time: DateTime.now(),
+    );
+
+    ref.read(chatMessageProvider.notifier).addMessage(message);
+
+    try {
+      final url = Uri.parse('http://todaymeet.shop:8080/chat/add');
+      var postbody = {
+        "user": {
+          "userNo": UserNo.myuserNo,
+        },
+        "meet": {"meetNo": widget.meetNo},
+        "content": textEditingController.text
+      };
+
+      Response response = await post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(postbody),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint('메세지 전송 완료');
+      } else {
+        debugPrint('서버 오류');
+        showToast('서버 오류');
+        return;
+      }
+    } catch (e) {
+      debugPrint('메세지 전송 오류');
+      showToast('메세지 전송 오류');
+    }
+
+    setState(() {
+      textEditingController.clear();
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 1),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  // 채팅 메세지 출력
+  Future<void> getChatMessage() async {
+    try {
+      final url = Uri.parse("http://todaymeet.shop:8080/chat/${widget.meetNo}");
+
+      Response response = await get(url);
+
+      if (response.statusCode == 200) {
+        var serverData = jsonDecode(utf8.decode(response.bodyBytes));
+        debugPrint('-------------------채팅 메세지-------------------');
+        print(serverData);
+        List<ChatMessage> serverMessageData = [];
+        serverData.forEach(
+            (element) => serverMessageData.add(ChatMessage.fromJson(element)));
+
+        ref.read(chatMessageProvider.notifier).clearMessage();
+
+        for (int index = 0; index < serverMessageData.length; index++) {
+          ref.read(chatMessageProvider.notifier).addMessage(ChattingMessage(
+              userImage: serverMessageData[index].userProfileImage,
+              name: serverMessageData[index].username,
+              content: serverMessageData[index].content,
+              isSentByMe: serverMessageData[index].userNo == UserNo.myuserNo,
+              time: serverMessageData[index].time));
+        }
+      } else {
+        debugPrint('채팅 메세지 서버 오류');
+        showToast('채팅 메세지 서버 오류');
+      }
+    } catch (e) {
+      debugPrint("채팅 메세지 출력 오류");
+      showToast("채팅 메세지 출력 오류");
+    }
+  }
+
+  // 참가자 리스트 받아오기
+  Future<void> getParticipant() async {
+    try {
+      final url = Uri.parse("http://todaymeet.shop:8080/chat-participant");
+      var postbody = {"userNo": UserNo.myuserNo, "meetNo": widget.meetNo};
+
+      Response response = await post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(postbody),
+      );
+
+      if (response.statusCode == 200) {
+        var serverData = jsonDecode(utf8.decode(response.bodyBytes));
+        debugPrint('-------------------참가자 리스트-------------------');
+        print(serverData);
+        users.clear();
+        serverData
+            .forEach((element) => users.add(ChatParticipant.fromJson(element)));
+      } else {
+        debugPrint('참가자 리스트 서버 오류');
+        showToast('참가자 리스트 서버 오류');
+      }
+    } catch (e) {
+      debugPrint("참가자 리스트 오류");
+      showToast("참가자 리스트 오류");
+    }
+  }
+
+  // 채팅방 퇴장
+  Future<void> exitChatting() async{
+    try{
+      final url = Uri.parse("http://todaymeet.shop:8080/chat/participant-remove");
+      var postbody = {
+        "meet":{
+          "meetNo":widget.meetNo
+        },
+        "user":{
+          "userNo":UserNo.myuserNo
+        }
+      };
+
+      Response response = await post(
+          url,
+          headers: {"Content-Type":"application/json"},
+          body: json.encode(postbody)
+      );
+
+      if(response.statusCode == 200){
+        debugPrint(response.toString());
+        debugPrint('---------------------채팅방 퇴장 완료--------------------');
+      } else{
+        debugPrint('채팅방 퇴장 서버 오류');
+        showToast('채팅방 퇴장 서버 오류');
+      }
+    } catch(e){
+      debugPrint('채팅방 참가 오류');
+      showToast('채팅방 참가 오류');
+    }
+  }
+
+  // 팔로우
+  Future<void> addFollow(int followerNo) async {
+    try{
+      final url = Uri.parse("http://todaymeet.shop:8080/follow/add");
+      var postbody = {
+        "followerNo":UserNo.myuserNo,
+        "followeeNo":followerNo
+      };
+
+      Response response = await post(
+        url,
+        headers: {"Content-Type":"application/json"},
+        body: json.encode(postbody),
+      );
+
+      if(response.statusCode == 200){
+        debugPrint("팔로우 성공");
+        print(response);
+      }else{
+        debugPrint("팔로우 서버 실패");
+        showToast("팔로우 서버 실패");
+      }
+    }catch(e){
+      debugPrint("팔로우 오류");
+      showToast('팔로우 오류');
     }
   }
 
   @override
   void initState() {
     super.initState();
-    messages.add(
-      ChatMessage(
-        content: '안녕하세요!',
-        isSentByMe: false,
-        time: DateTime.now().toString(),
-      ),
-    );
+
+    // foreground 수신처리
+    FirebaseMessaging.onMessage.listen(livechatting);
+
+    Future.delayed(Duration.zero, () async {
+      await getChatMessage();
+      await getParticipant();
+      setState(() {});
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 1),
+          curve: Curves.easeInOut,
+        );
+      });
+    });
+  }
+
+  /// 실시간 채팅 처리
+  void livechatting(RemoteMessage message) async {
+    debugPrint("---------------------------------------------");
+
+    RemoteNotification? notification = message.notification;
+    debugPrint(notification!.title); // title
+    debugPrint(notification.body); // body
+    Map<String, dynamic> data = message.data;
+    if (data['type'].toString() == "1") {
+      debugPrint("--------------------------- type Chat");
+
+      if(data['comment'] == "입장하셨습니다." || data['comment'] == "퇴장하셨습니다."){
+        data.forEach((key, value) {
+          debugPrint('Key: $key, Value: $value');
+        });
+        await getParticipant();
+        setState(() {});
+      }else{
+        ChattingMessage newMessage = ChattingMessage(
+            userImage: data['profileImage'],
+            name: data['username'],
+            content: data['comment'],
+            isSentByMe: false,
+            time: DateTime.parse(data['time']));
+
+        ref.read(chatMessageProvider.notifier).addMessage(newMessage);
+
+        data.forEach((key, value) {
+          debugPrint('Key: $key, Value: $value');
+        });
+
+        setState(() {});
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 1),
+            curve: Curves.easeInOut,
+          );
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    ChatMessage? lastMessages;
-    if (messages.isNotEmpty) {
-      lastMessages = messages.last;
-    }
-    if (lastMessages != null) {
-      String lastMessagesContent = lastMessages.content;
-      bool lastMessagesIsSentByMe = lastMessages.isSentByMe;
-      String lastMessagesTime = lastMessages.time;
-    } else {}
+    final messages = ref.watch(chatMessageProvider.notifier);
 
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        resizeToAvoidBottomInset: true,
-        appBar: CustomAppBar(
-            title: appbarText,
-            leadingWidget: SvgButton(imagePath: backarrow, onPressed: (){
-              Navigator.pop(context);
-            }),
-            actionWidget: badges.Badge(
-              badgeStyle: badges.BadgeStyle(
-                badgeColor: Color(0xFFB3261E),
-              ),
-              position: badges.BadgePosition.topEnd(top: 5, end: 7.7),
-              badgeContent: Center(child: Text(users.length.toString(),style: TextStyle(color: Colors.white,fontSize: 14,fontFamily: 'Roboto'),)),
-              child: Center(child: xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();})),
-            )
-          // xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();}),
-        ),
-        endDrawer: Drawer(
-          child: ListView(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                height: 50,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text('참여자',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700),),
-                    Spacer(),
-                    SizedBox(width: 8,),
-                    Text(users.length.toString()+ '명',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w700,color: Color(0xFF757575)),),
-                  ],
+      child: WillPopScope(
+        onWillPop: () async{
+          await exitChatting();
+          return false;
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+              toolbarHeight: 50,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                widget.meetTitle,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
-              Column(
-                children: users.map((users){
-                  return ListTile(
-                    leading: Container(
-                      child: Image.asset(users['image'],
-                        width: 26,
-                        height: 26,),
-                    ),
-                    title: Text(users['name'],style: TextStyle(fontSize: 12.0),),
-                    // trailing: Container(
-                    //   // width: users['isFollow'] ? 56 : 76,
-                    //   // height: 30,
-                    //   child: ElevatedButton(
-                    //       onPressed: (){}, ),
-                    // ),
-
-
-                  );
-                }).toList(),
+              leading: SvgButton(
+                imagePath: backarrow,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-
-            ],
-          ),
-        ),
-        body: Container(
-          color: Color(0xFFD3DDE7),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.separated(
-                  controller: scrollController,
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    return messages[index];
-                  },
-                  separatorBuilder: (context, index) => SizedBox(height: 5),
-                ),
-              ),
-              Container(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.transparent),
-                    color: Colors.white,
+              actions: [
+                badges.Badge(
+                  badgeStyle: const badges.BadgeStyle(
+                    badgeColor: Color(0xFFB3261E),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
-                          width: MediaQuery.of(context).size.width-86,
-                          height: 46,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.transparent),
-                            color: Color(0xFFF5F6FA),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child: TextField(
-                              controller: textEditingController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: '메시지를 입력해주세요.',
-                                hintStyle: TextStyle(fontSize: 13,color: Color(0xFFC8C8CB)),
-
-                              ),
-                            ),
-                          ),
+                  position: badges.BadgePosition.topEnd(top: 3, end: 8.301),
+                  badgeContent: Center(
+                      child: Text(
+                    users.length.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontFamily: 'Roboto',
+                    ),
+                  )),
+                  child: Center(
+                    child: xeiconButton(
+                      text: '',
+                      onPressed: () {
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                    ),
+                  ),
+                )
+              ]
+              // xeiconButton(text: '', onPressed: (){Scaffold.of(context).openEndDrawer();}),
+              ),
+          endDrawer: Drawer(
+            shadowColor: Colors.transparent,
+            child: ListView(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  height: 50,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        '참여자',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.5),
+                      ),
+                      const Spacer(),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        '${users.length.toString()}명',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF757575),
+                          letterSpacing: -0.5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: Container(
-                            width: 56,
-                            height: 46,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _sendMessage();
-                              },
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    // 버튼 눌려있을때는 높이 0으로 해놓고
-                                    return 0;
-                                  }
-                                  return 0.5; // 이건 디폴트
-                                }),
-                                backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    // 버튼이 눌려 있을 때의 배경색
-                                    //color: rgb(72,116,234);
-                                    return Color(0xFF345FB2); //
-                                  }
-                                  return buttonBlue; // 기본 배경색
-                                }),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: users.map((users) {
+                    return Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // 사용자 이미지, 이름
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) =>
+                                          userProfile(userNo: users.userNo)));
+                            },
+                            child: Row(
+                              children: [
+                                // 사용자 이미지
+                                ClipOval(
+                                  child: Image.network(
+                                    users.profileImage,
+                                    height: 26,
+                                    width: 26,
                                   ),
                                 ),
-                                overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                                const SizedBox(width: 10),
+
+                                // 사용자 이름
+                                Text(
+                                  users.username,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // 팔로우
+                          users.userNo == UserNo.myuserNo
+                              // 나인 경우
+                              ? Container(
+                                  height: 30,
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 12),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: const Color(0xFFD6D6DD),
+                                  ),
+                                  child: const Text(
+                                    "나",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12),
+                                  ),
+                                )
+                              : users.follow == true
+                                  // 팔로우하고 있는 경우
+                                  ? Container(
+                                      height: 30,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: const Color(0xFFD6D6DD),
+                                      ),
+                                      child: const Text(
+                                        "팔로우",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 12),
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () async {
+                                        await addFollow(users.userNo);
+                                        await getParticipant();
+                                        setState(() {});
+                                      },
+                                      child: Container(
+                                        height: 30,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12),
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFFF558F),
+                                          borderRadius: BorderRadius.circular(30),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              "팔로우",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            SvgPicture.asset(
+                                              "assets/icons/add_person.svg",
+                                              width: 16,
+                                              height: 16,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+          body: Container(
+            color: const Color(0xFFD3DDE7),
+            child: Column(
+              children: [
+                const SizedBox(height: 12),
+
+                // 대화 메세지 출력
+                Expanded(
+                  child: ListView.separated(
+                    controller: scrollController,
+                    itemCount: messages.getLength(),
+                    itemBuilder: (context, index) {
+                      return messages.getList(index);
+                    },
+                    separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+
+                // 메세지 입력 창
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 70,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.transparent),
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromRGBO(255, 255, 255, 0.1),
+                          offset: Offset(0, -4),
+                          blurRadius: 8,
+                          blurStyle: BlurStyle.outer,
+                        )
+                      ]),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // 메시지 입력 창
+                      Expanded(
+                        child: SizedBox(
+                          height: 46,
+                          child: TextField(
+                            controller: textEditingController,
+                            maxLines: null,
+                            maxLength: 50,
+                            keyboardType: TextInputType.multiline,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: '메시지를 입력해주세요.',
+                              hintStyle: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFFC8C8CB),
+                                  letterSpacing: -0.5),
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 16),
+                              filled: true,
+                              fillColor: Color(0xffF5F6FA),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                                borderSide: BorderSide(
+                                  color: Color(0xffF5F6FA),
+                                ),
                               ),
-                              child: Text(
-                                '전송',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 13),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                                borderSide: BorderSide(
+                                  color: Color(0xffF5F6FA),
+                                ),
                               ),
+                              counterText: '',
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 4),
+
+                      // 전송 버튼
+                      GestureDetector(
+                        onTap: () async {
+                          if (textEditingController.text.isNotEmpty) {
+                            _sendMessage();
+                          }
+                        },
+                        child: Container(
+                            width: 56,
+                            height: 46,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF4874EA),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Text(
+                              "전송",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.5,
+                              ),
+                            )),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-
       ),
     );
   }
 }
-
-
-
-// Container(
-// width: MediaQuery.of(context).size.width-86,
-// height: 46,
-// decoration: BoxDecoration(
-// border: Border.all(color: Colors.transparent),
-// color: Color(0xFFF5F6FA),
-// borderRadius: BorderRadius.circular(10.0),
-// ),
-// child: Padding(
-// padding:
-// const EdgeInsets.symmetric(horizontal: 16.0),
-// child: TextField(
-// textAlignVertical: TextAlignVertical.center,
-// controller: textEditingController,
-// decoration: InputDecoration(
-// border: InputBorder.none,
-// hintText: '메시지를 입력해주세요.',
-// hintStyle: TextStyle(fontSize: 13,color: Color(0xFFC8C8CB)),
-//
-// ),
-// ),
-// ),
-// ),

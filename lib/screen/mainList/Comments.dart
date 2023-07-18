@@ -219,6 +219,12 @@ class _CommentsState extends ConsumerState<Comments> {
                             color: Color(0xffF5F6FA),
                           ),
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(
+                            color: Color(0xffF5F6FA),
+                          ),
+                        ),
                         hintStyle: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 13,

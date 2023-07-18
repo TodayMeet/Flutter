@@ -13,14 +13,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../model/TextPrint.dart';
 import '../../model/showtoast.dart';
 import '../../data/meetList_Provider.dart';
+import '../../data/advertisement_Provider.dart';
 import '../../model/mainList/meetListView.dart';
 import '../../routes.dart';
 import '../mainMap/mainPageMap.dart';
-import '../setting/setlocation.dart';
 import 'package:front/data/meetList.dart';
 
 RefreshController refreshController = RefreshController(initialRefresh: true);
 late StateNotifierProvider<meetListNotifier, List<meetList>> meetListProvider;
+late StateNotifierProvider<AdvertisementNotifier, List<String>> advertisementProvider;
 
 // 필터링 Provider
 final StateProvider categoryNameProvider =
@@ -35,10 +36,11 @@ class MainListBoard extends ConsumerStatefulWidget {
 }
 
 class MainListBoardState extends ConsumerState<MainListBoard> {
+  List<String> advertisementList = [];
   List<meetList> tempList = [];
   int postNo = 0;
 
-  //서버에서 listdata 받아오기
+  // 서버에서 listdata 받아오기
   Future<int> postListData(String sort, int pageNo, String categoryName) async {
     try {
       final url = Uri.parse("http://todaymeet.shop:8080/meet/list/${ref.watch(dongProvider)}");
@@ -59,16 +61,38 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
         List<dynamic> meetListData = json.decode(utf8.decode(response.bodyBytes));
         meetListData
             .forEach((element) => tempList.add(meetList.fromJson(element)));
-        return 1;
+        return 0;
       } else {
         showToast('Data download failed! : ${response.statusCode}');
         print('Failed to post data : ${response.statusCode}');
-        return 0;
+        return -1;
       }
     } catch (e) {
       showToast('Data download failed!!');
       print('Failed to post data!!');
-      return 0;
+      return -1;
+    }
+  }
+
+  // 서버에서 광고 받아오기
+  Future<void> getAdvertisement() async {
+    try{
+      final url = Uri.parse("http://todaymeet.shop:8080/ad/one");
+
+      http.Response response = await http.get(url);
+
+      if(response.statusCode == 200){
+        debugPrint('----------------- 게시판 광고 받아오기 성공 -----------------');
+        var serverData = response.body;
+        print(serverData);
+        ref.read(advertisementProvider.notifier).addList(serverData);
+      }else{
+        debugPrint('광고 서버 오류');
+        showToast('광고 서버 오류');
+      }
+    } catch(e) {
+      debugPrint("광고 오류");
+      showToast('광고 오류');
     }
   }
 
@@ -79,11 +103,16 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
         StateNotifierProvider<meetListNotifier, List<meetList>>((ref) {
       return meetListNotifier(tempList);
     });
+    advertisementProvider =
+        StateNotifierProvider<AdvertisementNotifier, List<String>>((ref) {
+          return AdvertisementNotifier(advertisementList);
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     List<meetList> viewList = ref.watch(meetListProvider);
+    List<String> adList = ref.watch(advertisementProvider);
     final categoryName = ref.watch(categoryNameProvider);
     final sort = ref.watch(sortProvider);
 
@@ -139,21 +168,19 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
           ref.read(meetListProvider.notifier).clearList();
           tempList.forEach((element) =>
               ref.read(meetListProvider.notifier).addList(element));
-          if(complete == 1){
-            showToast("새로고침 완료");
-          }else{
+          ref.read(advertisementProvider.notifier).clearList();
+          if(complete == -1){
             showToast("새로고침 실패");
           }
           refreshController.refreshCompleted();
         },
         onLoading: () async {
           if (ref.read(meetListProvider).length < 31) {
+            await getAdvertisement();
             int complete = await postListData(sort, ++postNo, categoryName);
             tempList.forEach((element) =>
                 ref.read(meetListProvider.notifier).addList(element));
-            if(complete == 1){
-              showToast("로딩 완료");
-            }else{
+            if(complete == -1){
               showToast("로딩 실패");
             }
           }
@@ -207,7 +234,7 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
           },
         ),
         controller: refreshController,
-        child: meetListView(context, ref, viewList),
+        child: meetListView(context, ref, viewList, adList),
       ),
       floatingActionButton: Wrap(
         direction: Axis.vertical,

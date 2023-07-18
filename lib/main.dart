@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:front/model/showtoast.dart';
 
 import 'screen/mainMap/mainPageMap.dart';
 import 'screen/mainList/mainListBoard.dart';
@@ -50,8 +51,7 @@ Future<void> setupFlutterNotifications() async {
   channel = const AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
-    description: 'This channel is used for important notifications.',
-    // description
+    description: 'This channel is used for important notifications.', // description
     importance: Importance.high,
   );
 
@@ -202,7 +202,7 @@ class MyAppPageState extends ConsumerState<MyAppPage> {
                     );
                   } else if (settings.name == Routes.setLocationPageRoute) {
                     return MaterialPageRoute(
-                        builder: (context) => LocationPage(), settings: settings);
+                        builder: (context) => const LocationPage(), settings: settings);
                   } else if (settings.name == Routes.filterPageRoute) {
                     return MaterialPageRoute(
                         builder: (context) => const Filter(), settings: settings);
@@ -364,53 +364,50 @@ class MyAppPageState extends ConsumerState<MyAppPage> {
 /// fcm 배경 처리 (종료되어있거나, 백그라운드에 경우)
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  //debugPrint("1");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //debugPrint("2");
   await setupFlutterNotifications(); // 셋팅 메소드
   //showFlutterNotification(message);  // 로컬노티
-  //debugPrint("3");
 }
 
 /// fcm 전경 처리 - 로컬 알림 보이기
 void showFlutterNotification(RemoteMessage message) {
   debugPrint("---------------------------------------------");
 
-  //debugPrint(data.keys as String?);
   RemoteNotification? notification = message.notification;
-  debugPrint(notification!.title); // title
-  debugPrint(notification.body); // body
   Map<String, dynamic> data = message.data;
-  if (data['type'].toString() == "1") {
-    debugPrint("--------------------------- type Chat");
-  } else {
-    debugPrint("--------------------------- type Notifi");
-    alarmrefreshController.requestRefresh();
-  }
-  data.forEach((key, value) {
-    debugPrint('Key: $key, Value: $value');
-  });
+  if (data['type'].toString() == "0") {
+    debugPrint(notification!.title); // title
+    debugPrint(notification.body); // body
 
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null && !kIsWeb) {
-    // 웹이 아니면서 안드로이드이고, 알림이 있는경우
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description,
-          // TODO add a proper drawable resource to android, for now using
-          //      one that already exists in example app.
-          icon: 'launch_background',
+    debugPrint("--------------------------- type Notification");
+    alarmrefreshController.requestRefresh();
+
+    data.forEach((key, value) {
+      debugPrint('Key: $key, Value: $value');
+    });
+
+    showToastNotification(notification.body!);
+
+    /*AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null && !kIsWeb) {
+      // 웹이 아니면서 안드로이드이고, 알림이 있는경우
+      flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            //      one that already exists in example app.
+            icon: 'launch_background',
+          ),
         ),
-      ),
-    );
+      );
+    }*/
   }
 }
 

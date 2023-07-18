@@ -17,6 +17,7 @@ import 'package:front/data/meetList.dart';
 import 'package:front/model/mainList/CategoryContainer.dart';
 import 'package:front/model/TextPrint.dart';
 import '../../screen/mainList/Comments.dart';
+import '../../screen/profile/userProfile.dart';
 
 Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
   // 카테고리 표시 옆에 완료 텍스트
@@ -79,7 +80,15 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
             Row(
               children: [
                 InkWell(
-                  onTap: (){}, //프로필 페이지로 이동
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (builder) => userProfile(userNo: list.userNo),
+                      )
+                    );
+                  }, //프로필 페이지로 이동
                   child: Row(
                     children: [
                       ClipOval(

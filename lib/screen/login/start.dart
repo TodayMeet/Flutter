@@ -68,15 +68,13 @@ class _Start extends State<Start> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MyAppPage()),
+          MaterialPageRoute(builder: (builder)=>MyAppPage())
         );
       }
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => login(),
-        ),
+        MaterialPageRoute(builder: (builder)=>login()),
       );
     }
   }

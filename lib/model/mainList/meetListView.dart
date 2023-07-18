@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:front/data/search/recommendedHost.dart';
 
 import '../../routes.dart';
 import '../../data/userNo.dart';
@@ -16,28 +17,34 @@ import '../TextPrint.dart';
 import 'mainListView.dart';
 import 'Advertisement.dart';
 
-Widget meetListView(BuildContext context, WidgetRef ref, List<meetList> viewList) {
-  return ListView(// 메인 리스트 스크롤 뷰
+// 메인 리스트 스크롤 뷰
+Widget meetListView(
+    BuildContext context, WidgetRef ref, List<meetList> viewList, List<String> advertisementList) {
+  return ListView(
     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
     children: [
       //const SizedBox(height: 24.0,),
       //StringText('📣 주변의 새 이벤트', 24, FontWeight.w700, const Color(0xff2F3036)),
       StringText('🧭 주변 이벤트', 24, FontWeight.w700, const Color(0xff2F3036)),
-      const SizedBox(height: 19.0,),
+      const SizedBox(
+        height: 19.0,
+      ),
 
       Column(
           children: viewList.asMap().entries.map((list) {
-            if(list.key % 5 == 0 && list.key != 0) { //광고 나오는 조건
-              return Column(
-                children: [
-                  Advertisement('광고'), //광고 배너
-                  ListViewer(context, ref, list.value),
-                ],
-              );
-            }
-            return ListViewer(context, ref, list.value);
-          }).toList()
-      ), //건수 리스트
+            int index = list.key;
+        if (index % 5 == 0 && index != 0) {
+          //광고 나오는 조건
+          return Column(
+            children: [
+              Advertisement(advertisementList[(index/5-1).round()]), //광고 배너
+              ListViewer(context, ref, list.value),
+            ],
+          );
+        }
+        return ListViewer(context, ref, list.value);
+      }).toList()),
+      //건수 리스트
       //StringText('🧭 주변 이벤트', 24, FontWeight.w700, const Color(0xff2F3036)),
     ],
   );
@@ -48,25 +55,32 @@ Widget ListViewer(BuildContext context, WidgetRef ref, meetList List) {
     children: [
       InkWell(
         child: mainListView(List, ref, context),
-        onTap: (){
-          Navigator.push(context,
+        onTap: () {
+          Navigator.push(
+              context,
               MaterialPageRoute(
-                  builder: (context) => Loading_to_ListDetail(meetNo: List.meetNo, userNo: UserNo.myuserNo,)));
+                  builder: (context) => Loading_to_ListDetail(
+                        meetNo: List.meetNo,
+                        userNo: UserNo.myuserNo,
+                      )));
         }, // -> 건수 상세 페이지로 이동
       ),
-      const SizedBox(height: 18,)
+      const SizedBox(
+        height: 18,
+      )
     ],
   );
 }
 
-Widget meetListViews(BuildContext context, WidgetRef ref, List<meetList> viewList) {
-
-  return ListView(// 탐색 화면
+// 탐색 화면
+Widget meetListViews(BuildContext context, WidgetRef ref,
+    List<meetList> viewList, List<RecommendedHost> hostList, List<String> advertisementList) {
+  return ListView(
     physics: const ClampingScrollPhysics(),
     shrinkWrap: true,
     children: [
       // 상단 배너
-      const element.Banner(),
+      element.Banner(list:advertisementList),
 
       // 검색 창
       Container(
@@ -75,12 +89,12 @@ Widget meetListViews(BuildContext context, WidgetRef ref, List<meetList> viewLis
         child: ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
-            const MaterialStatePropertyAll<Color>(Color(0xFFF5F6FA)),
+                const MaterialStatePropertyAll<Color>(Color(0xFFF5F6FA)),
             shape: MaterialStatePropertyAll<OutlinedBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
             shadowColor:
-            const MaterialStatePropertyAll<Color>(Colors.transparent),
+                const MaterialStatePropertyAll<Color>(Colors.transparent),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -179,54 +193,52 @@ Widget meetListViews(BuildContext context, WidgetRef ref, List<meetList> viewLis
       ),
 
       // 추천 호스트 Container 출력
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: SizedBox(
-          height: 133,
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (BuildContext context, int index) {
-              return element.RecommendHost(
-                  element.host_image[index][0],
-                  element.host_image[index][1],
-                  element.host_image[index][2]);
-            },
-          ),
-        ),
-      ),
+      hostList == []
+          ? const SizedBox.shrink()
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: SizedBox(
+                height: 133,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: hostList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    RecommendedHost host = hostList[index];
+                    return element.RecommendHost(
+                      host.profileImage,
+                      host.username,
+                      host.userNo,
+                      host.follow,
+                    );
+                  },
+                ),
+              ),
+            ),
 
+      //건수 리스트
       Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
             children: viewList.asMap().entries.map((list) {
-              if(list.key % 5 == 0 && list.key != 0) { //광고 나오는 조건
-                return Column(
-                  children: [
-                    Advertisement('광고'), //광고 배너
-                    ListViewer(context, ref, list.value),
-                  ],
-                );
-              }
-              return ListViewer(context, ref, list.value);
-            }).toList()
-        ),
-      ), //건수 리스트
+          return ListViewer(context, ref, list.value);
+        }).toList()),
+      ),
     ],
   );
 }
 
-Widget meetListViewSearch(BuildContext context, WidgetRef ref, List<meetList> viewList) {
-  return ListView(  // 탐색 화면 검색 창 탭바
+// 탐색 화면 검색 창 탭바
+Widget meetListViewSearch(
+    BuildContext context, WidgetRef ref, List<meetList> viewList) {
+  return ListView(
     padding: const EdgeInsets.fromLTRB(24, 24, 24, 6),
     children: [
       Column(
           children: viewList.asMap().entries.map((list) {
-            return ListViewer(context, ref, list.value);
-          }).toList()
-      ), //건수 리스트
+        return ListViewer(context, ref, list.value);
+      }).toList()), //건수 리스트
     ],
   );
 }

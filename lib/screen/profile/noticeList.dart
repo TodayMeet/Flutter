@@ -96,18 +96,18 @@ class _noticeListState extends State<noticeList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => notice(noticeNo: notices['noticeNo'],image: notices['images'],),
+                      builder: (context) => notice(noticeNo: notices['noticeNo']),
                     ),
                   );
 
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 48,
+                  height: 50,
                   child: Row(
                     children: [
-                  notices['image']==null
-                      ? Container(height: 50,width: 50,decoration: BoxDecoration(shape: BoxShape.circle),color: Color(0xFFF5F6FA),child: SvgPicture.asset('assets/icons/Image.svg'),)
+                      notices['image']==null
+                      ? Container(alignment: Alignment.center, width: 50, height: 50, decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFFF5F6FA),), child: SvgPicture.asset('assets/icons/Image.svg'),)
                       : CircleAvatar(radius: 25, backgroundImage: NetworkImage(notices['image']),),
                       SizedBox(width: 16,),
                       Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: [

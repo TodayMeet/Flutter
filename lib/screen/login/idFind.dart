@@ -8,6 +8,7 @@
 import 'dart:convert';
 
 
+import 'package:flutter/services.dart';
 import 'package:front/model/UI/widget/text/textfieldTitle.dart';
 import 'package:front/screen/login/idFindResult.dart';
 
@@ -46,7 +47,7 @@ class _idFindState extends State<idFind> {
 
 
   Future<void> idResultLoad() async {
-    final url = Uri.parse('http://todaymeet.shop:8080/find-email/010-1234-1234');
+    final url = Uri.parse('http://todaymeet.shop:8080/find-email/${phoneNumber}');
     final requestData = {
       'email' : email,
     };
@@ -59,12 +60,12 @@ class _idFindState extends State<idFind> {
       print("===========================이거 잘 됨");
       print('result는 이거다!!!!! ${response.body}');
       email = response.body;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => idFindResult(email: email),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => idFindResult(email: email),
+      //   ),
+      // );
 
     } else{
       print('==================================이거 안됨');
@@ -139,6 +140,8 @@ class _idFindState extends State<idFind> {
           leadingWidget: SvgButton(
               imagePath: backarrow,
               onPressed:() {
+                // idResultLoad();
+                // print('이메일은 이거 입니다.............................${email}');
                 Navigator.pop(context);
                 Navigator.push(
                   context,
@@ -167,9 +170,15 @@ class _idFindState extends State<idFind> {
                   SizedBox(width: 16.0),
                   Expanded(
                     child: TextField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        NumberFormatter(), //숫자에 다시 넣어서
+                        LengthLimitingTextInputFormatter(13) //010-1234-1234 이거 13자리
+                      ],
                       onChanged: (value) {
                         setState(() {
                           _text2 = value;
+                          phoneNumber = _text2;
                         });
                       },
                       style: TextStyle(fontSize: 13.0),
@@ -319,16 +328,50 @@ class _idFindState extends State<idFind> {
             ),
             Spacer(),
             blueButton(buttonText: '아이디 찾기', onPressed: (){
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => idFindResult(),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => idFindResult(email: email,),
+                ),
+              );
               idResultLoad();
+              print(phoneNumber);
             },)
 
           ]),
         ));
+  }
+}
+class NumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    var text = newValue.text;
+
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
+
+    var buffer = StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      var nonZeroIndex = i + 1;
+      if (nonZeroIndex <= 3) {
+        if (nonZeroIndex % 3 == 0 && nonZeroIndex != text.length) {
+          buffer.write('-'); // Add double spaces.
+        }
+      } else {
+        if (nonZeroIndex % 7 == 0 &&
+            nonZeroIndex != text.length &&
+            nonZeroIndex > 4) {
+          buffer.write('-');
+        }
+      }
+    }
+
+    var string = buffer.toString();
+    return newValue.copyWith(
+        text: string,
+        selection: TextSelection.collapsed(offset: string.length));
   }
 }

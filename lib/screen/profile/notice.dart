@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -17,8 +18,7 @@ import '../../model/UI/widget/customAppBar.dart';
 
 class notice extends StatefulWidget {
   final int noticeNo;
-  final String image;
-  notice({required this.noticeNo, required this.image});
+  notice({required this.noticeNo});
   // const notice({Key? key}) : super(key: key);
 
   @override
@@ -31,9 +31,7 @@ class _noticeState extends State<notice> {
   String time = '';
   String content = ''' ''';
 
-
-
-
+  //공지사항 내용 불러오기
   Future<void> noticeContentLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/notice/detail?noticeNo=${widget.noticeNo}');
     final requestData = {
@@ -76,19 +74,16 @@ class _noticeState extends State<notice> {
   @override
   Widget build(BuildContext context) {
 
-
-    String appbarText = '공지사항';
     return Scaffold(
+
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
             imagePath: backarrow,
             onPressed: (){
-              Navigator.pop(context);
+             Navigator.pop(context);
             }),
-
-
-        title: appbarText,
+        title: '공지사항',
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -96,26 +91,36 @@ class _noticeState extends State<notice> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Text(title,style: TextStyle(fontSize: 18,),),
               SizedBox(height: 4,),
-              Text(time,style: TextStyle(fontSize: 14,color: Color(0xFF71727A)),),
+              Text(time ,style: TextStyle(fontSize: 14,color: Color(0xFF71727A)),),
               SizedBox(height: 16,),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 240,
-                color: Color(0xFFF5F6FA),
-                child:
-                  images==null ? Center(child: SvgPicture.asset('assets/icons/Image.svg',width: 71,height: 70,)) : Image.network(widget.image),
-
-              ),
+              _buildImageWidget(context,images),
               SizedBox(height: 16,),
               Text(content,style: TextStyle(fontSize: 14,color: Colors.black),),
-
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+
+Widget _buildImageWidget(BuildContext context,List<String> images) {
+  if (images.isEmpty) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 240,
+      color: Color(0xFFF5F6FA), child: Center(child: SvgPicture.asset('assets/icons/Image.svg', width: 71, height: 70),
+      ),
+    );
+  } else if (images.length == 1) {
+    return Image.network(images[0], fit: BoxFit.cover,);
+  } else {
+    List<Widget> imageWidgets = images.map((imageUrl) => Image.network(imageUrl, fit: BoxFit.cover,),).toList();
+    return CarouselSlider(
+      items: imageWidgets, options: CarouselOptions(autoPlay: false,enlargeCenterPage: true,viewportFraction: 1.0,enableInfiniteScroll: false),
     );
   }
 }

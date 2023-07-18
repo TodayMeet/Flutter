@@ -7,7 +7,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:front/data/designconst/constants.dart';
+import 'package:front/model/UI/widget/text/textfieldTitle.dart';
 
 import 'package:front/screen/login/registerProfile.dart';
 import 'package:http/http.dart' as http;
@@ -89,9 +91,7 @@ class _accountsettingState extends State<accountsetting> {
   }
 
   String convertIsDuplicateToString(bool isDuplicate) {
-    return isDuplicate
-        ? '* 이미 가입된 이메일 주소입니다.'
-        : '                             ';
+    return isDuplicate ? '* 이미 가입된 이메일 주소입니다.' : '                             ';
   }
 
   String convertIsDuplicatepwToString(bool isDuplicate) {
@@ -108,25 +108,22 @@ class _accountsettingState extends State<accountsetting> {
     }
   }
 
-
-
-  void _toregisterProfile() {
-
-    if(password==''){
-      onebutton.noInputPwDialog(context);
-    }else if(email==''){
-      onebutton.noInputIDDialog(context);
-    } else if (isDuplicate){
-      onebutton.emailDuplicateCheckDialog(context);
-    } else{
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => registerProfile(email: email,password: password),
-        ),
-      );
-    }
-  }
+  // void _toregisterProfile() {
+  //   if(password==''){
+  //     onebutton.noInputPwDialog(context);
+  //   }else if(email==''){
+  //     onebutton.noInputIDDialog(context);
+  //   } else if (isDuplicate){
+  //     onebutton.emailDuplicateCheckDialog(context);
+  //   } else{
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => registerProfile(email: email,password: password),
+  //       ),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -153,14 +150,7 @@ class _accountsettingState extends State<accountsetting> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      '아이디(이메일)',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 14),
-                    ),
-                  ),
+                  textfieldTitle(title: '아이디(이메일) ', star: true),
                   SizedBox(height: 8.0),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -169,6 +159,7 @@ class _accountsettingState extends State<accountsetting> {
                       border: Border.all(color: Color(0xFF1F2024)),
                     ),
                     child: TextField(
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9!@#$%^&*().]"),),],
                       controller: _idController,
                       onChanged: (value) {
                         email= _idController.text;

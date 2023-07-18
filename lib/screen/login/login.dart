@@ -2,7 +2,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:front/screen/login/start.dart';
-
+import 'package:flutter/services.dart';
 import '../../data/designconst/constants.dart';
 
 import '../../data/userNo.dart';
@@ -35,10 +35,13 @@ class _loginState extends State<login> {
   String password = '';
   bool obscureText = true;
   // String loginresult2 = '';
-  final regex = RegExp(r'^[a-zA-Z@,.]+$');
+  final TextEditingController _controller = TextEditingController();
+
   bool idformat = true;
   bool pwformat = true;
   String? token = '';
+
+
 
   Future<void> getToken() async {
     // String? token;
@@ -133,13 +136,14 @@ class _loginState extends State<login> {
                       padding: EdgeInsets.zero,
                       height: 48.0,
                       child: TextField(
-                        autofocus: false,
+                        controller: _controller,
+                        autofocus: true,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9!@#$%^&*().]"),),
+                        ],
                         onChanged: (value) {
                           setState(() {
                             _text = value;
-                          //   if (!regex.hasMatch(value)) {
-                          //     idformat=false;
-                          //   } 아이디가 형식에 맞지 않으면 또 다른 다이얼로그 출력
                           });
                           email = _text;
                         },
@@ -163,6 +167,7 @@ class _loginState extends State<login> {
                       child: TextField(
                         obscureText: obscureText,
                         autofocus: false,
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9!@#$%^&*().]"),),],
                         onChanged: (value) {
                           setState(() {
                             _text1 = value;
@@ -205,7 +210,18 @@ class _loginState extends State<login> {
                   height: 56.0,
                   child: ElevatedButton(
                     onPressed: () async {
+
+
+                      // bool isValidEmail = isEmailValid(_text);
+                      // if(isValidEmail==false){
+                      //   onebutton.idisEmailDialog(context);
+                      // } else {
+                      //   sendCredentialsToServer();
+                      // }
+
                       sendCredentialsToServer();
+
+
 
 
                     },
@@ -248,7 +264,6 @@ class divideLine extends StatelessWidget {
   const divideLine({
     super.key,
   });
-
   @override
   Widget build(BuildContext context) {
     return Divider(
@@ -296,7 +311,6 @@ class googleloginbutton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           // sendCredentialsToServer();
-
         },
         child: Center(
           child: Row(
@@ -386,7 +400,6 @@ class signupbutton extends StatelessWidget {
   const signupbutton({
     super.key,
   });
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -406,7 +419,7 @@ class signupbutton extends StatelessWidget {
             '회원가입',
             style: TextStyle(
               fontFamily: 'Inter',
-              fontSize: 14,
+              fontSize: 14.0,
               color: Color(0xFF71727A),
             ),
           ),
@@ -451,12 +464,7 @@ class idpwfind extends StatelessWidget {
               MaterialPageRoute(builder: (context) => idFind()),
             );
           },
-          child: Text(
-            '아이디찾기',
-            style: TextStyle(
-              fontSize: 12.0,
-              color: findtextColor,
-            ),
+          child: Text('아이디찾기', style: TextStyle(fontSize: 12.0, color: findtextColor,),
           ),
         ),
         Text(
@@ -510,6 +518,11 @@ class logoImage extends StatelessWidget {
     );
   }
 }// loginState class
+
+bool isEmailValid(String email) {
+  final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  return emailRegExp.hasMatch(email);
+}
 
 // 로그인 성공시 email, userpassword 저장
 void saveLoginCredentials(String email, String password) async {

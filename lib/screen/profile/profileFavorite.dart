@@ -215,6 +215,7 @@ class _profileFavoriteState extends State<profileFavorite> {
         padding: const EdgeInsets.all(24.0),
         child: ListView(controller: _scrollController, children: [
           textfieldTitle(title: '관심사를 최대 5개까지 골라 주세요.', star: false),
+          SizedBox(height: 8.0,),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: categories.map((category) {

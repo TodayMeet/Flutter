@@ -1,8 +1,3 @@
-//그냥 끝
-
-
-
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -26,9 +21,15 @@ class secession extends StatefulWidget {
   State<secession> createState() => _secessionState();
 }
 
+
 class _secessionState extends State<secession> {
   TextEditingController textarea = TextEditingController();
 
+  @override
+  void dispose() {
+    textarea.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +53,9 @@ class _secessionState extends State<secession> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             textfieldTitle(title: '사유', star: false),
-            SizedBox(
-              height: 8.0,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: textfieldColor,
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: TextField(
-                controller: textarea,
-                maxLines: 10,
+            SizedBox(height: 8.0,),
+            Container(decoration: BoxDecoration(color: textfieldColor, borderRadius: BorderRadius.circular(12.0),),
+              child: TextField(controller: textarea, maxLines: 10,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 12.0,horizontal: 16.0),
                   hintText: "200자 이하 텍스트 입력 가능",

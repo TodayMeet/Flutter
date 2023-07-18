@@ -22,6 +22,7 @@ Future<void> secessionFunction() async {
     headers: {'Content-Type': 'application/json'},
   );
   if (response2.statusCode == 200) {
+
     final responseData2 = jsonDecode(response2.body);
     print(responseData2);
   } else {
@@ -195,7 +196,7 @@ class onebutton{
 
       ),
     );
-  }
+  }// 이미 가입된 휴대전화번호
   static void inputTimeOverDialog(BuildContext context){
     showDialog(
       context: context,
@@ -208,7 +209,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //입력시간초과
   static void certificationSuccessDialog(BuildContext context){
     showDialog(
       context: context,
@@ -221,7 +222,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //인증성공
   static void incorrectCertificationDialog(BuildContext context){
     showDialog(
       context: context,
@@ -234,7 +235,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //인증번호 틀림
   static void notmemberDialog(BuildContext context){
     showDialog(
       context: context,
@@ -247,7 +248,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //가입되지 않은 휴대전화번호
   static void overFiveDialog(BuildContext context){
     showDialog(
       context: context,
@@ -260,7 +261,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //관심사 5개 이상 선택했을 경우
   static void over200Dialog(BuildContext context){
     showDialog(
       context: context,
@@ -273,7 +274,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //200자 이상 입력했을때
   static void over500Dialog(BuildContext context){
     showDialog(
       context: context,
@@ -286,7 +287,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //500자 이상 입력했을때
   static void questionConfirmDialog(BuildContext context){
     showDialog(
       context: context,
@@ -295,12 +296,12 @@ class onebutton{
         buttonText: '확인',
         onButtonPressed: () {
           Navigator.pop(context);
-          Navigator.pop(context);
+
         },
 
       ),
     );
-  }
+  } //문의 접수되었습니다.
   static void checkEssentialDialog(BuildContext context){
     showDialog(
       context: context,
@@ -313,7 +314,20 @@ class onebutton{
 
       ),
     );
-  } //필수항목 동의 둘다 안함
+  } //필수항목 동의 안함
+  static void idisEmailDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '아이디를 이메일 형식으로 입력해주세요.',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  }
   static void oneWordNameDialog(BuildContext context){
     showDialog(
       context: context,
@@ -365,7 +379,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //이메일 중복 여부를 확인해주세요
   static void noInputNameDialog(BuildContext context){
     showDialog(
       context: context,
@@ -378,7 +392,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //닉네임은 필수 입력사항입니다.
   static void pwChangeDialog(BuildContext context){
     showDialog(
       context: context,
@@ -391,7 +405,7 @@ class onebutton{
 
       ),
     );
-  }
+  } //비밀번호 변경되었습니다.
   static void favoriteChangeDialog(BuildContext context){
     showDialog(
       context: context,
@@ -409,6 +423,6 @@ class onebutton{
 
       ),
     );
-  }
+  } //관심사가 변경되었습니다.
 
 }

@@ -39,19 +39,13 @@ class _questionState extends State<question> {
     );
     if (response.statusCode == 200) {
       print('전송잘됨');
-
       print(url1);
       print('문의 완료 ?${response.body}');
       print(response);
     onebutton.questionConfirmDialog(context);
-
     } else {
-
       print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
-
       print(url1);
-
-
     }
   }
 

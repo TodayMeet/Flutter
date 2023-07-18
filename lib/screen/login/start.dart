@@ -7,6 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -63,7 +64,7 @@ class _Start extends State<Start> {
         print('로그인 성공');
         final userNo = jsonDecode(response.body);
         print("userNo : ");
-        print(userNo);
+        print('유저넘버유저언머뷰저넘버유저넘버?${userNo}');
         UserNo.myuserNo = userNo;
 
         Navigator.pushReplacement(
@@ -100,7 +101,7 @@ class startContent extends StatelessWidget {
       child: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Spacer(),
-          startImage(),
+          image(),
           Spacer(),
           startCompanyName(),
           SizedBox(
@@ -112,9 +113,8 @@ class startContent extends StatelessWidget {
   }
 }
 
-//startImage : 로고 이미지 출력하는 부분
-class startImage extends StatelessWidget {
-  const startImage({
+class image extends StatelessWidget {
+  const image({
     super.key,
   });
 
@@ -124,10 +124,12 @@ class startImage extends StatelessWidget {
       padding: EdgeInsets.zero,
       width: 121,
       height: 84,
-      child: Image.asset('assets/images/LoginImage/logoimage.png'),
+      child: SvgPicture.asset('assets/images/LoginImage/logoimage.svg')
     );
   }
 }
+
+
 
 //startCompanyName : 반듯한 컴퍼니 출력한느 부분
 class startCompanyName extends StatelessWidget {

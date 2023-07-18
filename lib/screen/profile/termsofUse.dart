@@ -40,8 +40,6 @@ class _termsofUseState extends State<termsofUse> {
           onPressed:() {
             Navigator.pop(context);
             },
-          width: 24.0,
-          height: 24.0,
 
         ),
         title: '이용약관',

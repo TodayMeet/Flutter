@@ -251,7 +251,7 @@ class _userProfileState extends ConsumerState<userProfile> {
           width: 24.0,
           height: 24.0,
         ),
-        title: username +' 님의 프로필',
+        title: username +'님의 프로필',
       ),
       body: SmartRefresher(
           enablePullUp: true,
@@ -314,7 +314,7 @@ Widget meeeeet(BuildContext context, WidgetRef ref, List<meetList> viewList,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '${username} ${genderString}',
+                      '${username}${genderString}',
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16.0,

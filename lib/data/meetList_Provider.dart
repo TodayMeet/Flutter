@@ -3,9 +3,7 @@
 // 최종 수정: 2023.6.3
 // 작업자: 정해수
 
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:front/data/Comment.dart';
 import 'meetList.dart';
 

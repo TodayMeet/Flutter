@@ -10,7 +10,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:front/screen/mainList/Comments.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
 
 import '../../data/userNo.dart';
 import 'package:front/data/Comment.dart';
@@ -78,7 +80,7 @@ Widget commentBox(Comment comment, BuildContext context, WidgetRef ref, bool com
           ), //사용자 아이콘
           InkWell(
               onTap: () {
-                reporting(context);
+                reporting(context, comment.meetCommentNo);
               },
               child: SvgPicture.asset(
                   "assets/icons/detail/report.svg")), //신고하기 아이콘
@@ -229,7 +231,7 @@ void showsnackbar(BuildContext context, Comment comment, WidgetRef ref){
   ));
 }
 
-void reporting(BuildContext context) {
+void reporting(BuildContext context, int meetcommentNo) {
   showModalBottomSheet(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -273,23 +275,50 @@ void reporting(BuildContext context) {
               ),
 
               // 폭력성 버튼
-              reportButton("폭력성", context),
+              reportButton("폭력성", context, meetcommentNo, 1),
 
               // 선정성 버튼
-              reportButton("선정성", context),
+              reportButton("선정성", context, meetcommentNo, 2),
 
               // 광고성 버튼
-              reportButton("광고성", context),
+              reportButton("광고성", context, meetcommentNo, 3),
 
               // 사기성 버튼
-              reportButton("사기성", context),
+              reportButton("사기성", context, meetcommentNo, 4),
             ],
           ),
         );
       });
 }
 
-Widget reportButton(String str, BuildContext context) {
+Widget reportButton(String str, BuildContext context, int meetCommentNo, int type) {
+
+  // 서버로 신고 push
+  Future<void> pushReport() async {
+    try {
+      final url = Uri.parse("http://todaymeet.shop:8080/reports");
+      var postbody = {
+        "userNo":UserNo.myuserNo,
+        "meetcommentNo":meetCommentNo,
+        "type":type
+      };
+
+      Response response = await post(
+        url,
+        headers: {"Content-Type":"application/json"},
+        body: json.encode(postbody)
+      );
+
+      if(response.statusCode == 200){
+        debugPrint('------------------신고 완료------------------');
+      }else{
+        debugPrint('------------------신고 서버 실패------------------');
+      }
+    } catch(e) {
+      debugPrint('------------------신고 실패------------------');
+    }
+  }
+
   return SizedBox(
     height: 50,
     child: TextButton(
@@ -360,8 +389,8 @@ Widget reportButton(String str, BuildContext context) {
                                               bottomLeft:
                                                   Radius.circular(16)))),
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(context);
+                                onPressed: () async {
+                                  pushReport();
                                   Navigator.pop(context);
                                 },
                                 child: const Text("네",
@@ -407,6 +436,7 @@ Widget reportButton(String str, BuildContext context) {
             );
           }),
         );
+        Navigator.pop(context);
       },
       child: Center(
         child: Text(

@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:front/data/designconst/constants.dart';
 import 'package:front/model/UI/widget/button/svgButton.dart';
 import 'package:front/model/UI/widget/customAppBar.dart';
 import 'package:front/screen/alarm/alarm.dart';
 import 'package:front/screen/chat/chatpage.dart';
-
-import '../../model/bottomBar.dart';
-import '../mainMap/mainPageMap.dart';
-import '../profile/profileMain.dart';
+import '../../data/chat/messageManagement.dart';
 
 class chatlist extends StatefulWidget {
   const chatlist({Key? key, this.lastMessages}) : super(key: key);
-  final ChatMessage? lastMessages;
+  final ChattingMessage? lastMessages;
 
   @override
   State<chatlist> createState() => _chatlistState();
@@ -50,8 +46,6 @@ class _chatlistState extends State<chatlist> {
         itemCount: chatList.length,
         itemBuilder: (context, index) {
           final chatItem = chatList[index];
-          final message =
-              widget.lastMessages != null ? widget.lastMessages!.content : '';
           return ListTile(
             leading: Container(
               padding: EdgeInsets.zero,
@@ -67,13 +61,12 @@ class _chatlistState extends State<chatlist> {
             subtitle: Text(lastMessages[index]), //이미지 넣어야함
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ChatPage()));
+                  context, MaterialPageRoute(builder: (context) => ChatPage(meetNo: 1 ,meetTitle: "엄",)));
             },
           );
         },
       ),
 
     );
-    ;
   }
 }

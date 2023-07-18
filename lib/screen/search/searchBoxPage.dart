@@ -101,6 +101,11 @@ class SearchBoxPageState extends ConsumerState<SearchBoxPage> {
                   ),
                 ),
                 TextButton(
+                  style: const ButtonStyle(
+                    padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+                      EdgeInsets.zero
+                    )
+                  ),
                   onPressed: () {
                     recentSearch.deleteAllWords();
                     updateScreen();

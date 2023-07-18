@@ -188,7 +188,7 @@ Widget alarmMessage(int index, String value) {
 void pageTransition(BuildContext context, int index, int? userNumber,
     int? meetNumber, String name, bool processed) {
   // 참가 승인
-  void approvalPositive () async {
+  Future<void> approvalPositive () async {
     try{
       final url = Uri.parse("http://todaymeet.shop:8080/approval/ok");
       var postBody = {
@@ -219,7 +219,7 @@ void pageTransition(BuildContext context, int index, int? userNumber,
   }
 
   // 참가 승인
-  void approvalNegative () async {
+  Future<void> approvalNegative () async {
     try{
       final url = Uri.parse("http://todaymeet.shop:8080/approval/not");
       var postBody = {
@@ -364,7 +364,7 @@ void pageTransition(BuildContext context, int index, int? userNumber,
                                     ),
                                     onPressed: () async {
                                       // 참가 승인 요청
-                                      approvalPositive();
+                                      await approvalPositive();
                                       alarmrefreshController.requestRefresh();
                                       Navigator.pop(context);
                                     },
@@ -392,9 +392,9 @@ void pageTransition(BuildContext context, int index, int? userNumber,
                                                   bottomRight:
                                                   Radius.circular(16)))),
                                     ),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       // 참가 승인 거부
-                                      approvalNegative();
+                                      await approvalNegative();
                                       alarmrefreshController.requestRefresh();
                                       Navigator.pop(context);
                                     },

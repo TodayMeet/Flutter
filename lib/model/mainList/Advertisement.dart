@@ -4,24 +4,26 @@
 // 작업자: 정해수
 
 import 'package:flutter/material.dart';
-import '../showtoast.dart';
 
-Widget Advertisement(String string) {
+Widget Advertisement(String url) {
   return Column(
     children: [
-      InkWell(
-        child: Container(
-          width: double.maxFinite,
-          height: 144,
-          decoration: BoxDecoration(
-            color: const Color(0xffF7F8FA),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(child: Text(string)),
+      Container(
+        width: double.maxFinite,
+        height: 144,
+        decoration: BoxDecoration(
+          color: const Color(0xffF7F8FA),
+          borderRadius: BorderRadius.circular(12),
         ),
-        onTap: (){
-          showToast('외부 페이지로 이동합니다');
-        }, // -> 외부 광고 페이지
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.network(
+            url,
+            width: double.maxFinite,
+            height: 144,
+            fit: BoxFit.fill,
+          ),
+        ),
       ),
       const SizedBox(height: 18,)
     ],

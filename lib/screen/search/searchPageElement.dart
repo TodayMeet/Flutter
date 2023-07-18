@@ -1,19 +1,24 @@
 // 탐색 페이지 위젯들
 
-// 최종 수정일 : 2023.6.26
+// 최종 수정일 : 2023.7.18
 // 작업자 : 김혁
-
-// 추가 작업 예정 사항
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 
-//import 'searchTabbarItem.dart';
+import '../../model/showtoast.dart';
+import '../../data/userNo.dart';
+import '../profile/userProfile.dart';
 import 'searchMain.dart';
 
+// 상단 배너
 class Banner extends StatefulWidget {
-  const Banner({Key? key}) : super(key: key);
+  const Banner({required this.list, Key? key}) : super(key: key);
+
+  final List<String> list;
 
   @override
   _BannerState createState() => _BannerState();
@@ -25,7 +30,6 @@ class _BannerState extends State<Banner> {
     initialPage: 0,
     keepPage: true
   );
-  final pageCount = 3;
   int currentPage = 0;
 
   @override
@@ -36,6 +40,8 @@ class _BannerState extends State<Banner> {
 
   @override
   Widget build(BuildContext context) {
+    final list = widget.list;
+    final pageCount = list.length;
     Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.black45,
@@ -43,7 +49,7 @@ class _BannerState extends State<Banner> {
       width: size.width,
       child: Stack(
         children: [
-          PageView(
+          PageView.builder(
             scrollDirection: Axis.horizontal,
             controller: _controller,
             onPageChanged: (int page){
@@ -51,38 +57,15 @@ class _BannerState extends State<Banner> {
                 currentPage = page;
               });
             },
-            children: const [
-              Center(
-                child: Text('상단 배너 1',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-              ),
-              Center(
-                child: Text('상단 배너 2',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-              ),
-              Center(
-                child: Text('상단 배너 3',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-              ),
-            ],
+            itemCount: list.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Image.network(
+                list[index],
+                width: size.width,
+                height: 252,
+                fit: BoxFit.fill,
+              );
+            },
           ),
           Positioned(
             bottom: 22,
@@ -239,11 +222,12 @@ class ButtonNotAll extends ConsumerWidget {
 
 // 추천 호스트 버튼
 class RecommendHost extends StatefulWidget {
-  RecommendHost(this.image, this.name, this.follow,
+  RecommendHost(this.image, this.name, this.userNo, this.follow,
       {Key? key}): super(key: key);
 
   final String image;
   final String name;
+  final int userNo;
   bool follow;
 
   @override
@@ -254,10 +238,42 @@ class RecommendHost extends StatefulWidget {
 
 class _RecommendHostState extends State<RecommendHost> {
 
+  // 팔로우
+  Future<int> addFollow(int followerNo) async {
+    try{
+      final url = Uri.parse("http://todaymeet.shop:8080/follow/add");
+      var postbody = {
+        "followerNo":UserNo.myuserNo,
+        "followeeNo":followerNo
+      };
+
+      Response response = await post(
+        url,
+        headers: {"Content-Type":"application/json"},
+        body: json.encode(postbody),
+      );
+
+      if(response.statusCode == 200){
+        debugPrint("팔로우 성공");
+        print(response);
+        return 0;
+      }else{
+        debugPrint("팔로우 서버 실패");
+        showToast("팔로우 서버 실패");
+        return -1;
+      }
+    }catch(e){
+      debugPrint("팔로우 오류");
+      showToast('팔로우 오류');
+      return -1;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final String image = widget.image;
     final String name = widget.name;
+    final int userNo = widget.userNo;
     bool follow = widget.follow;
 
     return Container(
@@ -269,29 +285,52 @@ class _RecommendHostState extends State<RecommendHost> {
       ),
       child: Column(
         children: [
-          SizedBox(
-            width: 36,
-            height: 36,
-            child: ClipOval(
-              child: Image.asset(
-                image,
-                width: 36,
-                height: 36,
-              ),
+          GestureDetector(
+            onTap: (){
+              Navigator.push(
+                context, MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (builder) => userProfile(userNo: userNo)),
+              );
+            },
+            child: Column(
+              children: [
+                // 추천 호스트 사진
+                SizedBox(
+                  width: 36,
+                  height: 36,
+                  child: ClipOval(
+                    child: Image.network(
+                      image,
+                      width: 36,
+                      height: 36,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // 추천 호스트 이름
+                SizedBox(
+                  width: 64,
+                  child: Center(
+                    child: Text(
+                      name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Colors.black,
+                        overflow: TextOverflow.ellipsis,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
+
           const SizedBox(height: 10),
-          Text(
-            name,
-            style: const TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
-              color: Colors.black,
-              overflow: TextOverflow.ellipsis,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 10),
+          // 팔로우 버튼
           SizedBox(
             height: 24,
             child: ElevatedButton(
@@ -312,10 +351,13 @@ class _RecommendHostState extends State<RecommendHost> {
                     EdgeInsets.symmetric(horizontal: 10, vertical: 0)
                   )
                 ),
-                onPressed: follow == false ?(){
-                  setState(() {
-                    widget.follow = true;
-                  });
+                onPressed: follow == false ?() async {
+                  int result = await addFollow(userNo);
+                  if(result == 0) {
+                    setState(() {
+                      widget.follow = true;
+                    });
+                  }
                 }:null,
                 child: follow == false ? Row(
                       children: [
@@ -349,12 +391,3 @@ class _RecommendHostState extends State<RecommendHost> {
     );
   }
 }
-
-// 추천 호스트 더미 데이터
-List<List<dynamic>> host_image = [
-  ["assets/images/User_Picture/User_pic_sample1.png","술주정뱅이",false],
-  ["assets/images/User_Picture/User_pic_sample2.png","운동쟁이", true],
-  ["assets/images/User_Picture/User_pic_sample3.png","술주정뱅이", true],
-  ["assets/images/User_Picture/User_pic_sample4.png","장국영", false],
-  ["assets/images/User_Picture/User_pic_sample5.png","브론즈에서는챌린저",false],
-];

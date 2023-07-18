@@ -24,8 +24,7 @@ class _pwChangeState extends State<pwChange> {
   final _changepwController = TextEditingController();
   final _confirmpwController = TextEditingController();
 
-  Color _hinttextcolor = Color(0xFFC8C8CB);
-  Color _textfieldcolor = Color(0xFFF5F6FA);
+
   bool obscureText1 = true;
   bool obscureText2 = true;
   bool obscureText3 = true;
@@ -78,12 +77,12 @@ class _pwChangeState extends State<pwChange> {
                     decoration: InputDecoration(
                       hintText: pwTitle,
                       hintStyle: TextStyle(
-                          fontSize: 13.0, color: _hinttextcolor),
+                          fontSize: 13.0, color: hinttextColor),
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(12.0)),
                       filled: true,
-                      fillColor: _textfieldcolor,
+                      fillColor: textfieldColor,
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
@@ -110,7 +109,7 @@ class _pwChangeState extends State<pwChange> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 8.0),
-                textfieldTitle(title: '새 비밀번호', star: true), //현재 비밀번호 *
+                textfieldTitle(title: '새 비밀번호', star: true),
                 SizedBox(height: 8.0),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -124,7 +123,7 @@ class _pwChangeState extends State<pwChange> {
                     decoration: InputDecoration(
                       hintText: pwTitle,
                       hintStyle: TextStyle(
-                          fontSize: 13.0, color: _hinttextcolor),
+                          fontSize: 13.0, color: hinttextColor),
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(12.0)),
@@ -168,7 +167,7 @@ class _pwChangeState extends State<pwChange> {
                     controller: _confirmpwController,
                     decoration: InputDecoration(
                       hintText: pwTitle,
-                      hintStyle: TextStyle(fontSize: 13.0, color: _hinttextcolor),
+                      hintStyle: TextStyle(fontSize: 13.0, color: hinttextColor),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.circular(12.0),
@@ -196,16 +195,8 @@ class _pwChangeState extends State<pwChange> {
             ),//새 비밀번호 확인
 
             Spacer(),
-
             blueButton(buttonText: '저장', onPressed: (){
-              // Navigator.pop(context);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => profileMain()),
               onebutton.pwChangeDialog(context);
-
-
             })//변경 버튼
           ],
         ),

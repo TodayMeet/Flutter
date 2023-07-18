@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:front/screen/chat/chatlist.dart';
-import 'package:front/screen/profile/userProfile.dart';
+import 'package:front/screen/profile/privatePolicy.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,8 +54,7 @@ class _profileMainState extends State<profileMain> {
   String birth = '';
   String userprofileimage = '';
   List<int> followNoList = [];
-
-
+  List<int> followerNoList = [];
 
 
   Future<void> followingLoad() async {
@@ -73,11 +72,34 @@ class _profileMainState extends State<profileMain> {
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      final responseData2 = jsonDecode(response.body);
-      followNoList = responseData2.map<int>((user) => user['userNo'] as int).toSet().toList();
+      final responseData2 =jsonDecode(utf8.decode(response.bodyBytes));
+      setState(() {
+        followNoList = responseData2.map<int>((user) => user['userNo'] as int).toSet().toList();
+        UserNo.FollowList = followNoList;
+      });
     } else {}
   }//팔로잉 정보 불러오기
+  Future<void> followerLoad() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/followee/list?userNo=${userNo}');
+    print('followerLoad의 userNo입니다============================${userNo}');
 
+    final requestData = {
+      "userNo": userNo,
+      "userProfileImage":  userprofileimage,
+      "username": username
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final responseData3 = jsonDecode(utf8.decode(response.bodyBytes));
+      print(responseData3);
+      followerNoList = responseData3.map<int>((user) => user['userNo'] as int).toSet().toList();
+      UserNo.FollowerList = followerNoList;
+    } else {}
+  }//팔로워 정보 불러오기
   Future<void> myInfoLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/user-profile/${userNo}');
 
@@ -108,8 +130,6 @@ class _profileMainState extends State<profileMain> {
         } else if (responseData['gender'] == 2) {
           genderString = '(여)';
         }
-        follownum = responseData['followNum'];
-        followeenum = responseData['followeeNum'];
         print(responseData);
         menu.clear();
         menu.addAll([
@@ -128,47 +148,68 @@ class _profileMainState extends State<profileMain> {
           {"name": '공지사항', 'goto': noticeList()},
           {"name": '개인정보처리방침', 'goto': privatePolicy()},
           {"name": '이용약관', 'goto': termsofUse()},
-          {"name": '채팅임시', 'goto': chatlist()},
+
+
 
         ]);
       });
     } else {}
-  }
+  } //내정보 불러오기
+  Future<void> myInfoLoad1() async {
+    final url = Uri.parse('http://todaymeet.shop:8080/user-profile/1');
+
+    final requestData = {
+      'userNo': userNo,
+      'username': username,
+      'follownum': follownum,
+      'followeenum': followeenum,
+      'gender': gender,
+      'birth': birth,
+      'userprofileimage': userprofileimage
+    };
+    final jsonData = jsonEncode(requestData);
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      setState(() {
+        userNo = responseData['userNo'];
+        userprofileimage = responseData['userProfileImage'];
+        username = responseData['username'];
+        birth = (responseData['birth'].substring(0,10)).replaceAll('-', '.');
+
+        if (responseData['gender'] == 1) {
+          genderString = '(남)';
+        } else if (responseData['gender'] == 2) {
+          genderString = '(여)';
+        }
+        print(responseData);
+        menu.clear();
+        menu.addAll([
+          {"name": '개최한 건수', 'goto': hostEvent(userNo: userNo)},
+          {"name": '참가한 건수', 'goto': joinEvent(userNo: userNo)},
+          {"name": '비밀번호 변경', 'goto': pwChange()},
+          {"name": '차단 관리', 'goto': blockManage()},
+          {
+            "name": '관심사',
+            'goto': profileFavorite(
+              userNo: userNo,
+            )
+          },
+          {"name": 'FAQ', 'goto': oftenQuestion()},
+          {"name": '문의하기', 'goto': question()},
+          {"name": '공지사항', 'goto': noticeList()},
+          {"name": '개인정보처리방침', 'goto': privatePolicy()},
+          {"name": '이용약관', 'goto': termsofUse()},
 
 
 
-  //사용자 정보 불어오기
-
-  // final List<Map<String, dynamic>> menu = [
-  //   {"name": '개최한 건수', 'goto': hostEvent(userNo: 1)},
-  //   {"name": '참가한 건수', 'goto': joinEvent(userNo: 1)},
-  //   {"name": '비밀번호 변경', 'goto': pwChange()},
-  //   {"name": '차단 관리', 'goto': blockManage()},
-  //   {
-  //     "name": '관심사',
-  //     'goto': profileFavorite(
-  //       userNo: 1,
-  //     )
-  //   },
-  //   {"name": 'FAQ', 'goto': oftenQuestion()},
-  //   {"name": '문의하기', 'goto': question()},
-  //   {"name": '공지사항', 'goto': noticeList()},
-  //   {"name": '개인정보처리방침', 'goto': privatePolicy()},
-  //   {"name": '이용약관', 'goto': termsofUse()},
-  //   {"name": '채팅임시', 'goto': chatlist()},
-  //   {"name": '사용자프로필', 'goto': userProfile()},
-  //   {
-  //     "name": '팔로우리스트',
-  //     'goto': followList(
-  //       username: 'asdf',
-  //     )
-  //   },
-  // ];
-
-
-
-
-
+        ]);
+      });
+    } else {}
+  } //내정보 불러오기
 
 
   final List<Map<String, dynamic>> menu = [];
@@ -176,7 +217,8 @@ class _profileMainState extends State<profileMain> {
   void initState() {
     super.initState();
     myInfoLoad();
-    // followingLoad();
+    followingLoad();
+    followerLoad();
   }
 
   @override
@@ -187,6 +229,7 @@ class _profileMainState extends State<profileMain> {
 
   @override
   Widget build(BuildContext context) {
+
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
     return SafeArea(
@@ -201,12 +244,9 @@ class _profileMainState extends State<profileMain> {
             style: ButtonStyle(
               overlayColor: MaterialStateProperty.all<Color>(Color(0xFFDDDDDD)),
             ),
-            onPressed: () async {
-              // print(userNo);
-              // await followingLoad();
-              // print(followNoList);
-              twobutton.logoutDialog(context);
+            onPressed: ()  {
 
+              twobutton.logoutDialog(context);
             },
             child: Text(
               '로그아웃',
@@ -227,30 +267,13 @@ class _profileMainState extends State<profileMain> {
                 child: Row(
                   children: [
                     ClipOval(
-                      child: Container(
-                        width: 70,
-                        height: 70,
-                        color: Colors.blue,
-                        child: Image.network(userprofileimage)
-                      ),
-                    ),
-
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Container(width: 70, height: 70, color: Colors.blue, child: Image.network(userprofileimage)),),
+                    SizedBox(width: 20,),
+                    Column(crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                        Row(crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
-                              '${username}${genderString}',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w700),
-                            ),
+                            Text('${username}${genderString}', style: TextStyle(color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w700),),
                             SizedBox(
                               width: 8.0,
                             ),
@@ -311,7 +334,7 @@ class _profileMainState extends State<profileMain> {
                                       builder: (context) => followList(username: username,userNo: userNo,)));
                             },
                             child: Text(
-                              follownum.toString(),
+                              '${followerNoList.length}',
                               style: TextStyle(
                                   fontSize: 24.0,
                                   fontWeight: FontWeight.w700,
@@ -349,7 +372,7 @@ class _profileMainState extends State<profileMain> {
                                       builder: (context) => followList(username: username,userNo: userNo,)));
                             },
                             child: Text(
-                              followeenum.toString(),
+                              '${followNoList.length}',
                               style: TextStyle(
                                   fontSize: 24.0,
                                   fontWeight: FontWeight.w700,

@@ -12,8 +12,10 @@ import '../../routes.dart';
 import '../../data/userNo.dart';
 import '../../data/meetList.dart';
 import '../../screen/mainList/Loading_to_ListDetail.dart';
+import '../../screen/profile/followList.dart';
 import '../../screen/search/searchPageElement.dart' as element;
 import '../TextPrint.dart';
+import '../UI/widget/button/WhiteButton.dart';
 import 'mainListView.dart';
 import 'Advertisement.dart';
 
@@ -242,3 +244,130 @@ Widget meetListViewSearch(
     ],
   );
 }
+
+
+Widget meeeeet(BuildContext context, WidgetRef ref, List<meetList> viewList,String userprofileimage,String username, int userNo,String genderString,String birth,int followernum,int followingnum) {
+  return ListView(  // 탐색 화면 검색 창 탭바
+    padding: EdgeInsets.zero,
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 24),
+        child: Row(
+          children: [
+            ClipOval(
+              child: Container(width: 70, height: 70, color: Colors.blue, child: Image.network(userprofileimage)),),
+            SizedBox(width: 20,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '${username} ${genderString}',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      width: 8.0,
+                    ),
+                    Text(
+                      '${birth} ',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),//유저이름, 성, 생년월일
+                SizedBox(
+                  height: 11,
+                ),
+                Row(
+                  children: [
+//팔로우버튼
+                    whiteButton(
+                      buttonText: '팔로우',
+                      onPressed: (){},
+                      width: (MediaQuery.of(context).size.width - 148) / 2 ,
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),//팔로우 버튼과 차단 버튼 사이 여백
+                    whiteButton(
+                      buttonText: '차단',
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                      width: (MediaQuery.of(context).size.width - 148) / 2 ,
+                    )
+                  ],
+                ),
+
+              ],
+            ),
+          ],),
+      ),
+      Row(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width / 2,
+            height: 60,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Color(0xFFCACACA),
+                  width: 0.5,
+                )),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('팔로워',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Color(0xFFA7A8A9)),),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>followList(userNo: userNo,username: username)));
+
+                  },
+                  child: Text(followernum.toString(),style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.w700,color: Color(0xFF1F2024)),),
+                )
+              ],
+            ),
+          ), //팔로워
+          Container(
+            width: MediaQuery.of(context).size.width / 2,
+            height: 60,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Color(0xFFCACACA),
+                  width: 0.5,
+                )),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('팔로우',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Color(0xFFA7A8A9)),),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>followList(userNo: userNo,username: username)));
+                  },
+                  child: Text(followingnum.toString(),style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.w700,color: Color(0xFF1F2024)),),
+                )
+              ],
+            ),
+          ),//팔로잉
+        ],
+      ),
+      ...viewList.asMap().entries.map((list) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+          child: ListViewer(context, ref, list.value),
+        );
+      }).toList(), //건수 리스트
+    ],
+  );
+}
+
+
+

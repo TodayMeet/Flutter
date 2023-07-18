@@ -17,7 +17,8 @@ import '../../model/UI/widget/customAppBar.dart';
 
 class notice extends StatefulWidget {
   final int noticeNo;
-  notice({required this.noticeNo});
+  final String image;
+  notice({required this.noticeNo, required this.image});
   // const notice({Key? key}) : super(key: key);
 
   @override
@@ -54,6 +55,11 @@ class _noticeState extends State<notice> {
         title = result["title"];
         content = result["content"];
         time = result["time"];
+        final originalFormat = DateFormat("yyyy-MM-ddTHH:mm:ss.SSSZ");
+        final parsedDateTime = originalFormat.parse(time);
+        final newFormat = DateFormat("yyyy.MM.dd HH:mm");
+        final newDateTimeString = newFormat.format(parsedDateTime);
+        time = newDateTimeString;
         images = List<String>.from(result["images"]);
       });
     }
@@ -69,9 +75,7 @@ class _noticeState extends State<notice> {
 
   @override
   Widget build(BuildContext context) {
-    DateFormat timeformat = DateFormat("yyyy.MM.dd HH:mm");
-    DateTime t1 = DateTime.parse(time);
-    String t2 = timeformat.format(t1);
+
 
     String appbarText = '공지사항';
     return Scaffold(
@@ -80,9 +84,7 @@ class _noticeState extends State<notice> {
         leadingWidget: SvgButton(
             imagePath: backarrow,
             onPressed: (){
-              print(t1);
-              print(timeformat.format(t1));
-              // Navigator.pop(context);
+              Navigator.pop(context);
             }),
 
 
@@ -97,13 +99,15 @@ class _noticeState extends State<notice> {
 
               Text(title,style: TextStyle(fontSize: 18,),),
               SizedBox(height: 4,),
-              Text('${t2}',style: TextStyle(fontSize: 14,color: Color(0xFF71727A)),),
+              Text(time,style: TextStyle(fontSize: 14,color: Color(0xFF71727A)),),
               SizedBox(height: 16,),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 240,
                 color: Color(0xFFF5F6FA),
-                child: Center(child: SvgPicture.asset('assets/icons/Image.svg',width: 71,height: 70,))
+                child:
+                  images==null ? Center(child: SvgPicture.asset('assets/icons/Image.svg',width: 71,height: 70,)) : Image.network(widget.image),
+
               ),
               SizedBox(height: 16,),
               Text(content,style: TextStyle(fontSize: 14,color: Colors.black),),

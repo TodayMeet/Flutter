@@ -24,7 +24,7 @@ class profileFavorite extends StatefulWidget {
 
 class _profileFavoriteState extends State<profileFavorite> {
   final ScrollController _scrollController = ScrollController();
-  final String appbarText = '관심사';
+
   String selectFavorite = '관심사를 최대 5개까지 골라 주세요';
   List<Map> categories = [
     {
@@ -126,22 +126,14 @@ class _profileFavoriteState extends State<profileFavorite> {
         String resultItem = data.toString();
         resultList.add(resultItem);
       }
+      print('categoryLoad의 resultList는 ?');
       print(resultList);
       return resultList;
       // print(response);
 
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => favorite()),
-      // );
     } else {
-      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
-      print(selectedCategories.toList());
-      // print(widget.password);
-      // print(widget.email);
-      print(url1);
-      print(jsonData);
-      print(response.body);
+      // print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+
       return ['a'];
     }
   }
@@ -177,6 +169,9 @@ class _profileFavoriteState extends State<profileFavorite> {
 
     }
   }
+
+
+
   @override
   void initState() {
     super.initState();
@@ -184,21 +179,22 @@ class _profileFavoriteState extends State<profileFavorite> {
   }
 
   Future<void> _initialize() async {
-
     List<String> loadedCategories = await categoryLoad();
-
     for (String name in loadedCategories) {
       for (Map category in categories) {
         if (category['name'] == name) {
-          category['isChecked'] = true;
+          setState(() {
+            category['isChecked'] = true;
+          });
           break;
         }
       }
     }
     for (Map category in categories) {
-      print(category['isChecked']);
+
     }
-  }
+  }//초기화 함수
+
   @override
   Widget build(BuildContext context) {
     int checkedCount =
@@ -213,28 +209,20 @@ class _profileFavoriteState extends State<profileFavorite> {
             Navigator.pop(context);
           },
         ),
-        title: appbarText,
+        title: '관심사',
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: ListView(controller: _scrollController, children: [
           textfieldTitle(title: '관심사를 최대 5개까지 골라 주세요.', star: false),
           Column(
-            // 카테고리
             crossAxisAlignment: CrossAxisAlignment.center,
             children: categories.map((category) {
               if (category['isChecked']) {
                 selectedCategories.add(category['name']);
               }
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF7F8FA),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+              return Padding(padding: const EdgeInsets.only(bottom: 10), child: Container(decoration: BoxDecoration(color: Color(0xFFF7F8FA), borderRadius: BorderRadius.circular(12),),
                   child: ListTile(
-
                       leading: Container(
                         alignment: Alignment.center,
                         width: 36,
@@ -314,19 +302,10 @@ class _profileFavoriteState extends State<profileFavorite> {
                 if (checkedCount > 5) {
                   onebutton.overFiveDialog(context);
                 } else {
-                  categoryLoad();
-                  print("userNo는");
-                  print(widget.userNo);
-                  print('새로 선택한 관심사는');
-                  print(selectedCategories.toList());
-                  print('기존에 선택했던 관심사는');
+                  categoryChange();
+                  onebutton.favoriteChangeDialog(context);
 
 
-
-
-
-                  // print(categor);
-                  // categoryChange();
                 }
               })
         ]),

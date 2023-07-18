@@ -56,6 +56,20 @@ class _profileMainState extends State<profileMain> {
   List<int> followNoList = [];
   List<int> followerNoList = [];
 
+  final List<Map<String,dynamic>>menu=[
+  {"name": '개최한 건수', 'goto': hostEvent(userNo: UserNo.myuserNo)},
+  {"name": '참가한 건수', 'goto': joinEvent(userNo: UserNo.myuserNo)},
+  {"name": '비밀번호 변경', 'goto': pwChange()},
+  {"name": '차단 관리', 'goto': blockManage()},
+  {"name": '관심사', 'goto': profileFavorite(userNo: UserNo.myuserNo,)
+  },
+  {"name": 'FAQ', 'goto': oftenQuestion()},
+  {"name": '문의하기', 'goto': question()},
+  {"name": '공지사항', 'goto': noticeList()},
+  {"name": '개인정보처리방침', 'goto': privatePolicy()},
+  {"name": '이용약관', 'goto': termsofUse()},
+  ];
+
 
   Future<void> followingLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/follow/list?userNo=${userNo}');
@@ -131,27 +145,7 @@ class _profileMainState extends State<profileMain> {
           genderString = '(여)';
         }
         print(responseData);
-        menu.clear();
-        menu.addAll([
-          {"name": '개최한 건수', 'goto': hostEvent(userNo: userNo)},
-          {"name": '참가한 건수', 'goto': joinEvent(userNo: userNo)},
-          {"name": '비밀번호 변경', 'goto': pwChange()},
-          {"name": '차단 관리', 'goto': blockManage()},
-          {
-            "name": '관심사',
-            'goto': profileFavorite(
-              userNo: userNo,
-            )
-          },
-          {"name": 'FAQ', 'goto': oftenQuestion()},
-          {"name": '문의하기', 'goto': question()},
-          {"name": '공지사항', 'goto': noticeList()},
-          {"name": '개인정보처리방침', 'goto': privatePolicy()},
-          {"name": '이용약관', 'goto': termsofUse()},
 
-
-
-        ]);
       });
     } else {}
   } //내정보 불러오기
@@ -212,7 +206,7 @@ class _profileMainState extends State<profileMain> {
   } //내정보 불러오기
 
 
-  final List<Map<String, dynamic>> menu = [];
+
   @override
   void initState() {
     super.initState();

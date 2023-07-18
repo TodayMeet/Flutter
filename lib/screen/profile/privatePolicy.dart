@@ -33,7 +33,7 @@ class _privatePolicyState extends State<privatePolicy> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         leadingWidget: IconButton(
-          iconSize: 14.93,
+
           onPressed: () {
             Navigator.pop(context);
           },

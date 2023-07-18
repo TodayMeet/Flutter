@@ -58,7 +58,9 @@ dependencies:
   bubble: ^1.2.1
   flutter_secure_storage: ^8.0.0
   flutter_launcher_icons: ^0.13.1
-  
+  carousel_slider: ^4.2.1
+  flutter_facebook_auth: ^4.4.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

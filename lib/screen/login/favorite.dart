@@ -1,19 +1,159 @@
+
+//   Color textColor = Color(0xff2f3036);
+//   @override
+//   Widget build(BuildContext context) {
+//     int checkedCount = categories.where((categories) => categories["isChecked"]).length;
+//     Size size = MediaQuery.of(context).size;
+//     return Scaffold(
+//       backgroundColor: const Color(0xFFFFFFFF),
+//       appBar: CustomAppBar(
+//         leadingWidget: SvgButton(
+//           imagePath: backarrow,
+//           onPressed: () {
+//             Navigator.push(context,
+//                 MaterialPageRoute(builder: (context) => login()));
+//           },
+//         ),
+//         title: '관심사',
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(24.0),
+//         child: ListView(controller: _scrollController, children: [
+//           textfieldTitle(title: '관심사를 최대 5개까지 골라 주세요.', star: false),
+//           SizedBox(height: 8,),
+//           Column(
+//             // 카테고리
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: categories.map((categories) {
+//               if(categories['isChecked']){
+//
+//                 setState(() {
+//                   selectedCategories.add(categories['name']);
+//                 });
+//               }
+//               return Padding(
+//                 padding: const EdgeInsets.only(bottom: 10),
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                     color: Color(0xFFF7F8FA),
+//                     borderRadius: BorderRadius.circular(12),
+//                   ),
+//                   child: ListTile(
+//                       leading: Container(
+//                         alignment: Alignment.center,
+//                         width: 36,
+//                         height: 36,
+//                         decoration: BoxDecoration(
+//                           shape: BoxShape.circle,
+//                           color: Color(int.parse(categories["image_color"])),
+//                         ),
+//                         child: SvgPicture.asset(categories["categories_image"]),
+//                       ),
+//                       title: Text(categories["name"],
+//                           style: const TextStyle(
+//                               fontWeight: FontWeight.w700, fontSize: 15)),
+//
+//                       trailing: Container(
+//                         width: categories['isChecked'] ? 64 : 45,
+//                         child: categories['isChecked']
+//                             ? TextButton(
+//                           style: ButtonStyle(
+//                             overlayColor: MaterialStateProperty.resolveWith<Color>(
+//                                     (states) => Colors.transparent),
+//                             backgroundColor: MaterialStateProperty.resolveWith<Color>(
+//                                   (states) => Color(0xFF5881EB),
+//                             ),
+//                             shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+//                                   (states) => RoundedRectangleBorder(
+//                                 borderRadius: BorderRadius.circular(30),
+//                               ),
+//                             ),
+//                           ),
+//                           onPressed: () {
+//                             print('userNo ${widget.userNo}');
+//                             setState(() {
+//                               categories['isChecked'] = false;
+//                             });
+//                           },
+//                           child: Row(
+//                             mainAxisAlignment: MainAxisAlignment.center,
+//                             children: [
+//                               Text('관심',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Colors.white),),
+//                               SizedBox(width: 5,),
+//                               SvgPicture.asset('assets/icons/detail/Vector.svg')
+//                             ],
+//                           ),
+//                         )
+//                             : TextButton(
+//                           style: ButtonStyle(
+//                             overlayColor: MaterialStateProperty.resolveWith<Color>(
+//                                     (states) => Colors.transparent),
+//                             backgroundColor: MaterialStateProperty.resolveWith<Color>(
+//                                   (states) => Color(0xFFD6D6DD),
+//                             ),
+//                             shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+//                                   (states) => RoundedRectangleBorder(
+//                                 borderRadius: BorderRadius.circular(30),
+//                               ),
+//                             ),
+//                           ),
+//                           onPressed: () {
+//                             setState(() {
+//                               categories['isChecked'] = true;
+//                             });
+//                           },
+//                           child: Text('관심',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Colors.white),),
+//                         ),
+//                       )
+//
+//
+//                   ),
+//                 ),
+//               );
+//             }).toList(),
+//           ),
+//
+//           blueButton(
+//               buttonText: '시작하기',
+//               onPressed: () {
+//                 //
+//                 if (checkedCount > 5) {
+//                   onebutton.overFiveDialog(context);
+//                 } else {
+//                   print(widget.userNo); //userNo를 가지고 있음음                  print(selectedCategories.toList());
+//                   // categoryChange();
+//
+//                   // Navigator.pushAndRemoveUntil(
+//                   //     context,
+//                   //     MaterialPageRoute(
+//                   //         builder: (BuildContext context) => MainPageMap()),
+//                   //         (route) => false);
+//                 }
+//               })
+//         ]),
+//       ),
+//     );
+//   }
+// }
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:front/screen/dialog/dialoglist.dart';
-import 'package:front/screen/login/login.dart';
-import 'package:front/screen/mainMap/mainPageMap.dart';
+import 'package:http/http.dart' as http;
+import 'package:front/screen/profile/profileMain.dart';
+
 import '../../data/designconst/constants.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
 import '../../model/UI/widget/text/textfieldTitle.dart';
+import '../mainMap/mainPageMap.dart';
 
 class favorite extends StatefulWidget {
   final int userNo;
+
   favorite({required this.userNo});
 
   @override
@@ -22,7 +162,7 @@ class favorite extends StatefulWidget {
 
 class _favoriteState extends State<favorite> {
   final ScrollController _scrollController = ScrollController();
-  final String appbarText = '관심사';
+
   String selectFavorite = '관심사를 최대 5개까지 골라 주세요';
   List<Map> categories = [
     {
@@ -99,6 +239,8 @@ class _favoriteState extends State<favorite> {
     },
   ];
   Set<String> selectedCategories = {};
+  Color textColor = Color(0xff2f3036);
+  int test = 34;
 
 
 
@@ -133,11 +275,23 @@ class _favoriteState extends State<favorite> {
 
     }
   }
-  Color textColor = Color(0xff2f3036);
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+
+  }//초기화 함수
+
   @override
   Widget build(BuildContext context) {
     int checkedCount =
-        categories.where((categories) => categories["isChecked"]).length;
+        categories.where((category) => category["isChecked"]).length;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
@@ -145,121 +299,107 @@ class _favoriteState extends State<favorite> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => login()));
+            Navigator.pop(context);
           },
         ),
-        title: appbarText,
+        title: '관심사',
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: ListView(controller: _scrollController, children: [
           textfieldTitle(title: '관심사를 최대 5개까지 골라 주세요.', star: false),
-          SizedBox(height: 8,),
+          SizedBox(height: 8.0,),
           Column(
-            // 카테고리
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: categories.map((categories) {
-              if(categories['isChecked']){
-                selectedCategories.add(categories['name']);
+            children: categories.map((category) {
+              if (category['isChecked']) {
+                selectedCategories.add(category['name']);
               }
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF7F8FA),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListTile(
-                      leading: Container(
-                        alignment: Alignment.center,
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(int.parse(categories["image_color"])),
-                        ),
-                        child: SvgPicture.asset(categories["categories_image"]),
+              return Padding(padding: const EdgeInsets.only(bottom: 10), child: Container(decoration: BoxDecoration(color: Color(0xFFF7F8FA), borderRadius: BorderRadius.circular(12),),
+                child: ListTile(
+                    leading: Container(
+                      alignment: Alignment.center,
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(int.parse(category["image_color"])),
                       ),
-                      title: Text(categories["name"],
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 15)),
+                      child: SvgPicture.asset(category["category_image"]),
+                    ),
+                    title: Text(category["name"],
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 15)),
 
-                      trailing: Container(
-                        width: categories['isChecked'] ? 64 : 45,
-                        child: categories['isChecked']
-                            ? TextButton(
-                          style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.resolveWith<Color>(
-                                    (states) => Colors.transparent),
-                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                                  (states) => Color(0xFF5881EB),
-                            ),
-                            shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
-                                  (states) => RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
+                    trailing: Container(
+                      width: category['isChecked'] ? 64 : 45,
+                      child: category['isChecked']
+                          ? TextButton(
+                        style: ButtonStyle(
+                          overlayColor: MaterialStateProperty.resolveWith<Color>(
+                                  (states) => Colors.transparent),
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                (states) => Color(0xFF5881EB),
+                          ),
+                          shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+                                (states) => RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          onPressed: () {
-                            print('userNo ${widget.userNo}');
-                            setState(() {
-                              categories['isChecked'] = false;
-                            });
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('관심',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Colors.white),),
-                              SizedBox(width: 5,),
-                              SvgPicture.asset('assets/icons/detail/Vector.svg')
-                            ],
-                          ),
-                        )
-                            : TextButton(
-                          style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.resolveWith<Color>(
-                                    (states) => Colors.transparent),
-                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                                  (states) => Color(0xFFD6D6DD),
-                            ),
-                            shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
-                                  (states) => RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              categories['isChecked'] = true;
-                            });
-                          },
-                          child: Text('관심',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Colors.white),),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            category['isChecked'] = false;
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('관심',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Colors.white),),
+                            SizedBox(width: 5,),
+                            SvgPicture.asset('assets/icons/detail/Vector.svg')
+                          ],
                         ),
                       )
+                          : TextButton(
+                        style: ButtonStyle(
+                          overlayColor: MaterialStateProperty.resolveWith<Color>(
+                                  (states) => Colors.transparent),
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                (states) => Color(0xFFD6D6DD),
+                          ),
+                          shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+                                (states) => RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            category['isChecked'] = true;
+                          });
+                        },
+                        child: Text('관심',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Colors.white),),
+                      ),
+                    )
 
 
-                  ),
                 ),
+              ),
               );
             }).toList(),
           ),
 
           blueButton(
               buttonText: '시작하기',
-              onPressed: () {
-                //
+              onPressed: () async {
                 if (checkedCount > 5) {
                   onebutton.overFiveDialog(context);
                 } else {
-                  print(widget.userNo); //userNo를 가지고 있음음                  print(selectedCategories.toList());
                   categoryChange();
-
-                  // Navigator.pushAndRemoveUntil(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (BuildContext context) => MainPageMap()),
-                  //         (route) => false);
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                          builder: (BuildContext context) => MainPageMap()),
+                          (route) => false);
                 }
               })
         ]),
@@ -267,3 +407,5 @@ class _favoriteState extends State<favorite> {
     );
   }
 }
+
+

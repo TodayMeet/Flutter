@@ -19,7 +19,7 @@ class blockManage extends StatefulWidget {
 
 class _blockManageState extends State<blockManage> {
 
-  Color _mygrey = Color(0xFFD6D6DD);Color _blue = Color(0xFF4874EA);
+
   List<Map> data =[{'name': '개굴개굴','image' : 'googlelogin','text':'차단해제','color': Color(0xFFD6D6DD),}, {'name': '꺄르를','image' : 'kakao_login_large_wide','text':'차단해제','color': Color(0xFFD6D6DD),},
     {'name': '보라돌이','image' : 'logoimage','text':'차단해제','color': Color(0xFFD6D6DD),},
     {'name': '오늘만산다','image' : 'naverlogin','text':'차단해제','color': Color(0xFFD6D6DD),},

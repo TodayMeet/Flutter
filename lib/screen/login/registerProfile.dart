@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:front/screen/dialog/dialoglist.dart';
+import 'package:front/screen/profile/hostEvent.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ import 'package:front/screen/profile/termsofUse.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'login.dart';
 import 'dart:io';
-
+import 'dart:convert';
 import '../../data/designconst/constants.dart';
 
 import '../../model/UI/widget/button/CameraButton.dart';
@@ -55,6 +56,9 @@ class _registerProfileState extends State<registerProfile> {
   List<bool> _selections = [false, false, false];
   int selectedValue =0;
   int userNo=0;
+  int gender = 0;
+  String birth = '';
+  String profileImage = '';
   // File defaultImage = Image.file('assets/images/LoginImage/test.png');
 
 
@@ -92,45 +96,108 @@ class _registerProfileState extends State<registerProfile> {
     }
   }
 
+  @override
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: source);
+    if (pickedImage != null) {
+      setState(() {
+        isimageFileNull = false;
+        imageFile = File(pickedImage.path);
+      });
+    }
+  }
 
   Future<void> join() async {
     final url1 = Uri.parse('http://todaymeet.shop:8080/join');
-    final requestData = {
-      'username': username,
-      'password' : widget.password,
-      'email': widget.email,
-    };
+    final requestData = {'username': username, 'password' : widget.password, 'email': widget.email, 'gender' : gender, 'birth' : birth};
     final jsonData = jsonEncode(requestData);
-    final response = await http.post(
-      url1,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonData,
-    );
-    if (response.statusCode == 200) {
-      print('전송잘됨');
-      print(username);
-      print(url1);
-      print('join success!!임 이건 ?${response.body}');
-      print(response);
-      setState(() {
-        isJoinSuccess = true;
-      });
 
-    } else {
-      print('회원가입 안됨1');
-      print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
-      print('회원가입 안됨2');
-      print(username);
-      // print(widget.password);
-      // print(widget.email);
-      print('회원가입 안됨3');
-      print(url1);
-      print('회원가입 안됨4');print(jsonData);
-      print('회원가입 안됨5');print(response.body);
-      setState(() {
-        isJoinSuccess = false;
+    final imageFile = this.imageFile;
+    if(imageFile !=null) {
+      var request = http.MultipartRequest('POST', url1);
+      var imageStream = http.ByteStream(imageFile.openRead());
+      var imageLength = await imageFile.length();
+      var imageMultipartFile = http.MultipartFile(
+        'image',
+        imageStream,
+        imageLength,
+        filename: imageFile.path
+            .split('/')
+            .last,
+      );
+      request.files.add(imageMultipartFile);
+
+      requestData.forEach((key, value) {
+        request.fields[key] = value.toString();
       });
+      var response = await request.send();
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+
+      if (response.statusCode == 200) {
+        // 성공 처리
+        print('전송잘됨');
+        print(username);
+        print(url1);
+        print('join success!!임 이건 ?$responseString');
+        print(response);
+        setState(() {
+          isJoinSuccess = true;
+        });
+      } else {
+        // 실패 처리
+        print('보낸건 뭘까');
+        print(requestData);
+        print('회원가입 안됨1');
+        print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+        print('회원가입 안됨2');
+        print(username);
+        print('회원가입 안됨3');
+        print(url1);
+        print('회원가입 안됨4');
+        print(requestData);
+        print('회원가입 안됨5');
+        print(responseString);
+        setState(() {
+          isJoinSuccess = false;
+        });
+      }
     }
+    else{
+      final jsonData = jsonEncode(requestData);
+      final response = await http.post(
+        url1,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonData,
+      );
+      if (response.statusCode == 200) {
+        print('전송잘됨');
+        print(username);
+        print(url1);
+        print('join success!!임 이건 ?${response.body}');
+        print(response);
+        setState(() {
+          isJoinSuccess = true;
+        });
+
+      } else {
+        print('회원가입 안됨1');
+        print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
+        print('회원가입 안됨2');
+        print(username);
+        // print(widget.password);
+        // print(widget.email);
+        print('회원가입 안됨3');
+        print(url1);
+        print('회원가입 안됨4');print(jsonData);
+        print('회원가입 안됨5');print(response.body);
+        setState(() {
+          isJoinSuccess = false;
+        });
+      }
+    }
+
   }
   Future<int> sendCredentialsToServer() async {
     final url = Uri.parse('http://todaymeet.shop:8080/loginB');
@@ -159,17 +226,8 @@ class _registerProfileState extends State<registerProfile> {
     }
   }
 
-  @override
-  Future<void> _pickImage(ImageSource source) async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: source);
-    if (pickedImage != null) {
-      setState(() {
-        isimageFileNull = false;
-        imageFile = File(pickedImage.path);
-      });
-    }
-  }
+
+
 
   @override
   void dispose() {
@@ -189,6 +247,7 @@ class _registerProfileState extends State<registerProfile> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+       birth = _selectedDate.toString();
       });
     }
   }
@@ -269,10 +328,11 @@ class _registerProfileState extends State<registerProfile> {
                     border: Border.all(color: Color(0xFF333333)),
                   ),
                   child: TextField(
-                    // inputFormatters: [
-                    //   LengthLimitingTextInputFormatter(10), // 최대 길이 제한
-                    //   FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9가-힣]+$')), // 허용할 문자 패턴
-                    // ],
+                    autofocus: true,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(10), // 최대 길이 제한
+                      FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9가-힣]+$')), // 허용할 문자 패턴
+                    ],
                     controller: _idController1,
                     onChanged: (value) {
                       username = _idController1.text;
@@ -345,6 +405,7 @@ class _registerProfileState extends State<registerProfile> {
                       _selections[i] = (i == index);
                     }
                     selectedValue = index;
+                    gender = selectedValue;
                   });
                 },
               ),
@@ -407,7 +468,7 @@ class _registerProfileState extends State<registerProfile> {
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       // 크기를 컨테이너에 맞추기 위해 추가
                       visualDensity:
-                          VisualDensity.compact, // 밀도를 조정하여 크기를 조절할 수도 있음
+                          VisualDensity.compact,
                     ), //체크박스
                     Text(
                       '[필수] 이용약관 동의',
@@ -485,6 +546,7 @@ class _registerProfileState extends State<registerProfile> {
               ),
         blueButton(
           buttonText: '회원가입',
+
           onPressed: () async {
             if (!isChecked || !isChecked1) {
               onebutton.checkEssentialDialog(context);
@@ -492,10 +554,6 @@ class _registerProfileState extends State<registerProfile> {
               onebutton.noInputNameDialog(context);
             } else if (username.length < 2) {
               onebutton.oneWordNameDialog(context);
-            } else if (username.length > 10) {
-              onebutton.tenWordNameDialog(context);
-            } else if (!RegExp(r'^[a-zA-Z0-9가-힣]+$').hasMatch(username)) {
-              onebutton.KoEnNumDialog(context);
             } else {
               await join();
               await sendCredentialsToServer();
@@ -503,7 +561,8 @@ class _registerProfileState extends State<registerProfile> {
               print('userno: $userNo');
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => favorite(userNo: userNo)),
+                MaterialPageRoute(builder: (context) => favorite(userNo: userNo)
+              ),
               );
             }
           },

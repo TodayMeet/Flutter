@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:front/screen/profile/profileMain.dart';
 
 import '../../data/designconst/constants.dart';
+import '../../data/userNo.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
@@ -25,7 +26,7 @@ class profileFavorite extends StatefulWidget {
 class _profileFavoriteState extends State<profileFavorite> {
   final ScrollController _scrollController = ScrollController();
 
-  String selectFavorite = '관심사를 최대 5개까지 골라 주세요';
+
   List<Map> categories = [
     {
       "name": "맛집",
@@ -102,8 +103,9 @@ class _profileFavoriteState extends State<profileFavorite> {
   ];
   Set<String> selectedCategories = {};
   Color textColor = Color(0xff2f3036);
-  int test = 34;
+  int test = UserNo.myuserNo;
 
+  //이전에 선택했던 카테고리 불러오기
   Future<List<String>> categoryLoad() async {
     final url1 = Uri.parse('http://todaymeet.shop:8080/usercategory/${test}');
     final requestData = selectedCategories.toList();
@@ -111,34 +113,24 @@ class _profileFavoriteState extends State<profileFavorite> {
     final response = await http.get(
       url1,
       headers: {'Content-Type': 'application/json'},
-
     );
     if (response.statusCode == 200) {
-      // print('전송잘됨');
-      // print(selectedCategories.toList());
-      // print(url1);
-      // var serverData = jsonDecode(utf8.decode(response.bodyBytes));
-
       List<dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
       List<String> resultList = [];
       for (dynamic data in result) {
-        // 데이터를 String으로 변환하여 결과 리스트에 추가
         String resultItem = data.toString();
-        resultList.add(resultItem);
-      }
+        resultList.add(resultItem);}
       print('categoryLoad의 resultList는 ?');
       print(resultList);
       return resultList;
-      // print(response);
-
     } else {
-      // print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
-
       return ['a'];
     }
   }
 
+  //카테고리 변경하기
   Future<void> categoryChange() async {
+
     final url1 = Uri.parse('http://todaymeet.shop:8080/usercategory/${widget.userNo}');
     final requestData = selectedCategories.toList();
     final jsonData = jsonEncode(requestData);
@@ -150,19 +142,14 @@ class _profileFavoriteState extends State<profileFavorite> {
     if (response.statusCode == 200) {
       print('전송잘됨');
       print(selectedCategories.toList());
+
       print(url1);
       print(response.body);
       print(response);
-
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => favorite()),
-      // );
     } else {
       print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
       print(selectedCategories.toList());
-      // print(widget.password);
-      // print(widget.email);
+
       print(url1);
       print(jsonData);
       print(response.body);
@@ -214,8 +201,13 @@ class _profileFavoriteState extends State<profileFavorite> {
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: ListView(controller: _scrollController, children: [
+          //관심사 제목
           textfieldTitle(title: '관심사를 최대 5개까지 골라 주세요.', star: false),
+          
+          //제목과 필드 사이 여백
           SizedBox(height: 8.0,),
+          
+          //관심사 표시 및 선택
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: categories.map((category) {
@@ -257,6 +249,7 @@ class _profileFavoriteState extends State<profileFavorite> {
                           onPressed: () {
                             setState(() {
                               category['isChecked'] = false;
+                              selectedCategories.remove(category['name']);
                             });
                           },
                           child: Row(
@@ -289,25 +282,18 @@ class _profileFavoriteState extends State<profileFavorite> {
                           child: Text('관심',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 12.0,color: Colors.white),),
                         ),
                       )
-
-
                       ),
                 ),
               );
             }).toList(),
           ),
-
-          blueButton(
-              buttonText: '저장하기',
-              onPressed: () async {
-                if (checkedCount > 5) {
-                  onebutton.overFiveDialog(context);
-                } else {
-                  categoryChange();
-                  onebutton.favoriteChangeDialog(context);
-
-
-                }
+          
+          // 관심사 저장
+          blueButton(buttonText: '저장하기', onPressed: () async {if (checkedCount > 5) {onebutton.overFiveDialog(context);}
+          else {
+            categoryChange();
+            onebutton.favoriteChangeDialog(context);
+          }
               })
         ]),
       ),

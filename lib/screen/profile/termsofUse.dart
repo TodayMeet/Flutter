@@ -1,3 +1,5 @@
+//이용약관
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import '../../data/designconst/constants.dart';

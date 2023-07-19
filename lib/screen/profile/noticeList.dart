@@ -2,14 +2,12 @@ import 'dart:convert';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:front/screen/profile/profileMain.dart';
 import 'package:intl/intl.dart';
 import '../../data/designconst/constants.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
 import 'notice.dart';
 
-// import 'mainListView.dart';
 
 class noticeList extends StatefulWidget {
   const noticeList({Key? key}) : super(key: key);
@@ -73,11 +71,11 @@ class _noticeListState extends State<noticeList> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      //앱바
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed: () {
-            // noticeLoad();
             Navigator.pop(context);
           },
         ),
@@ -92,6 +90,7 @@ class _noticeListState extends State<noticeList> {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: GestureDetector(
+                //탭하면 noticeNo를 통해 해당 공지사항으로 이동
                 onTap: () {
                   Navigator.push(
                     context,
@@ -101,15 +100,20 @@ class _noticeListState extends State<noticeList> {
                   );
 
                 },
+
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: 50,
                   child: Row(
                     children: [
+                      // 이미지가 없으면 기본 이미지로 설정, 이미지가 있으면 circleavatar에 이미지 넣기
                       notices['image']==null
                       ? Container(alignment: Alignment.center, width: 50, height: 50, decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFFF5F6FA),), child: SvgPicture.asset('assets/icons/Image.svg'),)
                       : CircleAvatar(radius: 25, backgroundImage: NetworkImage(notices['image']),),
+                      // 이미지와 글 사이의 공간
                       SizedBox(width: 16,),
+
+                      //공지사항 제목, 작성일자
                       Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: [
                           SizedBox(height:20.0,child: Text('${notices['title']}', style: TextStyle(color: Colors.black, fontSize: 14.0),)),
                           SizedBox(height: 4,),

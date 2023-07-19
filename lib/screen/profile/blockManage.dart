@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-
-
-import 'package:front/screen/profile/profileMain.dart';
-
 import '../../data/designconst/constants.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
 
-
-// import 'mainListView.dart';
 
 class blockManage extends StatefulWidget {
   const blockManage({Key? key}) : super(key: key);
@@ -19,11 +13,16 @@ class blockManage extends StatefulWidget {
 
 class _blockManageState extends State<blockManage> {
 
+//더미 데이터
 
-  List<Map> data =[{'name': '개굴개굴','image' : 'googlelogin','text':'차단해제','color': Color(0xFFD6D6DD),}, {'name': '꺄르를','image' : 'kakao_login_large_wide','text':'차단해제','color': Color(0xFFD6D6DD),},
-    {'name': '보라돌이','image' : 'logoimage','text':'차단해제','color': Color(0xFFD6D6DD),},
-    {'name': '오늘만산다','image' : 'naverlogin','text':'차단해제','color': Color(0xFFD6D6DD),},
-    {'name': '심심해','image' : 'titleimage','text':'차단해제','color': Color(0xFFD6D6DD),},
+  List<Map<String,dynamic>> dummy = [
+    {
+      'userNo': 1,
+      'username': 'John',
+      'userprofileimage': 'john@example.com',
+      'isblocked': true,
+    },
+
   ];
   List<String> entries = <String>['개굴개굴', '꺄르르', '보라돌이', '오늘만산다', '심심해'];
   List<String> entries1 = <String>[
@@ -47,7 +46,7 @@ class _blockManageState extends State<blockManage> {
     Color(0xFFD6D6DD),
     Color(0xFFD6D6DD),
   ];
-  String initext = '차단해제';
+
 
 
 
@@ -69,6 +68,7 @@ class _blockManageState extends State<blockManage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      //앱바
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
         imagePath: backarrow,
@@ -88,26 +88,21 @@ class _blockManageState extends State<blockManage> {
                   height: 48,
                   child: Row(
                     children: [
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundImage: AssetImage(
-                            "assets/images/User_Picture/User_pic_block.png"),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        '${entries[index]}',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700),
-                      ),
+                      CircleAvatar(radius: 18, backgroundImage: AssetImage("assets/images/User_Picture/User_pic_block.png"),),
+
+                      // 사진과 username사이 여백
+                      SizedBox(width: 10,),
+
+                      //유저네임 출력
+                      Text('${entries[index]}', style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w700),),
+
+                      //여백
                       Spacer(),
+
+                      //차단 - 차단 해제 버튼
                       ElevatedButton(
                         onPressed: ()=> changeButtonState(index),
-                        child: Text(
-                          buttonTexts[index],
+                        child: Text(buttonTexts[index],
                           style: TextStyle(color: Colors.white, fontSize: 14,fontWeight: FontWeight.w700),
                         ),
                         style: ButtonStyle(
@@ -127,6 +122,7 @@ class _blockManageState extends State<blockManage> {
                     ],
                   ),
                 ),
+                //목록 간 여백
                 SizedBox(height: 10,)
               ],
             );

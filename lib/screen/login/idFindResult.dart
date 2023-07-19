@@ -35,14 +35,19 @@ class _idFindResultState extends State<idFindResult> {
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 16.0),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Spacer(),
-            Text(
+          Spacer(),
+
+
+          Text(
               '가입하신 계정은',
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.black,
               ),
             ),//가입하신 계정은
+
+
+          //아이디(이메일) 결과 출력하는 부분
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
@@ -55,19 +60,27 @@ class _idFindResultState extends State<idFindResult> {
               ),
             ),
           ),
-            Text(
+
+
+
+          Text(
               '입니다.',
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.black,
               ),
             ),//입니다.
-            Spacer(),
-            findPasswordButton(findPasswordButtonText: '비밀번호 찾기'),
 
-            SizedBox(height: 10,),
 
-            gotoLoginButton(buttonText: '로그인 하기'),
+          Spacer(),
+
+          //비밀번호 찾기로 이동하는  버튼
+          findPasswordButton(findPasswordButtonText: '비밀번호 찾기'),
+
+          SizedBox(height: 10,),
+
+          //로그인 화면으로 돌아가기 버튼
+          gotoLoginButton(buttonText: '로그인 하기'),
           ]),
         ));
   }

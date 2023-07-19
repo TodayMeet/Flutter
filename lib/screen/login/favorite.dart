@@ -140,12 +140,13 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:front/main.dart';
 import 'package:front/screen/dialog/dialoglist.dart';
 import 'package:http/http.dart' as http;
 import 'package:front/screen/profile/profileMain.dart';
 
 import '../../data/designconst/constants.dart';
-import '../../main.dart';
+import '../../data/userNo.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
@@ -163,8 +164,6 @@ class favorite extends StatefulWidget {
 
 class _favoriteState extends State<favorite> {
   final ScrollController _scrollController = ScrollController();
-
-  String selectFavorite = '관심사를 최대 5개까지 골라 주세요';
   List<Map> categories = [
     {
       "name": "맛집",
@@ -240,11 +239,10 @@ class _favoriteState extends State<favorite> {
     },
   ];
   Set<String> selectedCategories = {};
-  Color textColor = Color(0xff2f3036);
-  int test = 34;
+  
+  
 
-
-
+  //카테고리 변경
   Future<void> categoryChange() async {
     final url1 = Uri.parse('http://todaymeet.shop:8080/usercategory/${widget.userNo}');
     final requestData = selectedCategories.toList();
@@ -255,7 +253,7 @@ class _favoriteState extends State<favorite> {
       body: jsonData,
     );
     if (response.statusCode == 200) {
-      print('전송잘됨');
+      print('==================선택한 카테고리는 다음과 같습니다.======================');
       print(selectedCategories.toList());
       print(url1);
       print(response.body);
@@ -277,17 +275,15 @@ class _favoriteState extends State<favorite> {
     }
   }
 
-
-
+  //초기화
+  Future<void> _initialize() async {
   @override
   void initState() {
     super.initState();
+    //초기화 함수
     _initialize();
   }
-
-  Future<void> _initialize() async {
-
-  }//초기화 함수
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -309,7 +305,11 @@ class _favoriteState extends State<favorite> {
         padding: const EdgeInsets.all(24.0),
         child: ListView(controller: _scrollController, children: [
           textfieldTitle(title: '관심사를 최대 5개까지 골라 주세요.', star: false),
-          SizedBox(height: 8.0,),
+
+          //여백
+         SizedBox(height: 8.0,),
+
+          //관심사 목록 및 리스트
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: categories.map((category) {
@@ -351,6 +351,7 @@ class _favoriteState extends State<favorite> {
                         onPressed: () {
                           setState(() {
                             category['isChecked'] = false;
+                            selectedCategories.remove(category['name']);
                           });
                         },
                         child: Row(
@@ -397,7 +398,9 @@ class _favoriteState extends State<favorite> {
                 if (checkedCount > 5) {
                   onebutton.overFiveDialog(context);
                 } else {
+                  //카테고리 변경 후
                   categoryChange();
+                  // 메인페이지로 이동
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                           builder: (BuildContext context) => MyAppPage()),
                           (route) => false);
@@ -410,3 +413,4 @@ class _favoriteState extends State<favorite> {
 }
 
 
+//

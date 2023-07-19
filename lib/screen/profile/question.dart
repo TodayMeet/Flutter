@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../data/userNo.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
@@ -53,12 +54,15 @@ class _questionState extends State<question> {
   String title = '';
   TextEditingController textarea1 = TextEditingController();
   String content = '';
-  int userNo = 1;
+  int userNo = UserNo.myuserNo; //로그인 했을때 유저 넘버를 불러옴
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false, //작성했음에도 불구하고 작동하지 않음
       backgroundColor: Colors.white,
+      //앱바
       appBar: CustomAppBar(
         leadingWidget: SvgButton(
           imagePath: backarrow,
@@ -68,20 +72,34 @@ class _questionState extends State<question> {
         ),
         title: '문의하기',
       ),
+
+
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            //제목
             Text('작성하신 문의 답변은 이메일 아이디 주소로 보내드립니다.\n답변까지 최대 2~3일이 걸립니다.',
               style: TextStyle(
               fontSize: 14.0,
 
             ),),
+
+
+            //여백
             SizedBox(height: 12.0,),
 
+
+            //텍스트필드 제목
             textfieldTitle(title: '제목',star: false,),
+
+            //제목과 텍스트필드 사이 여백
+            SizedBox(height: 8.0,),
+
+            //텍스트필드
             Container(
               decoration: BoxDecoration(
                 color: Color(0xFFF5F6FA),
@@ -104,9 +122,16 @@ class _questionState extends State<question> {
               ),
             ),
 
+            //제목 텍스트필드와 내용 텍스트필드 사이 여백
             SizedBox(height: 12.0,),
+
+            //내용 텍스트필드 제목
             textfieldTitle(title: '내용', star: false),
+
+            //내용 제목 - 내용 텍스트필드 사이 여백
             SizedBox(height: 8,),
+
+            //내용 텍스트필드
             Container(
               decoration: BoxDecoration(
                 color: Color(0xFFF5F6FA),
@@ -129,14 +154,21 @@ class _questionState extends State<question> {
 
               ),
             ),
-            Spacer(),
-            blueButton(buttonText: '문의하기', onPressed: (){
 
+            //텍스트필드와 버튼 사이 여백
+            Spacer(),
+            //문의하기 버튼
+            blueButton(
+                buttonText: '문의하기',
+                onPressed: (){
               if(textarea1.text.length >500){
+                print("============500자 이상 입력했을때");
                 onebutton.over500Dialog(context);
               }else{
+                //제목에 적었던 내용을 title에, 내용에 적었던 텍스틀 content에 대입
                 title=textarea.text;
                 content = textarea1.text;
+                //문의하기 버튼으로 서버로 전송
                 inquiry();
 
               }

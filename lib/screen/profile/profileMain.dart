@@ -56,21 +56,22 @@ class _profileMainState extends State<profileMain> {
   List<int> followNoList = [];
   List<int> followerNoList = [];
 
+
+  //불러올 메뉴
   final List<Map<String,dynamic>>menu=[
   {"name": '개최한 건수', 'goto': hostEvent(userNo: UserNo.myuserNo)},
   {"name": '참가한 건수', 'goto': joinEvent(userNo: UserNo.myuserNo)},
   {"name": '비밀번호 변경', 'goto': pwChange()},
   {"name": '차단 관리', 'goto': blockManage()},
-  {"name": '관심사', 'goto': profileFavorite(userNo: UserNo.myuserNo,)
-  },
+  {"name": '관심사', 'goto': profileFavorite(userNo: UserNo.myuserNo,)},
   {"name": 'FAQ', 'goto': oftenQuestion()},
   {"name": '문의하기', 'goto': question()},
   {"name": '공지사항', 'goto': noticeList()},
   {"name": '개인정보처리방침', 'goto': privatePolicy()},
-  {"name": '이용약관', 'goto': termsofUse()},
-  ];
+  {"name": '이용약관', 'goto': termsofUse()},];
 
 
+  //내가 팔로우하는 사람의 숫자 가져오기
   Future<void> followingLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/follow/list?userNo=${userNo}');
     print('foloowingLoad의 userNo입니다============================${userNo}');
@@ -93,6 +94,8 @@ class _profileMainState extends State<profileMain> {
       });
     } else {}
   }//팔로잉 정보 불러오기
+
+  //나를 팔로우하는 사람의 숫자 가져오기
   Future<void> followerLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/followee/list?userNo=${userNo}');
     print('followerLoad의 userNo입니다============================${userNo}');
@@ -114,6 +117,8 @@ class _profileMainState extends State<profileMain> {
       UserNo.FollowerList = followerNoList;
     } else {}
   }//팔로워 정보 불러오기
+
+  //내 정보( 유저넘버, 유저네임, 팔로우하는 숫자, 팔로우 당하는 숫자, 성별,생년월일, 사진이미지)
   Future<void> myInfoLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/user-profile/${userNo}');
 
@@ -149,64 +154,9 @@ class _profileMainState extends State<profileMain> {
       });
     } else {}
   } //내정보 불러오기
-  Future<void> myInfoLoad1() async {
-    final url = Uri.parse('http://todaymeet.shop:8080/user-profile/1');
-
-    final requestData = {
-      'userNo': userNo,
-      'username': username,
-      'follownum': follownum,
-      'followeenum': followeenum,
-      'gender': gender,
-      'birth': birth,
-      'userprofileimage': userprofileimage
-    };
-    final jsonData = jsonEncode(requestData);
-    final response = await http.get(
-      url,
-      headers: {'Content-Type': 'application/json'},
-    );
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      setState(() {
-        userNo = responseData['userNo'];
-        userprofileimage = responseData['userProfileImage'];
-        username = responseData['username'];
-        birth = (responseData['birth'].substring(0,10)).replaceAll('-', '.');
-
-        if (responseData['gender'] == 1) {
-          genderString = '(남)';
-        } else if (responseData['gender'] == 2) {
-          genderString = '(여)';
-        }
-        print(responseData);
-        menu.clear();
-        menu.addAll([
-          {"name": '개최한 건수', 'goto': hostEvent(userNo: userNo)},
-          {"name": '참가한 건수', 'goto': joinEvent(userNo: userNo)},
-          {"name": '비밀번호 변경', 'goto': pwChange()},
-          {"name": '차단 관리', 'goto': blockManage()},
-          {
-            "name": '관심사',
-            'goto': profileFavorite(
-              userNo: userNo,
-            )
-          },
-          {"name": 'FAQ', 'goto': oftenQuestion()},
-          {"name": '문의하기', 'goto': question()},
-          {"name": '공지사항', 'goto': noticeList()},
-          {"name": '개인정보처리방침', 'goto': privatePolicy()},
-          {"name": '이용약관', 'goto': termsofUse()},
 
 
-
-        ]);
-      });
-    } else {}
-  } //내정보 불러오기
-
-
-
+  //시작하면서 내 정보, 팔로우하는 사람숫자, 팔로우 받는 사람 숫자 가져옴
   @override
   void initState() {
     super.initState();
@@ -215,6 +165,8 @@ class _profileMainState extends State<profileMain> {
     followerLoad();
   }
 
+
+  // 전환시 컨트롤러 삭제
   @override
   void dispose() {
     _scrollController.dispose();
@@ -251,11 +203,12 @@ class _profileMainState extends State<profileMain> {
             ),
           ),
         ), //Appbar
+
         body: Scrollbar(
           controller: _scrollController,
           child: ListView(
-            // controller: _scrollController,
             children: [
+              // 내 정보 표시하는 부분
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
                 child: Row(
@@ -297,6 +250,8 @@ class _profileMainState extends State<profileMain> {
                   ],
                 ),
               ),
+
+              // 팔로우 팔로잉 표시
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Row(
@@ -379,6 +334,8 @@ class _profileMainState extends State<profileMain> {
                   ],
                 ),
               ),
+
+              // 메뉴 표시
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
@@ -483,9 +440,3 @@ class _profileMainState extends State<profileMain> {
     );
   }
 }
-
-
-//필요한 함수 정리
-// 사용자 정보 불러오기, username, gender, birthdate, userimage
-// 팔로우 리스트 불러오기
-// 팔로잉 리스트 불러오기

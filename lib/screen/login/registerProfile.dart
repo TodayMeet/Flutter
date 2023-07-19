@@ -6,6 +6,7 @@
 // 화면 전체 수정
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:front/screen/dialog/dialoglist.dart';
@@ -17,7 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:front/screen/login/favorite.dart';
 
 import 'package:front/screen/profile/termsofUse.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 // import 'login.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -43,7 +46,8 @@ class registerProfile extends StatefulWidget {
 class _registerProfileState extends State<registerProfile> {
 
   final _idController1 = TextEditingController();
-  File? imageFile;
+  File? showImageFile;
+  XFile? imageFile;
   bool isimageFileNull = true;
   DateTime now = DateTime.now();
   DateTime? _selectedDate;
@@ -56,9 +60,8 @@ class _registerProfileState extends State<registerProfile> {
   List<bool> _selections = [false, false, false];
   int selectedValue =0;
   int userNo=0;
-  int gender = 0;
-  String birth = '';
-  String profileImage = '';
+  int? gender;
+  String? birth;
   // File defaultImage = Image.file('assets/images/LoginImage/test.png');
 
 
@@ -96,106 +99,57 @@ class _registerProfileState extends State<registerProfile> {
     }
   }
 
-  @override
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: source);
-    if (pickedImage != null) {
+
+    imageFile = await picker.pickImage(source: source);
+    if (imageFile != null) {
+      final file = File(imageFile!.path);
       setState(() {
         isimageFileNull = false;
-        imageFile = File(pickedImage.path);
+        showImageFile = file;
       });
+      print('--------------------------------------이미지 파일 선택 -----------------------------------------');
     }
   }
 
   Future<void> join() async {
-    final url1 = Uri.parse('http://todaymeet.shop:8080/join');
-    final requestData = {'username': username, 'password' : widget.password, 'email': widget.email, 'gender' : gender, 'birth' : birth};
-    final jsonData = jsonEncode(requestData);
-
-    final imageFile = this.imageFile;
-    if(imageFile !=null) {
-      var request = http.MultipartRequest('POST', url1);
-      var imageStream = http.ByteStream(imageFile.openRead());
-      var imageLength = await imageFile.length();
-      var imageMultipartFile = http.MultipartFile(
-        'image',
-        imageStream,
-        imageLength,
-        filename: imageFile.path
-            .split('/')
-            .last,
-      );
-      request.files.add(imageMultipartFile);
-
-      requestData.forEach((key, value) {
-        request.fields[key] = value.toString();
-      });
-      var response = await request.send();
-      var responseData = await response.stream.toBytes();
-      var responseString = String.fromCharCodes(responseData);
-
-      if (response.statusCode == 200) {
-        // 성공 처리
-        print('전송잘됨');
-        print(username);
-        print(url1);
-        print('join success!!임 이건 ?$responseString');
-        print(response);
-        setState(() {
-          isJoinSuccess = true;
-        });
-      } else {
-        // 실패 처리
-        print('보낸건 뭘까');
-        print(requestData);
-        print('회원가입 안됨1');
-        print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
-        print('회원가입 안됨2');
-        print(username);
-        print('회원가입 안됨3');
-        print(url1);
-        print('회원가입 안됨4');
-        print(requestData);
-        print('회원가입 안됨5');
-        print(responseString);
-        setState(() {
-          isJoinSuccess = false;
-        });
-      }
+    MultipartFile? imagefile;
+    if(imageFile != null){
+      imagefile = await MultipartFile.fromFile(imageFile!.path, contentType: MediaType('image', 'jpg'));
+    }else{
+      imagefile = null;
     }
-    else{
-      final jsonData = jsonEncode(requestData);
-      final response = await http.post(
-        url1,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonData,
-      );
-      if (response.statusCode == 200) {
-        print('전송잘됨');
-        print(username);
-        print(url1);
-        print('join success!!임 이건 ?${response.body}');
-        print(response);
-        setState(() {
-          isJoinSuccess = true;
-        });
 
-      } else {
-        print('회원가입 안됨1');
-        print('전송 자체가 안됨. 상태 코드: ${response.statusCode}');
-        print('회원가입 안됨2');
-        print(username);
-        // print(widget.password);
-        // print(widget.email);
-        print('회원가입 안됨3');
-        print(url1);
-        print('회원가입 안됨4');print(jsonData);
-        print('회원가입 안됨5');print(response.body);
-        setState(() {
-          isJoinSuccess = false;
-        });
-      }
+    Dio dio = Dio();
+
+    dio.options.contentType = 'multipart/form-data';
+    FormData formData = FormData.fromMap({
+      'username': username,
+      'password': widget.password,
+      'email': widget.email,
+      'gender': gender,
+      'birth':birth,
+      'files':imagefile
+    });
+
+    final response = await dio.post(
+      'http://todaymeet.shop:8080/joinB',
+      data: formData,
+    );
+
+    if (response.statusCode == 200) {
+      // 성공 처리
+      debugPrint('------------------- 회원가입 완료 --------------------');
+      setState(() {
+        isJoinSuccess = true;
+      });
+    } else {
+      // 실패 처리
+      debugPrint('------------------- 회원가입 실패 -------------------');
+      setState(() {
+        isJoinSuccess = false;
+      });
     }
 
   }
@@ -247,7 +201,7 @@ class _registerProfileState extends State<registerProfile> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-       birth = _selectedDate.toString();
+        birth = DateFormat('yyyy-MM-dd HH:mm:ss.SSSSSS').format(_selectedDate!);
       });
     }
   }
@@ -287,8 +241,8 @@ class _registerProfileState extends State<registerProfile> {
                   backgroundColor: Colors.grey,
                   radius: 50,
                   backgroundImage:
-                  imageFile != null ? FileImage(imageFile!) : null,
-                  child: imageFile == null
+                  showImageFile != null ? FileImage(showImageFile!) : null,
+                  child: showImageFile == null
                       ? IconButton(
                     icon: Icon(
                       Icons.camera_alt,

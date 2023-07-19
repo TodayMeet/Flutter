@@ -3,7 +3,9 @@
 // 최종 수정: 2023.6.27
 // 작업자: 정해수 -> 김혁
 
-// 컨테이너 크기 자동 조절
+// 추가 작업해야 할 사항
+// 서버에서 리스트 받아오기
+// 서버에게 초대 기능 보내기
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -66,6 +68,7 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
       ),
       child: Column(
         children: [
+          // 바텀 시트 제목, 나가기 버튼
           AppBar(
             elevation: 0,
             toolbarHeight: 50,
@@ -98,10 +101,12 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
                 ),
               ),
             ],
-          ), // 바텀 시트 제목, 나가기 버튼
+          ),
+
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // 초대 가능 리스트
               Container(
                 height: 170,
                 padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -137,7 +142,9 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
                     );
                   }).toList(),
                 ),
-              ), // 초대 가능 리스트
+              ),
+
+              // 초대하기 버튼
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
                 child: SizedBox(
@@ -159,7 +166,7 @@ class _InvitaitonState extends ConsumerState<Invitaiton> {
                     child: StringText_letterspacing('초대하기', 14, FontWeight.w700, const Color(0xFFA8A8B2), -0.5),
                   ),
                 ),
-              ), //초대하기 버튼
+              ),
             ],
           ),
         ],

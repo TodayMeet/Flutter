@@ -1,9 +1,7 @@
 // 알림창 페이지
 
-// 최종 수정일 : 2023.7.11
+// 최종 수정일 : 2023.7.19
 // 작업자 : 남재혁 -> 김혁
-
-// 추가 작업 예정 사항
 
 import 'package:flutter/material.dart';
 import 'package:front/data/userNo.dart';
@@ -15,9 +13,6 @@ import '../../model/UI/widget/customAppBar.dart';
 import '../../model/showtoast.dart';
 import '../../data/alarm/alarmMessage.dart';
 import '../../data/alarm/indexProcess.dart';
-import '../../data/dummy_meetList.dart';
-import '../mainList/Loading_to_mainListBoard.dart';
-import '../profile/userProfile.dart';
 
 // 게시판 컨트롤러
 RefreshController alarmrefreshController = RefreshController(initialRefresh: true);
@@ -44,16 +39,18 @@ class _alarmState extends State<alarm> {
       if (response.statusCode == 200) {
         tempAlarm = [];
         List<dynamic> serverData = json.decode(utf8.decode(response.bodyBytes));
-        print(serverData);
-        serverData.forEach((element) => tempAlarm.add(Alarm.fromJson(element)));
+        serverData
+            .forEach((element) => tempAlarm.add(Alarm.fromJson(element)));
+
+        debugPrint('--------------------- 알림 리스트 불러오기 완료 --------------------');
         setState(() {});
       }else{
-        print('서버 통신 오류');
-        showToast('서버 통신 오류');
+        debugPrint('알림 리스트 서버 통신 오류');
+        showToast('알림 리스트 서버 통신 오류');
       }
     }catch(e) {
-      print('알림 오류');
-      showToast('알림 오류');
+      debugPrint('알림 리스트 오류');
+      showToast('알림 리스트 오류');
     }
   }
 
@@ -72,7 +69,6 @@ class _alarmState extends State<alarm> {
         enablePullDown: true,
         onRefresh: () async {
           await getAlarmList();
-          print(tempAlarm);
 
           alarmrefreshController.refreshCompleted();
         },

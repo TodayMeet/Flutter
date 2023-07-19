@@ -34,6 +34,8 @@ mixin _$meetList {
   int get peopleLimit => throw _privateConstructorUsedError; //모집 인원 수
   int get peopleNum => throw _privateConstructorUsedError; //현재 인원 수
   String get address => throw _privateConstructorUsedError; //주소
+  List<Map> get participantUserImage =>
+      throw _privateConstructorUsedError; //참가자 리스트
   bool get peopleClosed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -62,6 +64,7 @@ abstract class $meetListCopyWith<$Res> {
       int peopleLimit,
       int peopleNum,
       String address,
+      List<Map> participantUserImage,
       bool peopleClosed});
 }
 
@@ -92,6 +95,7 @@ class _$meetListCopyWithImpl<$Res, $Val extends meetList>
     Object? peopleLimit = null,
     Object? peopleNum = null,
     Object? address = null,
+    Object? participantUserImage = null,
     Object? peopleClosed = null,
   }) {
     return _then(_value.copyWith(
@@ -151,6 +155,10 @@ class _$meetListCopyWithImpl<$Res, $Val extends meetList>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
+      participantUserImage: null == participantUserImage
+          ? _value.participantUserImage
+          : participantUserImage // ignore: cast_nullable_to_non_nullable
+              as List<Map>,
       peopleClosed: null == peopleClosed
           ? _value.peopleClosed
           : peopleClosed // ignore: cast_nullable_to_non_nullable
@@ -181,6 +189,7 @@ abstract class _$$_meetListCopyWith<$Res> implements $meetListCopyWith<$Res> {
       int peopleLimit,
       int peopleNum,
       String address,
+      List<Map> participantUserImage,
       bool peopleClosed});
 }
 
@@ -209,6 +218,7 @@ class __$$_meetListCopyWithImpl<$Res>
     Object? peopleLimit = null,
     Object? peopleNum = null,
     Object? address = null,
+    Object? participantUserImage = null,
     Object? peopleClosed = null,
   }) {
     return _then(_$_meetList(
@@ -268,6 +278,10 @@ class __$$_meetListCopyWithImpl<$Res>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
+      participantUserImage: null == participantUserImage
+          ? _value._participantUserImage
+          : participantUserImage // ignore: cast_nullable_to_non_nullable
+              as List<Map>,
       peopleClosed: null == peopleClosed
           ? _value.peopleClosed
           : peopleClosed // ignore: cast_nullable_to_non_nullable
@@ -294,8 +308,10 @@ class _$_meetList implements _meetList {
       required this.peopleLimit,
       required this.peopleNum,
       required this.address,
+      required final List<Map> participantUserImage,
       required this.peopleClosed})
-      : _meetImage = meetImage;
+      : _meetImage = meetImage,
+        _participantUserImage = participantUserImage;
 
   factory _$_meetList.fromJson(Map<String, dynamic> json) =>
       _$$_meetListFromJson(json);
@@ -347,12 +363,23 @@ class _$_meetList implements _meetList {
   @override
   final String address;
 //주소
+  final List<Map> _participantUserImage;
+//주소
+  @override
+  List<Map> get participantUserImage {
+    if (_participantUserImage is EqualUnmodifiableListView)
+      return _participantUserImage;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_participantUserImage);
+  }
+
+//참가자 리스트
   @override
   final bool peopleClosed;
 
   @override
   String toString() {
-    return 'meetList(categoryName: $categoryName, time: $time, title: $title, meetNo: $meetNo, userNo: $userNo, userProfileImage: $userProfileImage, username: $username, lat: $lat, lon: $lon, meetImage: $meetImage, commentNum: $commentNum, peopleLimit: $peopleLimit, peopleNum: $peopleNum, address: $address, peopleClosed: $peopleClosed)';
+    return 'meetList(categoryName: $categoryName, time: $time, title: $title, meetNo: $meetNo, userNo: $userNo, userProfileImage: $userProfileImage, username: $username, lat: $lat, lon: $lon, meetImage: $meetImage, commentNum: $commentNum, peopleLimit: $peopleLimit, peopleNum: $peopleNum, address: $address, participantUserImage: $participantUserImage, peopleClosed: $peopleClosed)';
   }
 
   @override
@@ -381,6 +408,8 @@ class _$_meetList implements _meetList {
             (identical(other.peopleNum, peopleNum) ||
                 other.peopleNum == peopleNum) &&
             (identical(other.address, address) || other.address == address) &&
+            const DeepCollectionEquality()
+                .equals(other._participantUserImage, _participantUserImage) &&
             (identical(other.peopleClosed, peopleClosed) ||
                 other.peopleClosed == peopleClosed));
   }
@@ -403,6 +432,7 @@ class _$_meetList implements _meetList {
       peopleLimit,
       peopleNum,
       address,
+      const DeepCollectionEquality().hash(_participantUserImage),
       peopleClosed);
 
   @JsonKey(ignore: true)
@@ -435,6 +465,7 @@ abstract class _meetList implements meetList {
       required final int peopleLimit,
       required final int peopleNum,
       required final String address,
+      required final List<Map> participantUserImage,
       required final bool peopleClosed}) = _$_meetList;
 
   factory _meetList.fromJson(Map<String, dynamic> json) = _$_meetList.fromJson;
@@ -468,6 +499,8 @@ abstract class _meetList implements meetList {
   @override //현재 인원 수
   String get address;
   @override //주소
+  List<Map> get participantUserImage;
+  @override //참가자 리스트
   bool get peopleClosed;
   @override
   @JsonKey(ignore: true)

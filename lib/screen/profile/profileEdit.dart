@@ -41,8 +41,6 @@ class _profileEditState extends State<profileEdit> {
   List<String> _labels = ['선택안함','남자','여자'];
   List<bool> _selections = [false, false, false];
 
-
-  @override
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: source);

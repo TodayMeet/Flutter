@@ -62,14 +62,15 @@ class _CommentsState extends ConsumerState<Comments> {
         comments.clear();
         commentData
             .forEach((element) => comments.add(Comment.fromJson(element)));
+        debugPrint('--------------------- 댓글 데이터 불러오기 완료 --------------------');
         return 1;
       } else {
-        print('Data download failed!');
+        debugPrint('Data download failed!');
         showToast('Data download failed!');
         return 0;
       }
     } catch (e) {
-      print('There was a problem with the internet connection.');
+      debugPrint('There was a problem with the internet connection.');
       showToast('There was a problem with the internet connection.');
       return 0;
     }
@@ -93,7 +94,7 @@ class _CommentsState extends ConsumerState<Comments> {
         body: json.encode(postBody),
       );
       if (response.statusCode == 200) {
-        print(response.body);
+        debugPrint('--------------------- 댓글 추가 완료 --------------------');
         await refreshController.requestRefresh();
       } else {
         print('Data update failed! : ${response.statusCode}');
@@ -158,9 +159,7 @@ class _CommentsState extends ConsumerState<Comments> {
                   enablePullUp: false,
                   onRefresh: () async {
                     int complete = await getCommentData();
-                    if (complete == 1) {
-                      showToast("새로고침 완료");
-                    } else {
+                    if (complete != 1) {
                       showToast("새로고침 실패");
                     }
                     setState(() {});
@@ -183,6 +182,7 @@ class _CommentsState extends ConsumerState<Comments> {
               );
             },
           ),
+          // 댓글 입력 창, 전송 버튼
           bottomSheet: Container(
             decoration: const BoxDecoration(
               boxShadow: [
@@ -198,6 +198,7 @@ class _CommentsState extends ConsumerState<Comments> {
             width: double.infinity,
             child: Row(
               children: [
+                // 댓글 입력 창
                 Expanded(
                   child: SizedBox(
                     height: 46,
@@ -236,9 +237,9 @@ class _CommentsState extends ConsumerState<Comments> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 4,
-                ),
+
+                const SizedBox(width: 4),
+                // 전송 버튼
                 SizedBox(
                   width: 56,
                   height: 46,
@@ -251,10 +252,11 @@ class _CommentsState extends ConsumerState<Comments> {
                           Color(0xFF4874EA)
                         )
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if(Content != "") {
-                          print(Content);
-                          addComment(ref.watch(replyProvider.notifier).state);
+                          debugPrint('보낸 댓글 내용 : $Content');
+                          await addComment(ref.watch(replyProvider.notifier).state);
+                          ref.read(replyProvider.notifier).state = -1;      // 대댓글 번호 변경
                           setState(() {
                             textEditingController.text = "";
                             FocusScope.of(context).unfocus();

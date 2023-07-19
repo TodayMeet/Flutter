@@ -1,11 +1,10 @@
 // 메인 지도 페이지
 
-// 최종 수정일 : 2023.5.19
+// 최종 수정일 : 2023.7.19
 // 작업자 : 김혁
 
-// 추가 작업 예정 사항
-// 서버에서 받아온 모임 정보를 통해 핀 띄우기
-// 위치 설정을 통해 받아온 정보로 지도 이동하기
+// 추가 작업해야 할 사항
+// 핀 폰트 적용
 
 import 'dart:convert';
 import 'dart:async';
@@ -43,6 +42,7 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
   late double longitude;
   bool isLoaded = false;
 
+  // 현재 위치, 동, 핀 정보 받아오기
   Future<void> getLocationData() async {
     try {
       // 현재 위치 데이터 받아오기
@@ -51,7 +51,7 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
 
       latitude = location.latitude;
       longitude = location.longitude;
-      print("/////////////////////////////////////////////");
+      debugPrint('--------------------- 현재 위치 받아오기 완료 --------------------');
 
       // 동정보 업데이트
       await getDongName(latitude, longitude);
@@ -75,10 +75,10 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
         headers: {"Authorization": "KakaoAK $KakaoRestAPIKey"});
     String addr = kakaoGeo.body;
     var addrData = jsonDecode(addr);
-    print(addrData);
 
     final String dongName = addrData['documents'][0]['region_3depth_name'];
     ref.read(dongProvider.notifier).state = dongName;
+    debugPrint('--------------------- 동 위치 받아오기 완료 --------------------');
   }
 
   // 핀 정보 받아오기
@@ -156,7 +156,7 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
           });
         }
         pinInformationString = jsonEncode({'items': pinslist});
-        print(pinInformationString);
+        debugPrint('--------------------- 핀 위치 받아오기 완료 --------------------');
 
         // 처음에 build 제외
         if (isLoaded == true) {
@@ -267,11 +267,11 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
           ''');
         }
       } else {
-        print('핀 정보 서버 오류');
+        debugPrint('핀 정보 서버 오류');
         showToast('핀 정보 서버 오류');
       }
     } catch (e) {
-      print('핀 정보 오류');
+      debugPrint('핀 정보 오류');
       showToast('핀 정보 오류');
     }
   }
@@ -328,7 +328,6 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
         backgroundColor: Colors.white,
       ),
       body: Center(
-        // 메인페이지 - 지도
         child: isLoaded == false
             ? const CircularProgressIndicator()
             : KakaoMapView(
@@ -341,6 +340,7 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
                   ref.read(mapControllerProvider.notifier).state =
                       mapController;
                 },
+                // 카메라 이동 시 동 정보 업데이트
                 cameraIdle: (message) async {
                   KakaoLatLng latLng =
                       KakaoLatLng.fromJson(jsonDecode(message.message));
@@ -349,6 +349,7 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
                   getDongName(latitude, longitude);
                   getPinList(latitude.toString(), longitude.toString());
                 },
+                // 핀 출력 및 클릭 이벤트
                 customOverlay: '''
                     var markers = [];
                     
@@ -451,6 +452,7 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
                     marker.setMap(null);
                     acceptList('$pinInformationString');
                     ''',
+                // 핀 - 커스텀 오버레이 스타일 -> 폰트 적용 필요
                 customOverlayStyle: '''<style>
                       .customoverlay_restaurant {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px 8px;max-width:200px;}
                       .customoverlay_restaurant .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
@@ -490,7 +492,7 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
                       .customoverlay_exercise::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #DCA966;}
                       </style>''',
                 onTapMarker: (message) {
-                  print('meetNo ${message.message} is clicked');
+                  debugPrint('--------------- meetNo ${message.message} is clicked ---------------');
                   Navigator.push(context,
                       MaterialPageRoute(
                           builder: (context) => Loading_to_ListDetail(meetNo: int.parse(message.message), userNo: UserNo.myuserNo,)
@@ -502,8 +504,8 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
       floatingActionButton: Wrap(
         direction: Axis.vertical,
         children: <Widget>[
+          // 현재 위치 설정
           Container(
-            // 현재 위치 설정
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               boxShadow: [
@@ -519,7 +521,6 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
               heroTag: "현재 위치 불러오기",
               backgroundColor: const Color(0xFF4874EA),
               onPressed: () async {
-                // print(UserNo.myuserNo);
                 await getLocationData();
                 final webViewController = ref.watch(mapControllerProvider);
                 webViewController?.runJavascript('''
@@ -531,8 +532,9 @@ class MainPageMapState extends ConsumerState<MainPageMap> {
               ),
             ),
           ),
+
+          // 게시판 화면 이동
           Container(
-            // 게시판 화면
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               boxShadow: [

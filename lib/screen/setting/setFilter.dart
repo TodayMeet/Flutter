@@ -1,8 +1,10 @@
 // 게시판에서 필터 설정 페이지
 
-// 최종 수정일 : 2023.6.28
+// 최종 수정일 : 2023.7.19
 // 작업자 : 김혁
 
+// 추가 작업해야 할 사항
+// 적용 시 메인 지도 페이지에도 필터 적용
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -94,6 +96,7 @@ class FilterState extends ConsumerState<Filter> {
                 child: ListView(
                   controller: _scrollController,
                     children:[
+                      // 카테고리 텍스트
                       Container(
                         margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
                         child: const Text("카테고리", style: TextStyle(
@@ -151,14 +154,16 @@ class FilterState extends ConsumerState<Filter> {
                       ),
 
                       const SizedBox(height: 48),
+                      // 정렬 텍스트
                       Container(
-                        margin: const EdgeInsets.fromLTRB(24, 0, 24, 10),
+                        margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
                         child: const Text("정렬", style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
                             color: Color(0xFF2F3036))),
                       ),
 
+                      const SizedBox(height: 10),
                       // 정렬 버튼
                       Padding(
                         padding: const EdgeInsets.only(left: 24, right: 24),
@@ -280,11 +285,13 @@ class FilterState extends ConsumerState<Filter> {
                 ),
               ),
             ),
+
             // 적용, 초기화 버튼 출력
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Row(
                 children: [
+                  // 적용 버튼
                   Expanded(
                     child: Container(
                       height: 46,
@@ -297,7 +304,7 @@ class FilterState extends ConsumerState<Filter> {
                             List<String> category = [];
                             for(var i = 0; i < categories.length; i++) {
                               if (categories[i]["isChecked"] == true) {
-                                print(categories[i]["name"]);
+                                debugPrint('필터 - 카테고리 : ${categories[i]["name"]}');
                                 category.add(categories[i]["name"]);
                               }
                             }
@@ -316,7 +323,7 @@ class FilterState extends ConsumerState<Filter> {
                             }else{
                               ref.read(categoryNameProvider.notifier).state = category[0];
                             }
-                            print(sort);
+                            debugPrint('필터 - 정렬 : $sort');
                             refreshController.requestRefresh();
 
                             Navigator.pop(context);
@@ -331,7 +338,9 @@ class FilterState extends ConsumerState<Filter> {
                       ),
                     ),
                   ),
+
                   const SizedBox(width: 10),
+                  // 초기화 버튼
                   Expanded(
                     child: Container(
                       height: 46,

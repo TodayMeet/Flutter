@@ -66,15 +66,16 @@ class SearchMainState extends ConsumerState<SearchMain> {
         if(tempList == []){
           return 2;
         }
+        debugPrint('--------------------- 탐색 화면 리스트 받아오기 완료 --------------------');
         return 1;
       } else {
         showToast('Data download failed! : ${response.statusCode}');
-        print('Failed to post data : ${response.statusCode}');
+        debugPrint('Failed to post data : ${response.statusCode}');
         return 0;
       }
     } catch (e) {
       showToast('Data download failed!!');
-      print('Failed to post data!!');
+      debugPrint('Failed to post data!!');
       return 0;
     }
   }
@@ -96,8 +97,6 @@ class SearchMainState extends ConsumerState<SearchMain> {
 
       if(response.statusCode == 200){
         final serverData = jsonDecode(utf8.decode(response.bodyBytes));
-        debugPrint('------------------------탐색화면 추천 호스트 출력------------------------');
-        print(serverData);
         tempHost = [];
         serverData
             .forEach((element) => tempHost.add(RecommendedHost.fromJson(element)));
@@ -105,6 +104,7 @@ class SearchMainState extends ConsumerState<SearchMain> {
         ref.read(hostListProvider.notifier).clearHost();
         tempHost.forEach(
                 (element) => ref.read(hostListProvider.notifier).addHost(element));
+        debugPrint('--------------------- 탐색 화면 추천 호스트 불러오기 완료 --------------------');
       }else{
         debugPrint('추천 호스트 출력 서버 오류');
         showToast('추천 호스트 출력 서버 오류');
@@ -123,11 +123,9 @@ class SearchMainState extends ConsumerState<SearchMain> {
       http.Response response = await http.get(url);
 
       if(response.statusCode == 200){
-        debugPrint('-------------광고 이미지 받기 성공-------------');
-
         var serverData = json.decode(utf8.decode(response.bodyBytes));
-        print(serverData);
         serverData.forEach((element)=>ref.read(advertisementProvider.notifier).state.add(element));
+        debugPrint('--------------------- 탐색 화면 광고 배너 받아오기 완료 --------------------');
       }else{
         debugPrint('광고 배너 서버 오류');
         showToast('광고 배너 서버 오류');

@@ -3,8 +3,6 @@
 // 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
-// 추가 작업 예정 사항
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -31,7 +29,9 @@ class _MeetingTitleState extends State<MeetingTitle> {
       children: [
         enabled? Column(
             children: [
-              meet.Title(content:"제목을 입력해주세요."),
+              const meet.Title(content:"제목을 입력해주세요."),
+
+              // 제목 입력 창
               Container(
                 height: 48,
                 margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
@@ -59,6 +59,8 @@ class _MeetingTitleState extends State<MeetingTitle> {
                   maxLines: 1,
                 ),
               ),
+
+              // 다음 버튼
               Container(
                 height: 46,
                 width: size.width,
@@ -90,7 +92,7 @@ class _MeetingTitleState extends State<MeetingTitle> {
                 ),
               )
             ]
-        ): Container(
+        ): Container(                            // 입력 완료 후 출력 버튼
           margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),

@@ -3,9 +3,6 @@
 // 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
-// 추가 작업 예정 사항
-// 이미지 선택 위젯 완성되면 거기에 연결하기
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,7 +29,9 @@ class _MeetingContentState extends State<MeetingContent> {
       children: [
         enabled? Column(
             children: [
-              meet.Title(content:"내용을 입력해주세요."),
+              const meet.Title(content:"내용을 입력해주세요."),
+
+              // 내용 입력 창
               Container(
                 height: 140,
                 margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -61,6 +60,8 @@ class _MeetingContentState extends State<MeetingContent> {
                   expands: true,
                 ),
               ),
+
+              // 다음 버튼
               Container(
                 height: 46,
                 width: size.width,
@@ -93,7 +94,7 @@ class _MeetingContentState extends State<MeetingContent> {
                 ),
               )
             ]
-        ): Container(
+        ): Container(                               // 입력 완료 후 출력 버튼
           margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),

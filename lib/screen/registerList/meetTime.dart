@@ -1,9 +1,7 @@
 // 시간 선택 위젯
 
-// 최종 수정일 : 2023.5.28
+// 최종 수정일 : 2023.7.19
 // 작업자 : 김혁
-
-// 추가 작업 예정 사항
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -30,6 +28,7 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
   bool isChecked = false;
   String _showTime = "";
 
+  // 날짜 선택 위젯 설정
   final config = CalendarDatePicker2Config(
     selectedDayHighlightColor: const Color(0xFF006FFD),
     weekdayLabels: ['일', '월', '화', '수', '목', '금', '토'],
@@ -47,6 +46,7 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
     ),
   );
 
+  // 날짜 선택 bottomsheet
   void _showDatePicker(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -109,6 +109,7 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
+                      // 날짜 선택 위젯 출력
                       Expanded(
                         child: CalendarDatePicker2(
                           value: _singleDateValue,
@@ -118,6 +119,7 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
                       ),
                       const SizedBox(height: 12),
 
+                      // 다음 버튼
                       SizedBox(
                         height: 46,
                         width: size.width,
@@ -160,6 +162,7 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
   int _selectedMinute = 0;
   late TimeOfDay _selectedTime;
 
+  // 시간 선택 bottomsheet
   void _showTimePicker(BuildContext context) async {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -222,10 +225,12 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
+                      // 시간 선택 위젯
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            // 오전 or 오후 선택 위젯
                             Expanded(
                               child: CupertinoPicker(
                                 backgroundColor: Colors.white,
@@ -268,6 +273,8 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
                                 ],
                               ),
                             ),
+
+                            // 시 선택 위젯
                             Expanded(
                               child: CupertinoPicker(
                                 backgroundColor: Colors.white,
@@ -301,6 +308,8 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
                                 }),
                               ),
                             ),
+
+                            // 분 선택 위젯
                             Expanded(
                               child: CupertinoPicker(
                                 backgroundColor: Colors.white,
@@ -340,6 +349,7 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
                       ),
                       const SizedBox(height: 12),
 
+                      // 완료 버튼
                       SizedBox(
                         width: size.width,
                         height: 46,
@@ -421,7 +431,9 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
       children: [
         enabled?Column(
           children: [
-            meet.Title(content:"언제 만날까요?"),
+            const meet.Title(content:"언제 만날까요?"),
+
+            // 날짜, 시간 선택 버튼
             Container(
               width: size.width,
               height: 50,
@@ -456,7 +468,7 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
               ),
             ),
           ],
-        ):Container(
+        ):Container(                              // 선택 완료 후 출력 버튼
           margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
@@ -490,7 +502,7 @@ class MeetingTimeState extends ConsumerState<MeetingTime> {
             },
           ),
         ),
-        isChecked? MeetingWho()
+        isChecked? const MeetingWho()
             :const SizedBox.shrink(),
       ],
     );

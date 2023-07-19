@@ -1,11 +1,10 @@
 // 이미지 선택 위젯
 
-// 최종 수정일 : 2023.6.26
+// 최종 수정일 : 2023.7.19
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
-// 이미지 추가하고 뺴는 알고리즘 추가하기
-// x 버튼 구현하기
+// 이미지 중복 처리
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,7 +14,6 @@ import 'package:dotted_border/dotted_border.dart';
 
 import '../setting/registerMeeting.dart' as meet;
 import 'meetApproval.dart';
-import '../../model/showToast.dart';
 
 class MeetingImage extends StatefulWidget {
   const MeetingImage({Key? key}) : super(key: key);
@@ -33,6 +31,7 @@ class _MeetingImageState extends State<MeetingImage> {
   final List<File> _showFiles = [];
   final _imagePicker = ImagePicker();
 
+  // 이미지 선택
   Future<void> _pickImages() async{
     List<XFile>? images = await _imagePicker.pickMultiImage(
         maxHeight: 1920, maxWidth: 1080, imageQuality: 50);
@@ -53,6 +52,7 @@ class _MeetingImageState extends State<MeetingImage> {
     }
   }
 
+  // 선택한 이미지 제거
   void removeImage(int index) {
     setState(() {
       _showFiles.removeAt(index);
@@ -69,6 +69,7 @@ class _MeetingImageState extends State<MeetingImage> {
       children: [
         enabled? Column(
             children: [
+              // 이미지 선택 title
               Container(
                 margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
                 height: 58,
@@ -81,6 +82,7 @@ class _MeetingImageState extends State<MeetingImage> {
                       )
                   ),
               ),
+
               Container(
                 margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
                 alignment: Alignment.centerLeft,
@@ -92,13 +94,15 @@ class _MeetingImageState extends State<MeetingImage> {
                     )
                 ),
               ),
+
+              // 이미지 선택 및 출력
               Container(
                 margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
                 height: 89,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    imageCount < 5
+                    imageCount < 5                // 선택한 이미지가 5개 이하인 경우
                     ? Container(
                       margin: const EdgeInsets.only(right: 6),
                       child: DottedBorder(
@@ -134,6 +138,8 @@ class _MeetingImageState extends State<MeetingImage> {
                         ),
                       ),
                     ): const SizedBox.shrink(),
+
+                    // 선택한 이미지 출력 위젯
                     Expanded(
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -160,6 +166,8 @@ class _MeetingImageState extends State<MeetingImage> {
                                       ),
                                     ),
                                   ),
+
+                                  // x 버튼
                                   Positioned(
                                     top: 3.5,
                                     right: 0,
@@ -184,6 +192,8 @@ class _MeetingImageState extends State<MeetingImage> {
                   ],
                 ),
               ),
+
+              // 다음 버튼
               Container(
                 height: 46,
                 width: size.width,
@@ -220,7 +230,7 @@ class _MeetingImageState extends State<MeetingImage> {
               )
             ]
         ): imageCount == 0 ? const SizedBox.shrink()
-          :Container(
+          :Container(                            // 선택 완료 후 이미지 출력
             height: 77,
             margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
             child: ListView.builder(
@@ -230,6 +240,7 @@ class _MeetingImageState extends State<MeetingImage> {
                 return imageCount > index
                     ? Stack(
                       children: [
+                        // 이미지 출력
                         Center(
                           child: GestureDetector(
                             onTap: () async {
@@ -248,6 +259,8 @@ class _MeetingImageState extends State<MeetingImage> {
                             ),
                           ),
                         ),
+
+                        // x 버튼
                         Positioned(
                             top: 3.5,
                             right: 0,

@@ -1,6 +1,6 @@
-//메인 리스트
+// 메인 리스트
 
-// 최종 수정: 2023.6.29
+// 최종 수정: 2023.7.19
 // 작업자: 정해수 -> 김혁
 
 import 'package:flutter/material.dart';
@@ -61,15 +61,16 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
         List<dynamic> meetListData = json.decode(utf8.decode(response.bodyBytes));
         meetListData
             .forEach((element) => tempList.add(meetList.fromJson(element)));
+        debugPrint('--------------------- 건수 리스트 받아오기 완료 --------------------');
         return 0;
       } else {
         showToast('Data download failed! : ${response.statusCode}');
-        print('Failed to post data : ${response.statusCode}');
+        debugPrint('Failed to post data : ${response.statusCode}');
         return -1;
       }
     } catch (e) {
       showToast('Data download failed!!');
-      print('Failed to post data!!');
+      debugPrint('Failed to post data!!');
       return -1;
     }
   }
@@ -82,10 +83,9 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
       http.Response response = await http.get(url);
 
       if(response.statusCode == 200){
-        debugPrint('----------------- 게시판 광고 받아오기 성공 -----------------');
         var serverData = response.body;
-        print(serverData);
         ref.read(advertisementProvider.notifier).addList(serverData);
+        debugPrint('--------------------- 게시판 광고 받아오기 완료 --------------------');
       }else{
         debugPrint('광고 서버 오류');
         showToast('광고 서버 오류');
@@ -239,6 +239,7 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
       floatingActionButton: Wrap(
         direction: Axis.vertical,
         children: <Widget>[
+          //필터 화면 이동 아이콘
           Container(
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
@@ -261,7 +262,9 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
                 "assets/icons/filter.svg",
               ),
             ),
-          ), //필터 화면 이동 아이콘
+          ),
+
+          //지도 화면 이동 아이콘
           Container(
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
@@ -282,7 +285,7 @@ class MainListBoardState extends ConsumerState<MainListBoard> {
               },
               child: SvgPicture.asset("assets/icons/map.svg"),
             ),
-          ), //지도 화면 이동 아이콘
+          ),
         ],
       ),
     );

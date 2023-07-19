@@ -1,10 +1,7 @@
 // 건수 상세 정보 출력 페이지
 
-// 최종 수정: 2023.7.3
+// 최종 수정: 2023.7.19
 // 작업자: 정해수 -> 김혁
-
-// 추가 작업해야 할 사항
-// 채팅방 입장 연결
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +52,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
   void initState() {
     super.initState();
     upLoadData(widget.meetData); //건수 데이터 클래스 객체화
-    print("건수 번호 : ${Meet.meetNo}");
+    debugPrint("건수 번호 : ${Meet.meetNo}");
   }
 
   // 상세화면 데이터 불러오기
@@ -154,15 +151,15 @@ class ListDetailState extends ConsumerState<ListDetail> {
           body: json.encode(postBody),
         );
         if (response.statusCode == 200) {
-          print(response.body);
+          debugPrint('--------------------- 건수 참가 완료 --------------------');
           updateData();
-          showToast('참가했습니다');
+          showToast('건수에 참가했습니다');
         } else {
-          print('Data update failed! : ${response.statusCode}');
+          debugPrint('Data update failed! : ${response.statusCode}');
           showToast('Data update failed!');
         }
       } catch (e) {
-        print('There was a problem with the internet connection.');
+        debugPrint('There was a problem with the internet connection.');
         showToast('There was a problem with the internet connection.');
       }
     } else {
@@ -181,13 +178,13 @@ class ListDetailState extends ConsumerState<ListDetail> {
         if (response.statusCode == 200) {
           print(response.body);
           updateData();
-          showToast('참가 요청했습니다');
+          showToast('건수에 참가 요청했습니다');
         } else {
-          print('Data update failed! : ${response.statusCode}');
+          debugPrint('Data update failed! : ${response.statusCode}');
           showToast('Data update failed!');
         }
       } catch (e) {
-        print('There was a problem with the internet connection.');
+        debugPrint('There was a problem with the internet connection.');
         showToast('There was a problem with the internet connection.');
       }
     }
@@ -209,15 +206,15 @@ class ListDetailState extends ConsumerState<ListDetail> {
       );
 
       if (response.statusCode == 200) {
-        print(response.body);
+        debugPrint('--------------------- 건수 참가 취소 완료 --------------------');
         updateData();
-        showToast('취소했습니다');
+        showToast('참가를 취소했습니다');
       } else {
-        print('Data update failed!');
+        debugPrint('Data update failed!');
         showToast('Data update failed!');
       }
     } catch (e) {
-      print('There was a problem with the internet connection.');
+      debugPrint('There was a problem with the internet connection.');
       showToast('There was a problem with the internet connection.');
     }
   }
@@ -343,6 +340,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
         });
   }
 
+  // 채팅방 참가
   Future<int> participateChatting() async{
     try{
       final url = Uri.parse("http://todaymeet.shop:8080/chat/participant");
@@ -362,16 +360,15 @@ class ListDetailState extends ConsumerState<ListDetail> {
       );
 
       if(response.statusCode == 200){
-        print(response);
-        print('---------------------채팅방 참가 완료--------------------');
+        debugPrint('---------------------채팅방 참가 완료--------------------');
         return 0;
       } else{
-        print('채팅방 참가 서버 오류');
+        debugPrint('채팅방 참가 서버 오류');
         showToast('채팅방 참가 서버 오류');
         return 1;
       }
     } catch(e){
-      print('채팅방 참가 오류');
+      debugPrint('채팅방 참가 오류');
       showToast('채팅방 참가 오류');
       return -1;
     }
@@ -491,7 +488,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,
-          elevation: 1,
+          elevation: 0,
           title: const Text(
             "오늘의 건수",
             style: TextStyle(
@@ -521,16 +518,19 @@ class ListDetailState extends ConsumerState<ListDetail> {
         ),
         body: ListView(// 메인 리스트 스크롤 뷰
             children: <Widget>[
-          MeetImage(Meet.meetImage), //건수 사진
+          //건수 사진
+          MeetImage(Meet.meetImage),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
                 const SizedBox(height: 16),
+                // 카테고리, 완료, 마감 시간
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // 카테고리, 완료
                     Row(
                       children: [
                         categoryContainer(
@@ -540,6 +540,8 @@ class ListDetailState extends ConsumerState<ListDetail> {
                         completeContainer
                       ],
                     ),
+
+                    // 마감 시간
                     Row(
                       children: [
                         StringText(
@@ -553,21 +555,19 @@ class ListDetailState extends ConsumerState<ListDetail> {
                       ],
                     )
                   ],
-                ), //카테고리, 마감시간
-
-                const SizedBox(
-                  height: 12,
                 ),
+
+                const SizedBox(height: 12),
+                // 건수 제목
                 Row(
                   children: [
                     StringText(Meet.title, 24, FontWeight.w700,
                         const Color(0xff2F3036))
                   ],
-                ), //모임 제목
-
-                const SizedBox(
-                  height: 10,
                 ),
+
+                const SizedBox(height: 10),
+                // 호스트 프로필 이미지, 이름
                 GestureDetector(
                   onTap: (){
                     Navigator.push(
@@ -581,27 +581,31 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      // 호스트 사진
                       ClipOval(
-                        child: Image.asset(
-                            'assets/images/User_Picture/User_pic_null.png',
+                        child: Image.network(
+                            Meet.hostUser["userProfileImage"],
                             width: 26,
                             height: 26),
-                      ), //사용자 사진
-                      const SizedBox(
-                        width: 10,
                       ),
+
+                      const SizedBox(width: 10),
+                      // 호스트 이름
                       StringText_letterspacing(
                           Meet.username, 12, FontWeight.w400, Colors.black, -0.5),
                     ],
                   ),
-                ), //호스트 사진, 이름
+                ),
 
                 const SizedBox(height: 12),
-                Row(children: [
+                // 참가, 초대 버튼
+                Row(
+                  children: [
+                    // 참가 버튼
                   Expanded(
                     child: SizedBox(
                       height: 46,
-                      child:Meet.hostUser["userNo"] == UserNo.myuserNo
+                      child:Meet.hostUser["userNo"] == UserNo.myuserNo    // 사용자가 호스트일 경우
                       ?Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
@@ -658,7 +662,9 @@ class ListDetailState extends ConsumerState<ListDetail> {
                               -0.5)),
                     ),
                   ),
+
                   const SizedBox(width: 10),
+                  // 초대 버튼
                   Expanded(
                     child: SizedBox(
                       height: 46,
@@ -705,11 +711,10 @@ class ListDetailState extends ConsumerState<ListDetail> {
                               FontWeight.w700, const Color(0xff5E5F68), -0.5)),
                     ),
                   ),
-                ]), //참가하기, 초대하기 버튼
+                ]),
 
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
+                // 채팅방 입장 버튼
                 SizedBox(
                   height: 46,
                   child: OutlinedButton(
@@ -742,12 +747,13 @@ class ListDetailState extends ConsumerState<ListDetail> {
                       ],
                     ),
                   ),
-                ), //채팅방 입장 버튼
+                ),
 
                 const SizedBox(height: 16),
                 line(),
 
                 const SizedBox(height: 16),
+                // 건수 내용
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -764,12 +770,13 @@ class ListDetailState extends ConsumerState<ListDetail> {
                       ),
                     ),
                   ],
-                ), //모임 내용
+                ),
 
                 const SizedBox(height: 16),
                 line(),
 
                 const SizedBox(height: 16),
+                // 건수 날짜 및 시간
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -785,12 +792,13 @@ class ListDetailState extends ConsumerState<ListDetail> {
                         const Color(0xff5E5F68),
                         -0.5),
                   ],
-                ), //모임 날짜 및 시각
+                ),
 
                 const SizedBox(height: 16),
                 line(),
 
                 const SizedBox(height: 16),
+                // 건수 장소
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -802,9 +810,10 @@ class ListDetailState extends ConsumerState<ListDetail> {
                     StringText_letterspacing(Meet.address, 14, FontWeight.w400,
                         const Color(0xff5E5F68), -0.5),
                   ],
-                ), //모임 장소
+                ),
 
                 const SizedBox(height: 16),
+                // 건수 위치 지도
                 Center(
                   child: KakaoMapView(
                     height: 200,
@@ -812,6 +821,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                     lat: double.parse(Meet.lat),
                     lng: double.parse(Meet.lon),
                     kakaoMapKey: kakaoMapKey,
+                    // 커스텀 오버레이 표시 및 입력 이벤트
                     customOverlay: '''
                   function addMarker(content, position){
                     var marker = new kakao.maps.CustomOverlay({
@@ -834,6 +844,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   );
                   
                   ''',
+                    // 커스텀 오버레이 스타일
                     customOverlayStyle: '''<style>
                       .customoverlay_restaurant {position:relative;border-radius:20px;background:#E91E63;color:#FFF;padding:5px 8px;max-width:200px;}
                       .customoverlay_restaurant .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
@@ -872,18 +883,20 @@ class ListDetailState extends ConsumerState<ListDetail> {
                       .customoverlay_exercise .title {text-align:center;color:#FFF;font-size:10px;font-weight:400;}
                       .customoverlay_exercise::before {content: '';position: absolute;top: 100%;left: 50%;margin-left: -5px;border: 5px solid transparent;border-top-color: #DCA966;}
                       </style>''',
+                    // 핀 클릭 시 event
                     onTapMarker: (message) {
                       if (message.message == 'Map is clicked') {
                         findLocation();
                       }
                     },
                   ),
-                ), //지도 출력
+                ),
 
                 const SizedBox(height: 16),
                 line(),
 
                 const SizedBox(height: 16),
+                // 건수 참여 연령
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -896,12 +909,13 @@ class ListDetailState extends ConsumerState<ListDetail> {
                         const Color(0xff5E5F68), -0.5),
                     //age(Meet.age, Meet.hostage),
                   ],
-                ), //참여 연령 제한
+                ),
 
                 const SizedBox(height: 16),
                 line(),
 
                 const SizedBox(height: 16),
+                // 건수 참가비
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -913,12 +927,12 @@ class ListDetailState extends ConsumerState<ListDetail> {
                     StringText_letterspacing('${Meet.fee}원', 14,
                         FontWeight.w400, const Color(0xff5E5F68), -0.5),
                   ],
-                ), //참가비
-
+                ),
                 const SizedBox(height: 16),
                 line(),
 
                 const SizedBox(height: 16),
+                // 건수 참가 인원
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -942,9 +956,10 @@ class ListDetailState extends ConsumerState<ListDetail> {
                         const Color(0xff5E5F68),
                         -0.5),
                   ],
-                ), //참가 인원
+                ),
 
                 const SizedBox(height: 28),
+                // 참가자 정보 표시
                 Column(
                   children: Meet.userList.map((user) {
                     return Padding(
@@ -954,14 +969,22 @@ class ListDetailState extends ConsumerState<ListDetail> {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.account_circle), //유저 아이콘
-                              const SizedBox(
-                                width: 10,
+                              // 참가자 아이콘
+                              ClipOval(
+                                child: Image.network(
+                                  user['userProfileImage'],
+                                  width: 26,
+                                  height: 26,
+                                ),
                               ),
+
+                              const SizedBox(width: 10),
+                              // 참가자 이름
                               StringText_letterspacing(user['username'], 12,
                                   FontWeight.w700, Colors.black, -0.5),
                             ],
                           ),
+                          // 호스트 or 참가자 표시
                           userList(user, Meet.userNo)
                         ],
                       ),
@@ -973,15 +996,16 @@ class ListDetailState extends ConsumerState<ListDetail> {
                 line(),
 
                 const SizedBox(height: 16),
+                // 댓글 텍스트
                 Align(
                   alignment: Alignment.centerLeft,
                   child: SizedBox(
                       width: 50,
                       child: StringText_letterspacing('댓글', 12, FontWeight.w700,
                           const Color(0xffAEAFB3), -0.5)),
-                ), //댓글
+                ),
 
-                //const SizedBox(height: 16,),
+                // 댓글 리스트
                 Column(
                   children: Meet.comments.asMap().entries.map((c) {
                     return Column(
@@ -992,9 +1016,8 @@ class ListDetailState extends ConsumerState<ListDetail> {
                   }).toList(),
                 ),
 
-                const SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
+                // 전체 댓글 보기 버튼
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
@@ -1017,9 +1040,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
                         child: StringText_letterspacing('전체 댓글 보기', 14,
                             FontWeight.w700, const Color(0xffA8A8B2), -0.5)),
                   ),
-                ), //전체 댓글 보기 버튼
-
-                const SizedBox(height: 24),
+                ),
               ],
             ),
           ),
@@ -1027,6 +1048,7 @@ class ListDetailState extends ConsumerState<ListDetail> {
   }
 }
 
+// 참여연령 설정 위젯
 Widget age(String ageSet, int age) {
   if (ageSet.compareTo('전연령') != 0) {
     return Row(
@@ -1039,8 +1061,9 @@ Widget age(String ageSet, int age) {
   } else {
     return StringText('연령 제한 없음', 14, FontWeight.w400, const Color(0xff5E5F68));
   }
-} //연령 제한 여부
+}
 
+// 구분선 위젯
 Widget line() {
   return const Divider(
     height: 1,
@@ -1049,6 +1072,7 @@ Widget line() {
   );
 }
 
+// 호스트 or 참여자 표시 위젯
 Widget userList(Map user, int hostNo) {
   if (hostNo == user['userNo']) {
     return Row(
@@ -1075,6 +1099,7 @@ Widget userList(Map user, int hostNo) {
   }
 }
 
+// 건수 이미지 위젯
 class MeetImage extends StatefulWidget {
   const MeetImage(this.meetImage, {Key? key}) : super(key: key);
   final List<String> meetImage;

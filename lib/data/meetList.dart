@@ -21,6 +21,7 @@ class meetList with _$meetList{
     required int peopleLimit, //모집 인원 수
     required int peopleNum, //현재 인원 수
     required String address, //주소
+    required List<Map> participantUserImage, //참가자 리스트
     required bool peopleClosed, //모집 완료 여부
   }) = _meetList;
 

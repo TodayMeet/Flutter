@@ -1,12 +1,10 @@
 // 메인 리스트에서 보여지는 약식 정보 뷰어
 
-// 최종 수정: 2023.6.26
+// 최종 수정: 2023.7.19
 // 작업자: 정해수 -> 김혁
 
-//추가 작업 예정 사항:
-// 프로필 연결
-// 댓글창 연결
-// 사진 출력 여부
+// 추가 작업 예정 사항:
+// 프로필 사진 출력 여부
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +17,7 @@ import 'package:front/model/TextPrint.dart';
 import '../../screen/mainList/Comments.dart';
 import '../../screen/profile/userProfile.dart';
 
+// 게시판 화면 위젯
 Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
   // 카테고리 표시 옆에 완료 텍스트
   final completeContainerProvider = Provider((ref) {
@@ -53,6 +52,7 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // 카테고리 및 완료 표시
                 Row(
                   children: [
                     categoryContainer(list.categoryName,),
@@ -60,6 +60,8 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                     completeContainer
                   ],
                 ),
+
+                // 모집 마감 시간
                 Row(
                   children: [
                     StringText_letterspacing('모집 마감 시간: ', 12, FontWeight.w400, Colors.black, -0.5),
@@ -67,16 +69,18 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                   ],
                 )
               ],
-            ), //카테고리, 마감시간
+            ),
 
             const SizedBox(height: 12,),
+            // 제목
             Row(
               children: [
                 StringText(list.title, 18, FontWeight.w700, const Color(0xff2F3036))
               ],
-            ), //제목
+            ),
 
             const SizedBox(height: 10,),
+            // 호스트 사진, 이름 -> 사용자 프로필 이동
             Row(
               children: [
                 InkWell(
@@ -92,8 +96,11 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                   child: Row(
                     children: [
                       ClipOval(
-                        child: Image.network(list.userProfileImage,
-                            width: 26, height: 26),
+                        child: Image.network(
+                            list.userProfileImage,
+                            width: 26,
+                            height: 26
+                        ),
                       ),  //사용자 사진
                       const SizedBox(width: 10,),
                       StringText_letterspacing(list.username, 12, FontWeight.w400, Colors.black, -0.5)
@@ -101,21 +108,23 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                   ),
                 )
               ],
-            ), //사용자 사진, 이름 -> 사용자 프로필 이동
+            ),
 
             const SizedBox(height: 10,),
+            // 동네, 날짜, 시간
             Row(
               children: [
                 StringText(list.address, 13, FontWeight.w700, const Color(0xff949596)), //동네 이름
                 StringText(' ', 13, FontWeight.w700, const Color(0xff949596)),
                 StringText(DateFormat('M-dd | h:mm').format(list.time), 13, FontWeight.w700, const Color(0xff949596)),
               ],
-            ), //동네, 날짜, 시간
+            ),
 
             const SizedBox(height: 5),
+            // 건수 이미지
             (meetingImage.isEmpty)
                 ? const SizedBox.shrink()
-                : SizedBox(   //건수 등록 이미지
+                : SizedBox(
                   height: 112,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -127,25 +136,37 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                         height: 86,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.network(meetingImage[index], fit: BoxFit.cover)
+                          child: Image.network(
+                              meetingImage[index],
+                              width: 86,
+                              height: 86,
+                              fit: BoxFit.cover
+                          )
                         ),
                       );
                     }
                   ),
                 ),
 
-            const SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                curUserIcon(list.peopleNum)
-              ],
-            ), //참여중인 사용자 사진
+            // 참가자 프로필 사진 - 서버와 연결 필요
+            list.participantUserImage.isEmpty
+                ? const SizedBox.shrink()
+                : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        curUserIcon(list.participantUserImage)
+                      ],
+                    ),
+                ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 7),
+            // 댓글창, 인원 수
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // 댓글창
                 InkWell(
                     onTap: () {
                       Navigator.push(
@@ -173,7 +194,9 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                         ],
                       ),
                     )
-                ), //댓글창
+                ),
+
+                // 인원 수 표시
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14.0),
                   height: 30,
@@ -197,19 +220,23 @@ Widget mainListView(meetList list, WidgetRef ref, BuildContext context) {
                   ),
                 )
               ],
-            ), //댓글 -> 댓글창으로 이동, 인원수
+            ),
           ]
       ),
     ),
   );
 }
 
-Widget curUserIcon(int num) {
-  if(num == 1) {
+// 참가자 프로필 이미지
+Widget curUserIcon(List<Map> participantUserImage) {
+  int num = participantUserImage.length;
+  if(num == 0){
+    return const SizedBox.shrink();
+  } else if(num == 1) {
     return Stack(
         children: [
           ClipOval(
-            child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+            child: Image.network(participantUserImage[0]["profileImage"],
                 width: 26, height: 26),
           ),
         ]
@@ -220,12 +247,12 @@ Widget curUserIcon(int num) {
           Container(
             margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
             child: ClipOval(
-              child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+              child: Image.network(participantUserImage[1]["profileImage"],
                   width: 26, height: 26),
             ),
           ),
           ClipOval(
-            child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+            child: Image.network(participantUserImage[0]["profileImage"],
                 width: 26, height: 26),
           )
         ]
@@ -236,19 +263,19 @@ Widget curUserIcon(int num) {
           Container(
             margin: const EdgeInsets.fromLTRB(40, 0, 0, 0),
             child: ClipOval(
-              child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+              child: Image.network(participantUserImage[2]["profileImage"],
                   width: 26, height: 26),
             ),
           ),
           Container(
             margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
             child: ClipOval(
-              child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+              child: Image.network(participantUserImage[1]["profileImage"],
                   width: 26, height: 26),
             ),
           ),
           ClipOval(
-            child: Image.asset('assets/images/User_Picture/User_pic_null.png',
+            child: Image.network(participantUserImage[0]["profileImage"],
                 width: 26, height: 26),
           ),
         ]

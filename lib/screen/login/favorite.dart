@@ -145,6 +145,7 @@ import 'package:http/http.dart' as http;
 import 'package:front/screen/profile/profileMain.dart';
 
 import '../../data/designconst/constants.dart';
+import '../../main.dart';
 import '../../model/UI/widget/button/blueButton.dart';
 import '../../model/UI/widget/button/svgButton.dart';
 import '../../model/UI/widget/customAppBar.dart';
@@ -398,7 +399,7 @@ class _favoriteState extends State<favorite> {
                 } else {
                   categoryChange();
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                          builder: (BuildContext context) => MainPageMap()),
+                          builder: (BuildContext context) => MyAppPage()),
                           (route) => false);
                 }
               })

@@ -3,8 +3,6 @@
 // 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
-// 추가 작업 예정 사항
-
 import 'package:flutter/material.dart';
 
 import '../setting/registerMeeting.dart' as meet;
@@ -30,7 +28,9 @@ class _MeetingLimitState extends State<MeetingLimit> {
       children: [
         enabled? Column(
             children: [
-              meet.Title(content:"몇명이서 만날까요?"),
+              const meet.Title(content:"몇명이서 만날까요?"),
+
+              // 인원 수 제한 선택 버튼
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(
@@ -65,7 +65,7 @@ class _MeetingLimitState extends State<MeetingLimit> {
                   )),
               ),
             ]
-        ): Container(
+        ): Container(                     // 선택 완료 후 출력 버튼
           margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),

@@ -581,3 +581,5 @@ class _registerProfileState extends State<registerProfile> {
 //   }
 //   return null; // 유효한 입력값인 경우 null 반환
 // }
+
+//

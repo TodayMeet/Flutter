@@ -1,13 +1,10 @@
 // 건수 등록 페이지
 
-// 최종 수정일 : 2023.6.23
+// 최종 수정일 : 2023.7.19
 // 작업자 : 김혁
 
-// 추가 작업 예정 사항
-// 시간 설정 수정
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+//import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../registerList/meetCategory.dart';
@@ -57,7 +54,7 @@ class _RegisterMeetingState extends State<RegisterMeeting> {
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
-          leading: IconButton(
+          /*leading: IconButton(
               onPressed: () {
               },
               color: Colors.black,
@@ -66,7 +63,7 @@ class _RegisterMeetingState extends State<RegisterMeeting> {
                 height: 24,
                 width: 24,
               )
-          ),
+          ),*/
         ),
         body: Scrollbar(
           controller: _scrollController,
@@ -97,10 +94,11 @@ class _RegisterMeetingState extends State<RegisterMeeting> {
   }
 }
 
+// 각각의 제목 출력 위젯
 class Title extends StatelessWidget {
   final String content;
 
-  Title({required this.content});
+  const Title({super.key, required this.content});
 
   @override
   Widget build(BuildContext context) {

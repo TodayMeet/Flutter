@@ -1,9 +1,7 @@
 // 탐색 검색창 페이지
 
-// 최종 수정일 : 2023.6.29
+// 최종 수정일 : 2023.7.19
 // 작업자 : 김혁
-
-// 추가 작업 예정 사항
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

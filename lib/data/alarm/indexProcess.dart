@@ -9,6 +9,7 @@ import '../../model/showtoast.dart';
 import '../../screen/profile/userProfile.dart';
 import '../../screen/mainList/Comments.dart';
 
+// 알람 메세지 유형에 따른 텍스트
 Widget alarmMessage(int index, String value) {
   switch (index) {
     // 다른 유저가 나를 팔로우 했을 때
@@ -160,33 +161,10 @@ Widget alarmMessage(int index, String value) {
   }
 }
 
-/*Widget textMessage(bool bold, String message){
-  if(bold == true){
-    return Text(
-      overflow: TextOverflow.visible,
-      message,
-      style: const TextStyle(
-        color: Color(0xFF1F2024),
-        fontWeight: FontWeight.w700,
-        fontSize: 14,
-        letterSpacing: -0.5,
-      ),
-    );
-  }else{
-    return Text(
-      message,
-      style: const TextStyle(
-        color: Color(0xFF1F2024),
-        fontWeight: FontWeight.w400,
-        fontSize: 14,
-        letterSpacing: -0.5,
-      ),
-    );
-  }
-}*/
-
+// 알림 메세지 유형에 따른 버튼 클릭 event 처리
 void pageTransition(BuildContext context, int index, int? userNumber,
     int? meetNumber, String name, bool processed) {
+
   // 참가 승인
   Future<void> approvalPositive () async {
     try{
@@ -207,18 +185,18 @@ void pageTransition(BuildContext context, int index, int? userNumber,
       );
 
       if (response.statusCode == 200){
-        print(response);
+        debugPrint('--------------------- 참가 승인 완료 --------------------');
       }else{
-        print("서버 통신 오류");
-        showToast("서버 통신 오류");
+        debugPrint("참가 승인 서버 통신 오류");
+        showToast("참가 승인 서버 통신 오류");
       }
     }catch(e){
-      print("참가 승인 오류");
+      debugPrint("참가 승인 오류");
       showToast("참가 승인 오류");
     }
   }
 
-  // 참가 승인
+  // 참가 거부
   Future<void> approvalNegative () async {
     try{
       final url = Uri.parse("http://todaymeet.shop:8080/approval/not");
@@ -238,13 +216,13 @@ void pageTransition(BuildContext context, int index, int? userNumber,
       );
 
       if (response.statusCode == 200){
-        print(response);
+        debugPrint('--------------------- 참가 거부 완료 --------------------');
       }else{
-        print("서버 통신 오류");
-        showToast("서버 통신 오류");
+        debugPrint("참가 거부 서버 통신 오류");
+        showToast("참가 거부 서버 통신 오류");
       }
     }catch(e){
-      print("참가 승인 오류");
+      debugPrint("참가 승인 오류");
       showToast("참가 승인 오류");
     }
   }

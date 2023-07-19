@@ -1,10 +1,10 @@
 // 위치 설정 페이지
 
-// 최종 수정일 : 2023.7.06
+// 최종 수정일 : 2023.7.19
 // 작업자 : 김혁
 
 // 추가 작업 예정 사항
-// 적용 버튼 입력 시 서버에서 데이터 받아오기
+// 적용 버튼 디자인 필요
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -48,16 +48,16 @@ class LocationPageState extends ConsumerState<LocationPage> {
       if (response.statusCode == 200){
         var serverData = response.data;
         addressList.clear();
-        print(serverData);
 
         serverData.forEach((element) => addressList.add(Address.fromJson(element)));
+        debugPrint('--------------------- 주소 검색 완료 --------------------');
       } else {
-        print("서버 값 오류");
-        showToast("서버 값 오류");
+        debugPrint("주소 서버 값 오류");
+        showToast("주소 서버 값 오류");
       }
     } catch(e) {
-      print('검색 오류');
-      showToast('검색 오류');
+      debugPrint('주소 검색 오류');
+      showToast('주소 검색 오류');
     }
   }
 
@@ -163,6 +163,7 @@ class LocationPageState extends ConsumerState<LocationPage> {
   }
 }
 
+// 주소 리스트 위젯
 ListView addressListView(List<Address>? lists, WidgetRef ref, bool isBoardPage){
   if(lists == null || lists.isEmpty){
     return ListView(
@@ -178,10 +179,10 @@ ListView addressListView(List<Address>? lists, WidgetRef ref, bool isBoardPage){
         headers: {"Authorization": "KakaoAK $KakaoRestAPIKey"});
     String addr = kakaoGeo.body;
     var addrData = jsonDecode(addr);
-    print(addrData);
 
     final String dongName = addrData['documents'][0]['region_3depth_name'];
     ref.read(dongProvider.notifier).state = dongName;
+    debugPrint('--------------------- 동 위치 받아오기 완료 --------------------');
   }
 
   return ListView.builder(

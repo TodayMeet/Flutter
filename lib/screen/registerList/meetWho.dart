@@ -28,10 +28,11 @@ class _MeetingWhoState extends State<MeetingWho> {
       children: [
         enabled? Column(
             children: [
-              meet.Title(content:"누구와 만날까요?"),
+              const meet.Title(content:"누구와 만날까요?"),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  // 누구나 버튼
                   Expanded(
                     child: Container(
                       height: 46,
@@ -64,6 +65,8 @@ class _MeetingWhoState extends State<MeetingWho> {
                       ),
                     ),
                   ),
+
+                  // 또래만 버튼
                   Expanded(
                     child: Container(
                       height: 46,
@@ -100,7 +103,7 @@ class _MeetingWhoState extends State<MeetingWho> {
                 ],
               ),
             ]
-        ): Container(
+        ): Container(                             // 버튼 선택 완료 후 출력 버튼
           margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),

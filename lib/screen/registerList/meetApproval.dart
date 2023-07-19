@@ -3,8 +3,6 @@
 // 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
-// 추가 작업 예정 사항
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:front/data/userNo.dart';
@@ -25,6 +23,7 @@ class _MeetingApprovalState extends State<MeetingApproval> {
   bool isChecked = false;
   late String _valueApproval;
 
+  // 서버에 건수 등록
   void _registerMeet() async {
     // 이미지 파일 경로로 변환
     List<MultipartFile> imagefiles;
@@ -63,7 +62,7 @@ class _MeetingApprovalState extends State<MeetingApproval> {
 
     if (response.statusCode == 201) {
       // 성공
-      print(response.data.toString());
+      debugPrint('--------------------- 건수 등록 완료 --------------------');
     } else {
       // 오류
       throw Exception('Failed to post data');
@@ -77,11 +76,14 @@ class _MeetingApprovalState extends State<MeetingApproval> {
       children: [
         enabled? Column(
             children: [
-              meet.Title(content:"참가 승인은 어떻게 할까요?"),
+              const meet.Title(content:"참가 승인은 어떻게 할까요?"),
+
+              // 참가 승인 방법 선택 위젯
               Padding(
                 padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
                 child: Row(
                   children: [
+                    // 자동 승인 버튼
                     Expanded(
                       child: SizedBox(
                         height: 46,
@@ -113,7 +115,9 @@ class _MeetingApprovalState extends State<MeetingApproval> {
                         ),
                       ),
                     ),
+
                     const SizedBox(width: 10),
+                    // 확인 후 승인 버튼
                     Expanded(
                       child: SizedBox(
                         height: 46,
@@ -149,7 +153,7 @@ class _MeetingApprovalState extends State<MeetingApproval> {
                 ),
               ),
             ]
-        ): Container(
+        ): Container(                              // 선택 완료 후 버튼
           margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
@@ -183,7 +187,7 @@ class _MeetingApprovalState extends State<MeetingApproval> {
             },
           ),
         ),
-        isChecked?  Container(
+        isChecked?  Container(                   // 등록 완료 버튼
           height: 46,
           width: size.width,
           margin: const EdgeInsets.all(24),
@@ -196,17 +200,17 @@ class _MeetingApprovalState extends State<MeetingApproval> {
               )
             ),
             onPressed: (){
-              print('category : ' + meet.meetInfo.categoryName);
-              print('address : ' + meet.meetInfo.address);
-              print('lat : ' + meet.meetInfo.lat.toString());
-              print('lon : ' + meet.meetInfo.lon.toString());
-              print('time : '+meet.meetInfo.time);
-              print('age : '+ meet.meetInfo.age.toString());
-              print('peopleLimit : '+meet.meetInfo.peopleLimit.toString());
-              print('fee : '+meet.meetInfo.fee.toString());
-              print('title : '+meet.meetInfo.title);
-              print('content : '+meet.meetInfo.content);
-              print('approval : '+meet.meetInfo.approval.toString());
+              debugPrint('category : ${meet.meetInfo.categoryName}');
+              debugPrint('address : ${meet.meetInfo.address}');
+              debugPrint('lat : ${meet.meetInfo.lat.toString()}');
+              debugPrint('lon : ${meet.meetInfo.lon.toString()}');
+              debugPrint('time : ${meet.meetInfo.time}');
+              debugPrint('age : ${meet.meetInfo.age.toString()}');
+              debugPrint('peopleLimit : ${meet.meetInfo.peopleLimit.toString()}');
+              debugPrint('fee : ${meet.meetInfo.fee.toString()}');
+              debugPrint('title : ${meet.meetInfo.title}');
+              debugPrint('content : ${meet.meetInfo.content}');
+              debugPrint('approval : ${meet.meetInfo.approval.toString()}');
               _registerMeet();
               Navigator.pushReplacementNamed(
                   context,

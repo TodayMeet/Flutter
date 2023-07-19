@@ -1,6 +1,6 @@
 //메인 리스트 게시판 바디 틀
 
-// 최종 수정: 2023.6.27
+// 최종 수정: 2023.7.19
 // 작업자: 정해수 -> 김혁
 
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ import '../../data/meetList.dart';
 import '../../screen/mainList/Loading_to_ListDetail.dart';
 import '../../screen/profile/followList.dart';
 import '../../screen/search/searchPageElement.dart' as element;
+import '../../screen/search/searchingBox.dart';
 import '../TextPrint.dart';
 import '../UI/widget/button/WhiteButton.dart';
 import 'mainListView.dart';
@@ -23,15 +24,15 @@ import 'Advertisement.dart';
 Widget meetListView(
     BuildContext context, WidgetRef ref, List<meetList> viewList, List<String> advertisementList) {
   return ListView(
-    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+    padding: const EdgeInsets.all(24),
     children: [
-      //const SizedBox(height: 24.0,),
       //StringText('📣 주변의 새 이벤트', 24, FontWeight.w700, const Color(0xff2F3036)),
       StringText('🧭 주변 이벤트', 24, FontWeight.w700, const Color(0xff2F3036)),
       const SizedBox(
         height: 19.0,
       ),
 
+      // 건수 리스트
       Column(
           children: viewList.asMap().entries.map((list) {
             int index = list.key;
@@ -46,8 +47,6 @@ Widget meetListView(
         }
         return ListViewer(context, ref, list.value);
       }).toList()),
-      //건수 리스트
-      //StringText('🧭 주변 이벤트', 24, FontWeight.w700, const Color(0xff2F3036)),
     ],
   );
 }
@@ -119,6 +118,8 @@ Widget meetListViews(BuildContext context, WidgetRef ref,
             ),
           ),
           onPressed: () {
+            ref.read(textchangeProvider.notifier).state = "";
+            textcontroller.text = "";
             Navigator.pushNamed(context, Routes.searchBoxRoute);
           },
         ),

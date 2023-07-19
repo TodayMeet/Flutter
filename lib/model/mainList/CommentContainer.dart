@@ -1,10 +1,11 @@
 // 댓글 container
 
-// 최종 수정: 2023.6.27
+// 최종 수정: 2023.7.19
 // 작업자: 정해수 -> 김혁
 
-// 추가 작업해야 할 사항
-// 채팅방 입장 연결
+// 추가 작업 해야 할 사항
+// 댓글 수정, 삭제
+// 게시판 답글쓰기 버튼 클릭 시 입력창 포커스 및 스낵바 출력 필요
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,11 @@ import '../../data/userNo.dart';
 import 'package:front/data/Comment.dart';
 import 'package:front/model/TextPrint.dart';
 
+// 댓글, 대댓글 구분하는 위젯
 Widget CommentContainer(
     BuildContext context, Comment comment, int key, WidgetRef ref, bool commentSummary) {
   if (comment.parentNo < 0) {
-    //대댓이 아니면
+    //대댓이 아닐 경우
     return SizedBox(
       width: MediaQuery.of(context).size.width - 50,
       child: Column(
@@ -33,6 +35,7 @@ Widget CommentContainer(
       ),
     );
   } else {
+    // 대댓글일 경우
     return Column(
       children: [
         const SizedBox(height: 8),
@@ -40,9 +43,8 @@ Widget CommentContainer(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SvgPicture.asset('assets/icons/detail/comment_reply.svg'),
-            const SizedBox(
-              width: 5,
-            ),
+
+            const SizedBox(width: 5),
             Expanded(
               child: commentBox(comment, context, ref, commentSummary),
             ),
@@ -60,9 +62,10 @@ Widget commentBox(Comment comment, BuildContext context, WidgetRef ref, bool com
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // 사용자 데이터
           Row(
             children: [
-              //사용자 아이콘
+              // 사용자 아이콘
               ClipOval(
                 child: Image.network(
                   comment.userProfileImage,
@@ -71,30 +74,33 @@ Widget commentBox(Comment comment, BuildContext context, WidgetRef ref, bool com
                   height: 26,
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
+              const SizedBox(width: 10),
 
+              // 사용자 이름
               StringText(comment.username, 12, FontWeight.w400, Colors.black),
             ],
-          ), //사용자 아이콘
+          ),
+
+          // 신고하기 아이콘
           InkWell(
               onTap: () {
                 reporting(context, comment.meetCommentNo);
               },
               child: SvgPicture.asset(
-                  "assets/icons/detail/report.svg")), //신고하기 아이콘
+                  "assets/icons/detail/report.svg"
+              )
+          ),
         ],
       ),
-      const SizedBox(
-        height: 10,
-      ),
+
+      const SizedBox(height: 10),
+      // 댓글 내용
       Container(
           child: StringText_letterspacing(
               comment.content, 12, FontWeight.w400, Colors.black, -0.5)),
-      const SizedBox(
-        height: 10,
-      ),
+
+      const SizedBox(height: 10),
+      // 댓글 작성 시간 및 답글 쓰기 or 수정, 삭제
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -129,7 +135,7 @@ Widget commentBox(Comment comment, BuildContext context, WidgetRef ref, bool com
                       ),
                       const SizedBox(width: 10),
 
-                      // 수정 버튼
+                      // 삭제 버튼
                       InkWell(
                         onTap: () {},
                         child: const Text("삭제",
@@ -145,7 +151,7 @@ Widget commentBox(Comment comment, BuildContext context, WidgetRef ref, bool com
               // 답글 쓰기
               : InkWell(
                   onTap: () {
-                    if (commentSummary == true) {
+                    if (commentSummary == true) {           // 게시판 댓글 - textfield 활성화 및 snackbar 출력 필요
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -154,8 +160,11 @@ Widget commentBox(Comment comment, BuildContext context, WidgetRef ref, bool com
                           )
                         )
                       );
+
+                      // 대댓글 번호 변경
+                      ref.read(replyProvider.notifier).state = comment.meetCommentNo;
                     }
-                    else {
+                    else {                                  // 댓글 화면
                       // 대댓글 번호 변경
                       ref.read(replyProvider.notifier).state = comment.meetCommentNo;
 
@@ -163,7 +172,7 @@ Widget commentBox(Comment comment, BuildContext context, WidgetRef ref, bool com
                       FocusScope.of(context).unfocus();
                       FocusScope.of(context).requestFocus(textFieldFocusNode);
 
-                      // SnackBar 생성
+                      // SnackBar 출력
                       scaffoldKey.currentState?.hideCurrentSnackBar();
                       showsnackbar(context, comment, ref);
                     }
@@ -173,11 +182,13 @@ Widget commentBox(Comment comment, BuildContext context, WidgetRef ref, bool com
                 ),
         ],
       ),
+
       const SizedBox(height: 12),
     ],
   );
 }
 
+// 답글 쓰기 누를 시 보이는 스낵바 출력
 void showsnackbar(BuildContext context, Comment comment, WidgetRef ref){
   scaffoldKey.currentState?.showSnackBar(SnackBar(
     content: Container(
@@ -231,6 +242,7 @@ void showsnackbar(BuildContext context, Comment comment, WidgetRef ref){
   ));
 }
 
+// 신고하기 기능
 void reporting(BuildContext context, int meetcommentNo) {
   showModalBottomSheet(
       shape: const RoundedRectangleBorder(
@@ -291,6 +303,7 @@ void reporting(BuildContext context, int meetcommentNo) {
       });
 }
 
+// 신고하기 버튼
 Widget reportButton(String str, BuildContext context, int meetCommentNo, int type) {
 
   // 서버로 신고 push
@@ -329,6 +342,7 @@ Widget reportButton(String str, BuildContext context, int meetCommentNo, int typ
         ),
       ),
       onPressed: () {
+        // 버튼 클릭 시 보이는 dialog
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -453,6 +467,7 @@ Widget reportButton(String str, BuildContext context, int meetCommentNo, int typ
   );
 }
 
+// 구분선
 Widget line(int key) {
   if (key != 0) {
     return const Divider(

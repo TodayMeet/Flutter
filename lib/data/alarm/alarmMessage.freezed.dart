@@ -20,12 +20,12 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Alarm {
-  String get time => throw _privateConstructorUsedError;
-  int? get userNumber => throw _privateConstructorUsedError;
-  int? get meetNumber => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get imageLink => throw _privateConstructorUsedError;
-  int get notiType => throw _privateConstructorUsedError;
+  String get time => throw _privateConstructorUsedError; // 알림 시간
+  int? get userNumber => throw _privateConstructorUsedError; // 사용자 번호
+  int? get meetNumber => throw _privateConstructorUsedError; // 건수 번호
+  String get name => throw _privateConstructorUsedError; // 출력되는 텍스트 값
+  String get imageLink => throw _privateConstructorUsedError; // 알림에 뜨는 이미지
+  int get notiType => throw _privateConstructorUsedError; // 알림 유형
   bool get processed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -185,16 +185,22 @@ class _$_Alarm with DiagnosticableTreeMixin implements _Alarm {
 
   @override
   final String time;
+// 알림 시간
   @override
   final int? userNumber;
+// 사용자 번호
   @override
   final int? meetNumber;
+// 건수 번호
   @override
   final String name;
+// 출력되는 텍스트 값
   @override
   final String imageLink;
+// 알림에 뜨는 이미지
   @override
   final int notiType;
+// 알림 유형
   @override
   final bool processed;
 
@@ -269,17 +275,17 @@ abstract class _Alarm implements Alarm {
 
   @override
   String get time;
-  @override
+  @override // 알림 시간
   int? get userNumber;
-  @override
+  @override // 사용자 번호
   int? get meetNumber;
-  @override
+  @override // 건수 번호
   String get name;
-  @override
+  @override // 출력되는 텍스트 값
   String get imageLink;
-  @override
+  @override // 알림에 뜨는 이미지
   int get notiType;
-  @override
+  @override // 알림 유형
   bool get processed;
   @override
   @JsonKey(ignore: true)

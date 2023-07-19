@@ -3,8 +3,6 @@
 // 최종 수정일 : 2023.6.26
 // 작업자 : 김혁
 
-// 추가 작업 예정 사항
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,11 +30,14 @@ class _MeetingFeeState extends State<MeetingFee> {
       children: [
         enabled? Column(
             children: [
-              meet.Title(content:"참가비는 얼마인가요?"),
+              const meet.Title(content:"참가비는 얼마인가요?"),
+
+              // 참가비 유/무 선택 버튼
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Row(
                   children: [
+                    // 참가비 없음 버튼
                     Expanded(
                       child: SizedBox(
                         height: 46,
@@ -67,7 +68,9 @@ class _MeetingFeeState extends State<MeetingFee> {
                         ),
                       ),
                     ),
+
                     const SizedBox(width: 10),
+                    // 참가비 있음 버튼
                     Expanded(
                       child: SizedBox(
                         height: 46,
@@ -100,6 +103,8 @@ class _MeetingFeeState extends State<MeetingFee> {
                   ],
                 ),
               ),
+
+              // 참가비 입력 필드
               Container(
                 alignment: Alignment.centerLeft,
                 height: 48,
@@ -132,6 +137,8 @@ class _MeetingFeeState extends State<MeetingFee> {
                   expands: false,
                 ),
               ),
+
+              // 다음 버튼
               Container(
                 height: 46,
                 width: size.width,
@@ -167,7 +174,7 @@ class _MeetingFeeState extends State<MeetingFee> {
                 ),
               ),
             ]
-        ): Container(
+        ): Container(                             // 입력 완료 후 출력 버튼
           margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),

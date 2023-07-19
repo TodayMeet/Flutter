@@ -22,6 +22,9 @@ _$_meetList _$$_meetListFromJson(Map<String, dynamic> json) => _$_meetList(
       peopleLimit: json['peopleLimit'] as int,
       peopleNum: json['peopleNum'] as int,
       address: json['address'] as String,
+      participantUserImage: (json['participantUserImage'] as List<dynamic>)
+          .map((e) => e as Map<String, dynamic>)
+          .toList(),
       peopleClosed: json['peopleClosed'] as bool,
     );
 
@@ -41,5 +44,6 @@ Map<String, dynamic> _$$_meetListToJson(_$_meetList instance) =>
       'peopleLimit': instance.peopleLimit,
       'peopleNum': instance.peopleNum,
       'address': instance.address,
+      'participantUserImage': instance.participantUserImage,
       'peopleClosed': instance.peopleClosed,
     };

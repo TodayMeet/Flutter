@@ -3,9 +3,6 @@
 // 최종 수정일 : 2023.6.23
 // 작업자 : 김혁
 
-// 추가 작업 예정 사항
-// 현재 위치 가져오기 할 시 근처에 건물 없을 시 처리
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakaomap_webview/kakaomap_webview.dart';
@@ -72,6 +69,7 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
         setState(() {
           searchResults.value = docs;
         });
+        debugPrint('--------------------- 위치 검색 완료 --------------------');
       } else {
         throw Exception('Failed to load address');
       }
@@ -142,7 +140,7 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
         headers: {"Authorization": "KakaoAK $KakaoRestAPIKey"});
     if (kakaoGeo.statusCode == 200) {
       final addrData = json.decode(kakaoGeo.body);
-      print(addrData);
+      debugPrint('--------------------- 현재 위치 받아오기 완료 --------------------');
 
       if (addrData['documents'][0]['road_address'] == null) {
         meetLocation = addrData['documents'][0]['address']['address_name'];
@@ -222,7 +220,7 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
         backgroundColor: Colors.white,
         context: context,
         builder: (BuildContext context) {
-          WidgetsBinding.instance?.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             _focusNode.requestFocus();
           });
           return Container(
@@ -271,8 +269,10 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
                             },
                           ),
                         ),
-                      ]),
+                      ]
+                  ),
 
+                  // 검색 창
                   Container(
                     height: 46,
                     padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
@@ -322,6 +322,7 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
         });
   }
 
+  // 선택한 위치 보여주는 함수
   void _showlocationmap() {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -387,6 +388,7 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
                     ],
                   ),
 
+                  // 선택한 위치 지도 출력
                   Container(
                     height: 330,
                     width: size.width,
@@ -442,6 +444,7 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
                     ),
                   ),
 
+                  // 위치 설정 버튼
                   InkWell(
                     onTap: () {
                       categoryChange();
@@ -487,8 +490,9 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
         enabled
             ? Column(
                 children: [
-                  meet.Title(content: "어디서 만날까요?"),
-                  Container(
+                  const meet.Title(content: "어디서 만날까요?"),
+
+                  Container(                                // 위치 선택 버튼
                     width: size.width,
                     margin: const EdgeInsets.fromLTRB(24, 0, 24, 12),
                     decoration: BoxDecoration(
@@ -519,7 +523,7 @@ class MeetingLocationState extends ConsumerState<MeetingLocation> {
                   ),
                 ],
               )
-            : Container(
+            : Container(                                  // 선택 후 출력 버튼
                 margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.0),

@@ -380,8 +380,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 /// fcm 전경 처리 - 로컬 알림 보이기
 void showFlutterNotification(RemoteMessage message) {
-  debugPrint("---------------------------------------------");
-
+  debugPrint('--------------------- 파이어 베이스 --------------------');
   RemoteNotification? notification = message.notification;
   Map<String, dynamic> data = message.data;
   if (data['type'].toString() == "0") {
@@ -427,7 +426,6 @@ Widget searchMain(BuildContext context) {
 }
 
 class NoGlowScrollBehavior extends ScrollBehavior {
-  @override
   Widget buildViewportChrome(
     BuildContext context,
     Widget child,

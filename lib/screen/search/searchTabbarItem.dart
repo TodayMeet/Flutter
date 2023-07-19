@@ -1,6 +1,6 @@
 // 탐색 3 페이지 - 탭바 및 탭바 뷰
 
-// 최종 수정일 : 2023.6.30
+// 최종 수정일 : 2023.7.19
 // 작업자 : 김혁
 
 import 'package:flutter/material.dart';
@@ -77,6 +77,7 @@ class TabbarPage extends ConsumerWidget {
   }
 }
 
+// 상단 탭바 아이템
 PreferredSizeWidget searchTabbar(){
   return PreferredSize(
     preferredSize: const Size.fromHeight(52),

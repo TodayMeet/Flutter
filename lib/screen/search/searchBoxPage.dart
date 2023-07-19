@@ -1,11 +1,7 @@
 // 탐색 2 페이지 - 최근 검색어 및 실시간 인기 카테고리
 
-// 최종 수정일 : 2023.6.30
+// 최종 수정일 : 2023.7.19
 // 작업자 : 김혁
-
-// 추가 작업 예정 사항
-// 최근 검색어 저장 및 관리
-// 서버 연결
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +30,7 @@ class SearchBoxPageState extends ConsumerState<SearchBoxPage> {
   // 최근 검색어 목록
   List<String> searchwords = [];
 
-  // 인기 검색어 받아오기
+  // 인기 카테고리 받아오기
   List<PopularList> popularList = [];
   Future<int> getPopularCategoryList() async {
     try {
@@ -49,15 +45,16 @@ class SearchBoxPageState extends ConsumerState<SearchBoxPage> {
         serverData
             .forEach((element) => popularList.add(PopularList.fromJson(element)));
 
+        debugPrint('--------------------- 인기 카테고리 받아오기 완료 --------------------');
         return 1;
       } else{
-        print('Data download failed!');
+        debugPrint('Data download failed!');
         showToast('Data download failed!');
         return 0;
       }
     }
     catch (e) {
-      print('There was a problem with the internet connection.');
+      debugPrint('There was a problem with the internet connection.');
       showToast('There was a problem with the internet connection.');
       return -1;
     }
@@ -92,6 +89,7 @@ class SearchBoxPageState extends ConsumerState<SearchBoxPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // 최근 검색어 텍스트
                 const Text(
                   '최근 검색어',
                   style: TextStyle(
@@ -100,6 +98,8 @@ class SearchBoxPageState extends ConsumerState<SearchBoxPage> {
                     fontSize: 14,
                   ),
                 ),
+
+                // 모두 지우기 버튼
                 TextButton(
                   style: const ButtonStyle(
                     padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(

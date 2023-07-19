@@ -43,10 +43,11 @@ class _Phone_ijState extends State<Phone_ij> {
   String phoneNumber = '';
   String apvNum = '';
   bool isDupicate = true;
+  bool certiSuccess = false;
 
 
 
-
+//휴대폰번호 중복검사 - 중복인 휴대폰 번호일 경우 isCodeSend를 통해 인증번호 전송을 할지 안할지 결정
   Future<void> phonenumDuplicate() async {
     final url = Uri.parse('http://todaymeet.shop:8080/phone/${phoneNumber}');
     final requestData = {
@@ -82,6 +83,7 @@ class _Phone_ijState extends State<Phone_ij> {
     }
   }
 
+  //카운트다운 시작
   void startCountdown() {
     _isCountdownStarted = true;
     if (_isCountdownStarted) {
@@ -99,6 +101,7 @@ class _Phone_ijState extends State<Phone_ij> {
     }
   }
 
+  // 카운트다운 초기화
   void resetCountdown() {
     setState(() {
       _isCountdownStarted = false;
@@ -111,8 +114,9 @@ class _Phone_ijState extends State<Phone_ij> {
     int minutes = _countdown ~/ 60;
     int seconds = _countdown % 60;
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false, //텍스트필드 입력 중에 버튼이 위로 올라오지 않게 설정
       backgroundColor: Colors.white,
+        //앱바 설정
         appBar: CustomAppBar(
           leadingWidget: SvgButton(
             imagePath: backarrow,
@@ -124,9 +128,12 @@ class _Phone_ijState extends State<Phone_ij> {
         body: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(children: [
+            //휴대전화번호 텍스트필드 제목
             textfieldTitle(title: '휴대전화번호', star: true),
+            //여백
             SizedBox(height: 8,),
-            Container(
+            //인증번호, 인증번호 요청 텍스트필드
+          Container(
               width: MediaQuery.of(context).size.width,
               height: 40.0,
               decoration: BoxDecoration(
@@ -135,17 +142,11 @@ class _Phone_ijState extends State<Phone_ij> {
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-
                 children: [
-                  SizedBox(width: 16.0),
                   Expanded(
                     child: TextField(
                       autofocus: true,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        NumberFormatter(), //숫자에 다시 넣어서
-                        LengthLimitingTextInputFormatter(13) //010-1234-1234 이거 13자리
-                      ],
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly, NumberFormatter(), LengthLimitingTextInputFormatter(13) ],//전화번호 형식으로 변경 최대 13자리까지 입력가능
                       onChanged: (value) {
                         setState(() {
                           _text2 = value;
@@ -154,6 +155,7 @@ class _Phone_ijState extends State<Phone_ij> {
                       },
                       style: TextStyle(fontSize: 13.0),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(16.0, 0, 16.0, 8),
                         hintText: '휴대전화번호를 입력해주세요',
                         hintStyle: TextStyle(color: hinttextColor, fontSize: 13.0),
                         border: InputBorder.none,
@@ -162,7 +164,7 @@ class _Phone_ijState extends State<Phone_ij> {
                   ),
                   SizedBox(width: 16.0),
                   Container(
-                    width: 110,
+                    width: 100,
                     height: 46,
                     child: ElevatedButton(
                       onPressed: () {
@@ -210,7 +212,7 @@ class _Phone_ijState extends State<Phone_ij> {
                       child: Text(
                         '인증번호 요청',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 10,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
@@ -222,7 +224,7 @@ class _Phone_ijState extends State<Phone_ij> {
             ),
             SizedBox(height: 10.0),
             Container(
-              padding: EdgeInsets.only(left: 16.0),
+
               width: MediaQuery.of(context).size.width,
               height: 40.0,
               decoration: BoxDecoration(
@@ -235,6 +237,7 @@ class _Phone_ijState extends State<Phone_ij> {
                 children: [
                   Expanded(
                     child: TextField(
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly,  LengthLimitingTextInputFormatter(6) ],
                       onChanged: (value) {
                         setState(() {
                           _text3 = value;
@@ -242,6 +245,7 @@ class _Phone_ijState extends State<Phone_ij> {
                       },
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(16.0, 0, 16.0, 8),
                         hintText: '인증번호',
                         hintStyle: TextStyle(color: hinttextColor,fontSize: 13.0),
                         border: InputBorder.none,
@@ -259,15 +263,21 @@ class _Phone_ijState extends State<Phone_ij> {
                   SizedBox(width: 13.0),
 
                   Container(
-                    width: 110,
+                    width: 100,
                     height: 46,
                     child: ElevatedButton(
                       onPressed: () {
 
                         if(_countdown==0){
                           onebutton.inputTimeOverDialog(context);
-                        }else{
+                        } else if(_text2 =='' ||  _text3 ==''){
+                          onebutton.certificationFailDialog(context);
+                        }
+                        else{
                           onebutton.certificationSuccessDialog(context);
+                          setState(() {
+                            certiSuccess = true;
+                          });
                         }
                       },
                       style: ButtonStyle(
@@ -286,8 +296,6 @@ class _Phone_ijState extends State<Phone_ij> {
                         overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
                         backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                           if (states.contains(MaterialState.pressed)) {
-                            // 버튼이 눌려 있을 때의 배경색
-                            //color: rgb(72,116,234);
                             return Colors.black54; //
                           }
                           return Colors.black; // 기본 배경색
@@ -296,7 +304,7 @@ class _Phone_ijState extends State<Phone_ij> {
                       child: Text(
                         '확인',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 10,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
@@ -308,20 +316,17 @@ class _Phone_ijState extends State<Phone_ij> {
             ),
             Spacer(),
             blueButton(buttonText: '다음', onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => accountsetting(),
-                ),
-              );
-            },)
+              certiSuccess
+                  ? Navigator.push(context, MaterialPageRoute(builder: (context) => accountsetting(),),)
+                  : onebutton.certificationFailDialog(context);
+              },)
 
           ]),
         ));
   }
 }
 
-
+//숫자 입력하면 전화번호 형식으로 변환
 class NumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

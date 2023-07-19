@@ -223,6 +223,19 @@ class onebutton{
       ),
     );
   } //인증성공
+  static void certificationFailDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogOneButton(
+        message: '휴대전화번호 인증을 완료해주세요',
+        buttonText: '확인',
+        onButtonPressed: () {
+          Navigator.pop(context);
+        },
+
+      ),
+    );
+  } //휴대전화번호 인증을 완료해주세요
   static void incorrectCertificationDialog(BuildContext context){
     showDialog(
       context: context,

@@ -8,6 +8,7 @@
 import 'dart:convert';
 
 
+import 'package:flutter/services.dart';
 import 'package:front/model/UI/widget/text/textfieldTitle.dart';
 import 'package:front/screen/login/idFindResult.dart';
 import 'package:front/screen/login/pwFindResult.dart';
@@ -94,8 +95,9 @@ class _pwFindState extends State<pwFind> {
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           appBar: CustomAppBar(
-            leadingWidget: null,
-            automaticallyImplyLeading: false,
+            leadingWidget: SvgButton(imagePath: backarrow,onPressed: (){
+              Navigator.pop(context);
+            },),
             title: '비밀번호 찾기',
           ),
           body: Padding(
@@ -104,14 +106,7 @@ class _pwFindState extends State<pwFind> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-              Padding(
-                padding: EdgeInsets.zero,
-                child: Text(
-                  '아이디(이메일)',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700, fontSize: 14),
-                ),
-              ),
+              textfieldTitle(title: '아이디(이메일) ', star: true),
               SizedBox(height: 8.0),
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -120,6 +115,7 @@ class _pwFindState extends State<pwFind> {
                   border: Border.all(color: Color(0xFF1F2024)),
                 ),
                 child: TextField(
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9!@#$%^&*().]"),),],
                   controller: _idController,
                   onChanged: (value) {
                   },
@@ -138,16 +134,17 @@ class _pwFindState extends State<pwFind> {
                 ),
               ),
               SizedBox(height: 8.0),
-              textfieldTitle(title: pwTitle, star: true, reverse: true,),
+              textfieldTitle(title: ' 이메일 주소는 “@”와 “.”을 최소 하나 이상 포함되어야 합니다.', star: true, reverse: true,),
               Text(
                 convertIsDuplicateToString(isDuplicate),
                 style: TextStyle(color: messageRed, fontSize: 12.0),
               ),
+                  SizedBox(height: 24,),
               textfieldTitle(title: '휴대전화번호', star: true),
               SizedBox(height: 8,),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 40.0,
+                height: 46.0,
                 decoration: BoxDecoration(
                   color: textfieldColor,
                   borderRadius: BorderRadius.circular(10.0),
@@ -158,6 +155,7 @@ class _pwFindState extends State<pwFind> {
                     SizedBox(width: 16.0),
                     Expanded(
                       child: TextField(
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly, NumberFormatter(),],
                         onChanged: (value) {
                           setState(() {
                             _text2 = value;
@@ -231,7 +229,7 @@ class _pwFindState extends State<pwFind> {
               Container(
                 padding: EdgeInsets.only(left: 16.0),
                 width: MediaQuery.of(context).size.width,
-                height: 40.0,
+                height: 46.0,
                 decoration: BoxDecoration(
                   color: textfieldColor,
                   borderRadius: BorderRadius.circular(10.0),
@@ -242,6 +240,7 @@ class _pwFindState extends State<pwFind> {
                   children: [
                     Expanded(
                       child: TextField(
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         onChanged: (value) {
                           setState(() {
                             _text3 = value;
@@ -321,5 +320,39 @@ class _pwFindState extends State<pwFind> {
             ]),
           )),
     );
+  }
+}
+
+class NumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    var text = newValue.text;
+
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
+
+    var buffer = StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      var nonZeroIndex = i + 1;
+      if (nonZeroIndex <= 3) {
+        if (nonZeroIndex % 3 == 0 && nonZeroIndex != text.length) {
+          buffer.write('-'); // Add double spaces.
+        }
+      } else {
+        if (nonZeroIndex % 7 == 0 &&
+            nonZeroIndex != text.length &&
+            nonZeroIndex > 4) {
+          buffer.write('-');
+        }
+      }
+    }
+
+    var string = buffer.toString();
+    return newValue.copyWith(
+        text: string,
+        selection: TextSelection.collapsed(offset: string.length));
   }
 }

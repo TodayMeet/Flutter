@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../../data/meetList.dart';
 import '../../data/meetList_Provider.dart';
 import '../../model/mainList/meetListView.dart';

@@ -21,6 +21,7 @@ class _oftenQuestionState extends State<oftenQuestion> {
   int faqno = 0;
   List<Map> finalresult = [];
 
+  // 자주 묻는 질문 불러오기
   Future<void> questionLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/FAQ/list');
     final requestData = {
@@ -50,6 +51,7 @@ class _oftenQuestionState extends State<oftenQuestion> {
     }
   } //서버로 전송
 
+  // 시작할때 questionLoad로 불러옴
   @override
   void initState() {
     super.initState();
@@ -64,7 +66,6 @@ class _oftenQuestionState extends State<oftenQuestion> {
         leadingWidget: SvgButton(
           imagePath: backarrow,
           onPressed: () {
-            // questionLoad();
             Navigator.pop(context);
           },
         ),

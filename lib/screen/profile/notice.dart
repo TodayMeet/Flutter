@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:front/data/designconst/constants.dart';
 import 'package:front/model/TextPrint.dart';
 import 'package:front/model/UI/widget/button/svgButton.dart';
-import 'package:front/screen/profile/noticeList.dart';
 import 'package:intl/intl.dart';
 
 import '../../model/UI/widget/customAppBar.dart';
@@ -53,16 +52,21 @@ class _noticeState extends State<notice> {
         title = result["title"];
         content = result["content"];
         time = result["time"];
+
+        // String으로 불러온 형식 변환
         final originalFormat = DateFormat("yyyy-MM-ddTHH:mm:ss.SSSZ");
         final parsedDateTime = originalFormat.parse(time);
         final newFormat = DateFormat("yyyy.MM.dd HH:mm");
         final newDateTimeString = newFormat.format(parsedDateTime);
         time = newDateTimeString;
+        
+        //이미지를 리스트에 저장
         images = List<String>.from(result["images"]);
       });
     }
   } //서버로 전송
 
+  // 처음 시작할때 정보를 받아옴
   @override
   void initState() {
     noticeContentLoad();
@@ -108,6 +112,7 @@ class _noticeState extends State<notice> {
 
 
 Widget _buildImageWidget(BuildContext context,List<String> images) {
+  // 이미지가 없을때
   if (images.isEmpty) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -115,9 +120,13 @@ Widget _buildImageWidget(BuildContext context,List<String> images) {
       color: Color(0xFFF5F6FA), child: Center(child: SvgPicture.asset('assets/icons/Image.svg', width: 71, height: 70),
       ),
     );
-  } else if (images.length == 1) {
+  } 
+  //이미지가 하나뿐일때
+  else if (images.length == 1) {
     return Image.network(images[0], fit: BoxFit.cover,);
-  } else {
+  } 
+  // 이미지가 두개 이상일때
+  else {
     List<Widget> imageWidgets = images.map((imageUrl) => Image.network(imageUrl, fit: BoxFit.cover,),).toList();
     return CarouselSlider(
       items: imageWidgets, options: CarouselOptions(autoPlay: false,enlargeCenterPage: true,viewportFraction: 1.0,enableInfiniteScroll: false),

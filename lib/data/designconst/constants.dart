@@ -9,10 +9,10 @@ const String backarrow = 'assets/icons/backarrow.svg';
 const String fowardarrow = 'assets/icons/fowardarrow.svg';
 const String camera = 'assets/icons/detail/Camera.svg';
 const Color textfieldColor = Color(0xFFF5F6FA);
-const String visible = 'assets/icons/detail/Visibility.svg';
-const String visibleOff = 'assets/icons/detail/Visibility_off.svg';
-const String Camera = 'assets/icons/detail/Camera.svg';
-TextStyle messageStyle = TextStyle(color: messageRed, fontSize: 12.0);
+// // const String visible = 'assets/icons/detail/Visibility.svg';
+// const String visibleOff = 'assets/icons/detail/Visibility_off.svg';
+// const String Camera = 'assets/icons/detail/Camera.svg';
+// TextStyle messageStyle = TextStyle(color: messageRed, fontSize: 12.0);
 
 
 ButtonStyle CustomButtonStyle(Color backgroundColor, Color pressedColor, Color borderColor) {

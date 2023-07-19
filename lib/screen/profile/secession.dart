@@ -1,3 +1,6 @@
+//탈퇴하기
+
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -33,7 +36,7 @@ class _secessionState extends State<secession> {
 
   @override
   Widget build(BuildContext context) {
-    String appbarText = '탈퇴신청';
+
     return Scaffold(
 
       resizeToAvoidBottomInset: false,
@@ -45,15 +48,20 @@ class _secessionState extends State<secession> {
             Navigator.pop(context);
             },
         ),
-        title: appbarText,
+        title: '탈퇴신청',
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //텍스트필드 제목 사유
             textfieldTitle(title: '사유', star: false),
+
+            //텍스트필드 제목과 사유 입력 사이 여백
             SizedBox(height: 8.0,),
+
+            //텍스트필드
             Container(decoration: BoxDecoration(color: textfieldColor, borderRadius: BorderRadius.circular(12.0),),
               child: TextField(controller: textarea, maxLines: 10,
                 decoration: InputDecoration(
@@ -64,10 +72,16 @@ class _secessionState extends State<secession> {
                 ),
               ),
             ),
+
+            //텍스트필드 - 메시지 사이 여맥
             SizedBox(
               height: 8.0,
             ),
+
+            //200자 이내로 입력가능합니다. 메시지
             textfieldTitle(title: ' 200자 이내로 입력 가능합니다.', star: true, reverse: true,),//텍스트필드-입력가능 사이 여백 //200자 이내로 입력 가능합니다.
+
+            //메시지와 탈퇴 버튼 사이 여백
             Spacer(),
             //탈퇴버튼
             //200자가 넘으면 over200Dialog
@@ -75,10 +89,8 @@ class _secessionState extends State<secession> {
                   if(textarea.text.length > 200){
                     onebutton.over200Dialog(context);
                   }else{
-                    print('${widget.userNo}');
-
+                    print('탈퇴하는 유저의 번호 : ${widget.userNo}');
                     twobutton.secessionDialog(context);
-
                   }
 
                 })

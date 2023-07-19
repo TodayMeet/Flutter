@@ -85,6 +85,8 @@ class _userProfileState extends ConsumerState<userProfile> {
       return 0;
     }
   }
+
+  //팔로우
   Future<void> follow() async {
     final url1 = Uri.parse('http://todaymeet.shop:8080/follow/add');
     final requestData = {
@@ -115,6 +117,8 @@ class _userProfileState extends ConsumerState<userProfile> {
 
     }
   }
+
+  //언팔로우
   Future<void> unfollow() async {
     final url1 = Uri.parse('http://todaymeet.shop:8080/follow/minus');
     final requestData = {
@@ -140,6 +144,8 @@ class _userProfileState extends ConsumerState<userProfile> {
 
     }
   }
+
+  // userNo로 정보 받아오기
   Future<void> userInfoLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/user-profile/${widget.userNo}');
     final requestData = {
@@ -178,6 +184,8 @@ class _userProfileState extends ConsumerState<userProfile> {
       });
     } else {}
   }
+
+  //user가 팔로우 하는 사람의 숫자 불러오기
   Future<void> followingLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/follow/list?userNo=${widget.userNo}');
     print('foloowingLoad의 userNo입니다============================${widget.userNo}');
@@ -196,13 +204,15 @@ class _userProfileState extends ConsumerState<userProfile> {
       final responseData2 =jsonDecode(utf8.decode(response.bodyBytes));
 
       followingnum = responseData2.length;
-      print('임마 followingnum ${followingnum}');
+      print('user가 팔로우하는 사람의 숫자 followingnum ${followingnum}');
       // setState(() {
       //   followNoList = responseData2.map<int>((user) => user['userNo'] as int).toSet().toList();
       //   UserNo.FollowList = followNoList;
       // });
     } else {}
   }//팔로잉 정보 불러오기
+
+  // user를 팔로우 하는 사람의 숫자 불러오기
   Future<void> followerLoad() async {
     final url = Uri.parse('http://todaymeet.shop:8080/followee/list?userNo=${widget.userNo}');
     print('followerLoad의 userNo입니다============================${widget.userNo}');
@@ -223,6 +233,7 @@ class _userProfileState extends ConsumerState<userProfile> {
       print('followernum입니다 ${followernum}');
     } else {}
   }//팔로워 정보 불러오기
+
 
   @override
   void initState() {
@@ -253,6 +264,8 @@ class _userProfileState extends ConsumerState<userProfile> {
         ),
         title: username +'님의 프로필',
       ),
+
+
       body: SmartRefresher(
           enablePullUp: true,
           enablePullDown: true,
@@ -297,7 +310,7 @@ Widget meeeeet(BuildContext context, WidgetRef ref, List<meetList> viewList,
     String userprofileimage,String username, int userNo,String genderString,
     String birth,int followernum,int followingnum,bool isFollow,
     VoidCallback onFollowButtonPressed,bool isBlock,VoidCallback onBlockButtonPressed) {
-  return ListView(  // 탐색 화면 검색 창 탭바
+  return ListView(
     padding: EdgeInsets.zero,
     children: [
       Padding(

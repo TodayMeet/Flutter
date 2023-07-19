@@ -1,9 +1,4 @@
-// 시작 화면
-//
-// 남재혁
-// 최종수정일 2023.05.14
-//추후 작업예정사항
-// 화면 전체 수정
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -100,52 +95,34 @@ class startContent extends StatelessWidget {
     return SafeArea(
       child: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          //여백
           Spacer(),
-          image(),
-          Spacer(),
-          startCompanyName(),
-          SizedBox(
-            height: 52,
+          
+          // 이미지 출력 - svg,png 둘다 깨짐 
+          Container(
+              padding: EdgeInsets.zero,
+              width: 121,
+              height: 84,
+              child: SvgPicture.asset('assets/images/LoginImage/logoimage.svg')
           ),
+          
+          //여백
+          Spacer(),
+          
+          //회사 이름 출력
+          Text('ⓒbandeuthan', style: TextStyle(color: Color(0xFF626262), fontSize: 12.0, fontFamily: 'xeicon'),),
+          
+          //여백
+          SizedBox(height: 52,),
         ]),
       ),
     );
   }
 }
 
-class image extends StatelessWidget {
-  const image({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.zero,
-      width: 121,
-      height: 84,
-      child: SvgPicture.asset('assets/images/LoginImage/logoimage.svg')
-    );
-  }
-}
 
 
 
-//startCompanyName : 반듯한 컴퍼니 출력한느 부분
-class startCompanyName extends StatelessWidget {
-  const startCompanyName({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'ⓒbandeuthan',
-      style: TextStyle(
-          color: Color(0xFF626262), fontSize: 12.0, fontFamily: 'xeicon'),
-    );
-  }
-}
 
 void saveLoginCredentials(String username, String password) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -153,154 +130,3 @@ void saveLoginCredentials(String username, String password) async {
   await prefs.setString('password', password);
 }
 
-// Future<bool> tryAutoLogin() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   String username = prefs.getString('username');
-//   String password = prefs.getString('password');
-//
-//   // 저장된 로그인 정보가 있는 경우
-//   if (username != null && password != null) {
-//     // 서버로 로그인 요청을 보내고 성공 여부를 확인합니다.
-//     bool loginSuccess = await login(username, password);
-//
-//     if (loginSuccess) {
-//       // 로그인 성공 시 필요한 작업을 수행합니다.
-//       return true;
-//     } else {
-//       // 저장된 로그인 정보는 있지만, 서버에서 로그인 실패한 경우
-//       // 저장된 로그인 정보를 삭제합니다.
-//       await clearLoginCredentials();
-//       return false;
-//     }
-//   } else {
-//     // 저장된 로그인 정보가 없는 경우
-//     return false;
-//   }
-// }
-
-// void _startdataload() async {
-//   final url = Uri.parse("http://todaymeet.shop:8080/meet/add");
-//   final Map<String, dynamic> jsonData = {
-//     'category':{
-//       'categoryNo': meet.meetInfo.categoryNo
-//     },
-//     'address' : meet.meetInfo.address,
-//     'lat' : meet.meetInfo.lat,
-//     'lon' : meet.meetInfo.lon,
-//     'time' : meet.meetInfo.time,
-//     'age' : meet.meetInfo.age,
-//     'peopleLimit' : meet.meetInfo.peopleLimit,
-//     'fee' : meet.meetInfo.fee,
-//     'title' : meet.meetInfo.title,
-//     'content' : meet.meetInfo.content,
-//     'approval' : meet.meetInfo.approval,
-//     'user': {
-//       'userNo' : 1
-//     },
-//   };
-//
-//   final response = await http.post(
-//     url,
-//     headers: {'Content-Type' : 'application/json'},
-//     body: json.encode(jsonData),
-//   );
-//
-//   if (response.statusCode == 200) {
-//     print(json.decode(response.body));
-//   } else {
-//     throw Exception('Failed to post data');
-//   }
-// }
-//
-
-// void _registerMeet() async {
-//   final url = Uri.parse("http://todaymeet.shop:8080/meet/add");
-//   final Map<String, dynamic> jsonData = {
-//     'category':{
-//       'categoryNo': meet.meetInfo.categoryNo
-//     },
-//     'address' : meet.meetInfo.address,
-//     'lat' : meet.meetInfo.lat,
-//     'lon' : meet.meetInfo.lon,
-//     'time' : meet.meetInfo.time,
-//     'age' : meet.meetInfo.age,
-//     'peopleLimit' : meet.meetInfo.peopleLimit,
-//     'fee' : meet.meetInfo.fee,
-//     'title' : meet.meetInfo.title,
-//     'content' : meet.meetInfo.content,
-//     'approval' : meet.meetInfo.approval,
-//     'user': {
-//       'userNo' : 1
-//     },
-//   };
-//
-//   final response = await http.post(
-//     url,
-//     headers: {'Content-Type' : 'application/json'},
-//     body: json.encode(jsonData),
-//   );
-//
-//   if (response.statusCode == 200) {
-//     print(json.decode(response.body));
-//   } else {
-//     throw Exception('Failed to post data');
-//   }
-// }
-
-// Future<void> _registerMeet() async {
-//   final url = Uri.parse("http://todaymeet.shop:8080/meet/add");
-//   final Map<String, dynamic> jsonData = {
-//     'category': {
-//       'categoryNo': meet.meetInfo.categoryNo
-//     },
-//     'address': meet.meetInfo.address,
-//     'lat': meet.meetInfo.lat,
-//     'lon': meet.meetInfo.lon,
-//     'time': meet.meetInfo.time,
-//     'age': meet.meetInfo.age,
-//     'peopleLimit': meet.meetInfo.peopleLimit,
-//     'fee': meet.meetInfo.fee,
-//     'title': meet.meetInfo.title,
-//     'content': meet.meetInfo.content,
-//     'approval': meet.meetInfo.approval,
-//     'user': {
-//       'userNo': await getUserNo() // userNo를 받는 함수를 호출하여 값을 가져옵니다.
-//     },
-//   };
-//
-//   final response = await http.post(
-//     url,
-//     headers: {'Content-Type': 'application/json'},
-//     body: json.encode(jsonData),
-//   );
-//
-//   if (response.statusCode == 200) {
-//     print(json.decode(response.body));
-//   } else {
-//     throw Exception('Failed to post data');
-//   }
-// }
-//
-// Future<int> getUserNo() async {
-//   final userNoResponse = await http.get(Uri.parse("http://todaymeet.shop:8080/meet/add"));
-//   if (userNoResponse.statusCode == 200) {
-//     final userData = json.decode(userNoResponse.body);
-//     return userData['userNo'];
-//   } else {
-//     throw Exception('Failed to get userNo');
-//   }
-// }
-
-// @override
-// void initState() {
-//   super.initState();
-//   Timer(Duration(seconds: 2), () {
-//     Navigator.pushReplacement(
-//       context,
-//       MaterialPageRoute(
-//         builder: (context) => login(),
-//       ),
-//     );
-//   });
-//   // fetchData();
-// }

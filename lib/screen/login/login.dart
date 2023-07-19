@@ -1,4 +1,3 @@
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:front/screen/login/start.dart';
@@ -34,18 +33,14 @@ class _loginState extends State<login> {
   String email = '';
   String password = '';
   bool obscureText = true;
-  // String loginresult2 = '';
   final TextEditingController _controller = TextEditingController();
-
   bool idformat = true;
   bool pwformat = true;
   String? token = '';
 
 
-
+//토큰 생성 함수
   Future<void> getToken() async {
-    // String? token;
-
     if(defaultTargetPlatform == TargetPlatform.iOS ||defaultTargetPlatform == TargetPlatform.macOS||defaultTargetPlatform == TargetPlatform.android) {
       debugPrint("===================token=======================================");
       token = await FirebaseMessaging.instance.getToken();
@@ -56,6 +51,7 @@ class _loginState extends State<login> {
     debugPrint("fcmToken : $token");// 이 토큰이 있어야 서버에서 알림을 보낼 수 있습니다.
   }
 
+  //로그인 함수
   Future<int> sendCredentialsToServer() async {
     final url = Uri.parse('http://todaymeet.shop:8080/loginB');
     final requestData = {
@@ -73,8 +69,12 @@ class _loginState extends State<login> {
       final userNo = jsonDecode(response.body);
       print("userNo : ");
       print(userNo);
-      // Get.to( MainPageMap(),arguments: userNo);
+
+
+      //로그인에 성공했을 경우 토큰생성
       await getToken();
+
+      //유저넘버와 토큰을 같이 전송
       final sendToken = {
         'userNo' : userNo,
         'token' : token
@@ -100,15 +100,18 @@ class _loginState extends State<login> {
       }
       return userNo;
     }else if(_text==null ){
+      // 아이디 입력창이 비어있을 경우
       onebutton.noInputIDDialog(context);
       return 0;
     }
 
     else if(_text1 ==null){
+      //비밀번호 입력창에 아무것도 입력하지 않은 경우
       onebutton.noInputPwDialog(context);
       return 0;
     }
     else {
+      // 아이디 또는 비밀번호를 잘못입력했을 경우
       print('로그인 실패. 상태 코드: ${response.statusCode}');
       onebutton.incorrectInputDialog(context);
       return 0;
@@ -120,7 +123,7 @@ class _loginState extends State<login> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false, //텍스트필드에 입력하려고 키보드를 올려도 버튼이 안올라오게 설정
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
@@ -132,11 +135,12 @@ class _loginState extends State<login> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: EdgeInsets.zero,
-                      height: 48.0,
+                    SizedBox(
+                      height : 48.0,
                       child: TextField(
+                        keyboardType: TextInputType.multiline,
                         controller: _controller,
+
                         autofocus: true,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9!@#$%^&*().]"),),
@@ -149,6 +153,7 @@ class _loginState extends State<login> {
                         },
                         // textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 12,horizontal: 16),
                           hintText: '아이디',
                           hintStyle: TextStyle(color: Color(0xFFD1D1D4),fontSize: 13.0),
                           border: OutlineInputBorder(
@@ -176,6 +181,7 @@ class _loginState extends State<login> {
                         },
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 12,horizontal: 16),
                           hintText: '비밀번호',
                           hintStyle: TextStyle(color: Color(0xFFD1D1D4),fontSize: 13.0,fontFamily: 'Inter'),
                           border: OutlineInputBorder(
@@ -218,7 +224,7 @@ class _loginState extends State<login> {
                       // } else {
                       //   sendCredentialsToServer();
                       // }
-
+                      print('로그인 시작합니다.');
                       sendCredentialsToServer();
 
 
@@ -531,23 +537,26 @@ void saveLoginCredentials(String email, String password) async {
   await prefs.setString('password', password);
 }// 서버로 email, password 보내는 함수
 
-void _login_fail_pwnone(BuildContext context) {
-  showCupertinoModalPopup<void>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      content: const Text('비밀번호를 입력해주세요'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('확인'),
-        ),
-      ],
-    ),
-  );
-}//비밀번호 확인 팝업
+
+
+
+// void _login_fail_pwnone(BuildContext context) {
+//   showCupertinoModalPopup<void>(
+//     context: context,
+//     builder: (BuildContext context) => CupertinoAlertDialog(
+//       content: const Text('비밀번호를 입력해주세요'),
+//       actions: <CupertinoDialogAction>[
+//         CupertinoDialogAction(
+//           isDefaultAction: true,
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//           child: const Text('확인'),
+//         ),
+//       ],
+//     ),
+//   );
+// }//비밀번호 확인 팝업
 
 // class MyController extends GetxController {
 //   var userNo = 0;

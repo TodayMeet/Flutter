@@ -5,7 +5,6 @@ import '../../model/UI/widget/customAppBar.dart';
 
 class privatePolicy extends StatefulWidget {
   const privatePolicy({Key? key}) : super(key: key);
-
   @override
   State<privatePolicy> createState() => _privatePolicyState();
 }

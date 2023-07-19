@@ -62,11 +62,14 @@ class _registerProfileState extends State<registerProfile> {
   // File defaultImage = Image.file('assets/images/LoginImage/test.png');
 
 
+
+
   String convertIsDuplicateToString(bool isDuplicateUsername) {
     return isDuplicateUsername
         ? '* 중복된 닉네임이 존재합니다.'
         : '                             ';
   }
+
 
   Future<void> usernameDuplicate() async {
     final url = Uri.parse('http://todaymeet.shop:8080/username/${username}');
@@ -96,6 +99,8 @@ class _registerProfileState extends State<registerProfile> {
     }
   }
 
+
+
   @override
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -107,6 +112,7 @@ class _registerProfileState extends State<registerProfile> {
       });
     }
   }
+
 
   Future<void> join() async {
     final url1 = Uri.parse('http://todaymeet.shop:8080/join');
@@ -329,9 +335,10 @@ class _registerProfileState extends State<registerProfile> {
                   ),
                   child: TextField(
                     autofocus: true,
+
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(10), // 최대 길이 제한
-                      FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9가-힣]+$')), // 허용할 문자 패턴
+                      LengthLimitingTextInputFormatter(10),
+                      FilteringTextInputFormatter.deny(RegExp(r'[!@/#\$%^&*(),.?":{}|<>]')),
                     ],
                     controller: _idController1,
                     onChanged: (value) {
